@@ -1,0 +1,13 @@
+@import '../mixins/colors';
+@import '../mixins/fonts';
+
+.title {
+    text-align: center;
+    padding-top: 20px;
+
+    h1 {
+        font-family: $primary-font;
+        font-weight: 300;
+        margin: 0;
+    }
+}

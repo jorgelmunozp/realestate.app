@@ -1,0 +1,87 @@
+@import '../mixins/colors';
+@import '../mixins/screen';
+
+/* === Botón hamburguesa === */
+.bm-burger-button {
+  position: fixed;
+  width: 30px;
+  height: 24px;
+  top: 30px;
+  left: 25px;
+  z-index: 1000;
+}
+
+/* barras del icono hamburguesa */
+.bm-burger-bars {
+  background: $white-color; 
+  border-radius: 2px;
+}
+
+.bm-burger-bars-hover {
+  background: darken($blue-color, 10%);
+}
+
+/* Botón cerrar */
+.bm-cross-button {
+  height: 28px;
+  width: 28px;
+}
+
+.bm-cross {
+  background: $blue-color;
+}
+
+/* Fondo del menú */
+.bm-menu {
+  background: #fff;
+  padding: 2rem 1.5rem;
+  font-size: 1rem;
+  box-shadow: 4px 0 20px rgba(0,0,0,0.15);
+  border-top-right-radius: 16px;
+  border-bottom-right-radius: 16px;
+}
+
+/* overlay del fondo oscuro */
+.bm-overlay {
+  background: rgba(0, 0, 0, 0.5);
+}
+
+/* Header del menú */
+.menu-header {
+  text-align: center;
+  margin-bottom: 1.5rem;
+
+  h2 {
+    font-family: 'Poppins', sans-serif;
+    color: $blue-color;
+    font-weight: 600;
+    font-size: 1.4rem;
+  }
+}
+
+/* Línea horizontal */
+.bm-hr {
+  border: 1px solid $blue-color;
+  margin: 0.5rem 0 1rem;
+}
+
+/* Items del menú */
+.menu-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: $black-color;
+  padding: 14px 0;
+  text-decoration: none;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 500;
+  font-size: 1rem;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+
+  &:hover {
+    color: #fff;
+    background-color: $blue-color;
+    transform: translateX(5px);
+  }
+}

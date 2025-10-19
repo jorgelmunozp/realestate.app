@@ -1,0 +1,16 @@
+@import '../mixins/colors';
+
+.header {
+    background-color: $blue-color;
+    color: white;
+    height: 100px;
+    font-family: 'Carter One', cursive;
+    font-weight: 900;
+    padding-top: 10px;
+    text-align: center;
+    border-bottom: 12.5px solid darken($blue-color, 90%);
+}
+
+.header-letter {
+    color: $black-color;
+}
