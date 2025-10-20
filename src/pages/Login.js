@@ -37,6 +37,7 @@ export const Login = () => {
     }
   };
 
+  const goToIndex = () => navigate('/index');
   const goToRegister = () => navigate('/register');
   const forgotPassword = () => navigate('/password-recover');
 
@@ -75,6 +76,10 @@ export const Login = () => {
 
         <button className="login-link" onClick={forgotPassword}>
           ¿Olvidaste tu contraseña?
+        </button>
+        <br /><br />
+        <button className="login-link" onClick={goToIndex}>
+          ← Volver al inicio
         </button>
       </div>
     </div>

@@ -19,7 +19,7 @@ export const PasswordRecover = () => {
           icon: "success",
           confirmButtonColor: "$blue-color"
         });
-        navigate('/login');
+        navigate('/index');
       }
     } catch (error) {
       Swal.fire({
@@ -31,7 +31,7 @@ export const PasswordRecover = () => {
     }
   };
 
-  const handleCancel = () => navigate('/');
+  const handleCancel = () => navigate('/login');
 
   return (
     <div className="recover-container">

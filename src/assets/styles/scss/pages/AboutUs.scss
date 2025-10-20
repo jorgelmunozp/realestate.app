@@ -1,80 +1,177 @@
 @import '../mixins/colors';
 @import '../mixins/screen';
+@import '../mixins/fonts';
 
 .aboutUs-container {
   display: flex;
   justify-content: center;
-  height: 100%;
-  min-height: 85vh;
-  background-color: $blue-color;
-  padding-left: 20px;
-  padding-right: 20px;
-  padding-bottom: 40px;
+  min-height: 90vh;
+  background: #f6f8fb;
+  padding: 2rem;
 }
 
 .aboutUs-form {
+  width: 100%;
+  max-width: 1200px;
+  background-color: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 20px;
+  padding: 2rem;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+  color: #333;
   display: flex;
   flex-direction: column;
-  border-radius: 8px;
-  color: $white-color;
-  background-color: $blue-color;
+  gap: 2rem;
 
-  text-align: justify;
-  text-align-last: center;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  width: 90vw;
-  padding-left: 5vw;
-  padding-right: 5vw;
-  padding-top: 20px;
-  padding-bottom: 30px;
+  /* Slider */
+  .aboutUs-slider {
+    position: relative;
+    overflow: hidden;
+    border-radius: 16px;
 
-  @include screen-sm { 
-    padding-left: 1vw;
-    padding-right: 1vw; 
-  }
-  
-  .aboutUs-content { 
-      font-size: calc(1rem + .5vw);
+    img {
+      width: 100%;
+      object-fit: cover;
+      position: absolute;
+      top: 0; left: 0;
+      opacity: 0;
+      transition: opacity 0.7s ease-in-out;
+      border-radius: 16px;
+      height: 60vh;
 
-      @include desktop { font-size: calc(2rem + .5vw); }  
-      @include screen-md { font-size: calc(1.5rem + .5vw); }  
-      @include screen-sm { font-size: calc(1rem + .5vw); }
-  }
+      @include desktop { height: 70vh }
+      @include screen-md { height: 60vh }
+      @include screen-sm { height: 30vh }
 
-  h2 {
-    text-align: center;
-    margin-bottom: 30px;
-    font-family: 'Roboto', sans-serif; /* cambiar según Figma */
-    color: $white-color;
-  }
+      &.active {
+        opacity: 1;
+        position: relative;
+      }
+    }
 
-  .aboutUs-button {
-    font-size: 22px;
-    margin-top: 10px;
-    margin-bottom: 10px;
-    border: 1px solid #2C2C2C;
-    border-radius: 20px;
-    cursor: pointer;
-    color: #fff;
-    background-color: $button-color;
-    padding: 16px 12px;
-    transition: 0.2s;
+    .slider-arrow {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background-color: rgba(0,0,0,0.4);
+      color: #fff;
+      border: none;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: background 0.3s;
 
-    &:hover {
-      opacity: 0.9;
+      &:hover {
+        background-color: rgba(0,0,0,0.7);
+      }
+
+      &.left { left: 15px; }
+      &.right { right: 15px; }
+    }
+
+    .slider-indicators {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 10px;
+
+      .indicator {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background-color: rgba(0,0,0,0.2);
+        cursor: pointer;
+        transition: background-color 0.3s;
+
+        &.active {
+          background-color: $blue-color;
+        }
+      }
     }
   }
 
-  .aboutUs-link-button {
-    background-color: $black-color;
-    border: 1px solid #C00F0C;
-    border-radius: 20px;
-    cursor: pointer;
-    color: $white-color;
-    margin-top: 5px;
-    text-decoration: underline;
-    font-size: 14px;
-    text-decoration: none;
-    padding: 12px;
+  /* Contenido principal */
+  .aboutUs-content {
+    font-size: 1rem;
+    text-align: center;
+
+    @include desktop { font-size: 1.2rem; }
+    @include screen-md { font-size: 1.1rem; }
+    @include screen-sm { font-size: 1rem; }
+  }
+
+  /* Servicios */
+  .aboutUs-services {
+    text-align: center;
+
+    h3 {
+      font-family: $primary-font;
+      margin-bottom: 1rem;
+      font-size: 1.5rem;
+      color: $blue-color;
+    }
+
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.5rem;
+      margin-top: 1rem;
+    }
+
+    .service-card {
+      background: #f6f8fb;
+      border-radius: 16px;
+      padding: 1.5rem;
+      text-align: center;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+      transition: all 0.3s ease;
+
+      &:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+      }
+
+      .service-icon {
+        font-size: 2.2rem;
+        color: $blue-color;
+        margin-bottom: 0.5rem;
+      }
+
+      h4 {
+        margin: 0.5rem 0;
+        font-size: 1.1rem;
+        font-weight: 600;
+      }
+
+      p {
+        font-size: 0.95rem;
+        color: #555;
+        text-align: justify;
+        text-align-last: center;
+      }
+    }
+  }
+
+  /* Botones */
+  .aboutUs-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+
+    .aboutUs-link-button {
+      width: 100% !important;
+      margin: 0 auto;
+    }
+  }
+}
+
+/* Responsive */
+@include screen-sm {
+  .aboutUs-form {
+    padding: 1.5rem;
   }
 }

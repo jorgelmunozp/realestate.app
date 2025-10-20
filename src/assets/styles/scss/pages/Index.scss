@@ -2,29 +2,34 @@
 @import '../mixins/screen';
 @import '../mixins/fonts';
 
-.home-container {
+.index-container {
   display: flex;
   justify-content: center;
   align-items: center;
   min-height: 90vh;
   background: #f6f8fb;
-  padding: 2rem;
+  padding: 2rem 2rem;
+
+  @include screen-sm { padding: 2rem 0.5rem; }
+
 }
 
-.home-content {
+.index-content {
   width: 100%;
   max-width: 1200px;
   background-color: #fff;
   border: 1px solid #e5e7eb;
   border-radius: 20px;
-  padding: 2rem;
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
   color: #333;
+  padding: 2rem 2rem;
+
+  @include screen-sm { padding: 1.5rem 0.5rem; }
 }
 
-.home-header {
+.index-header {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   margin-bottom: 2rem;
 
@@ -34,7 +39,7 @@
     font-size: 2.2rem;
   }
 
-  .home-add-btn {
+  .index-add-btn {
     background-color: $blue-color;
     color: #fff;
     border: none;
@@ -46,12 +51,12 @@
 
     &:hover {
       background-color: #1d4ed8;
-      transform: translateY(-10px);
+      transform: rotate(90deg);
     }
   }
 }
 
-.home-search {
+.index-search {
   margin-bottom: 2rem;
   text-align: center;
 
@@ -71,14 +76,13 @@
   }
 }
 
-.home-grid {
-  display: inline-block;
-  width: 100%;
+.index-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 2rem;
 }
 
-.home-property-card {
-  display: flex;
+.index-property-card {
   background-color: #fff;
   border-radius: 16px;
   overflow: hidden;
@@ -92,14 +96,14 @@
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
   }
 
-  .home-property-card-img {
-    width: 100px;
-    height: 100px;
+  .index-property-card-img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
   }
 
-  .home-property-card-info {
-    padding: 0.25rem 1rem;
-    overflow-x: auto;
+  .index-property-card-info {
+    padding: 1rem;
 
     h3 {
       margin: 0;
@@ -122,7 +126,7 @@
   }
 }
 
-.home-pagination {
+.index-pagination {
   margin-top: 2rem;
   display: flex;
   justify-content: center;
@@ -130,7 +134,7 @@
   gap: 1rem;
   color: #555;
 
-  .home-page-btn {
+  .index-page-btn {
     background-color: $blue-color;
     border: none;
     color: #fff;
@@ -159,7 +163,7 @@
   }
 }
 
-.home-accept-btn {
+.index-accept-btn {
   background-color: $blue-color;
   color: #fff;
   border-radius: 8px;
@@ -174,7 +178,7 @@
 }
 
 /* Estilo claro para SweetAlert */
-.home-swal-popup {
+.index-swal-popup {
   background-color: #ffffff !important;
   color: #333 !important;
   border-radius: 12px !important;
@@ -183,15 +187,12 @@
 
 /* Responsive */
 @media (max-width: 768px) {
-  .home-content {
-    padding: 1.5rem;
-  }
 
-  .home-header h1 {
+  .index-header h1 {
     font-size: 1.8rem;
   }
 
-  .home-search input {
+  .index-search input {
     width: 100%;
   }
 }

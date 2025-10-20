@@ -8,7 +8,7 @@ import { primaryColor } from '../global.js';
 import "../assets/styles/scss/components/AppMenu.scss";
 
 export const AppMenu = () => {
-    const { dispatch } = useContext(AuthContext);
+    const { user, dispatch } = useContext(AuthContext);
     const navigate = useNavigate();
 
     const handleLogout = () => {
@@ -29,7 +29,7 @@ export const AppMenu = () => {
         <FiPhone color={primaryColor} /> Contacto
       </a>
       <a className="menu-item" href="/login" onClick={handleLogout}>
-        <FiLogOut color={primaryColor} /> Cerrar sesión
+       { user === 'logged' ? (<><FiLogOut color={primaryColor} /> Cerrar sesión</>) : (<><FiLogOut color={primaryColor} /> Ingresar</>) }
       </a>
     </Menu>
   );
