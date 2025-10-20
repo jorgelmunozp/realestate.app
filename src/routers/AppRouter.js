@@ -16,8 +16,8 @@ import { Contact } from '../pages/Contact.js';
 export const AppRouter = () => {
   return (
     <Router>
-      <AppMenu />
       <Header />
+      <AppMenu />
       <Routes>
         {/* Rutas públicas */}
         <Route path="*" element={<PublicRoute><Index /></PublicRoute>} />
