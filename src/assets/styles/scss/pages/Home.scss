@@ -8,7 +8,9 @@
   align-items: center;
   min-height: 90vh;
   background: #f6f8fb;
-  padding: 2rem;
+  padding: 2rem 2rem;
+
+  @include screen-sm { padding: 2rem 1rem; }
 }
 
 .home-content {
@@ -83,7 +85,7 @@
   display: flex;
   flex-wrap: nowrap;
   background-color: #fff;
-  border-radius: 16px;
+  border-radius: 2px;
   overflow: hidden;
   cursor: pointer;
   transition: all 0.3s ease;
@@ -96,15 +98,17 @@
   }
 
   .home-property-card-img {
-    width: 50px;
-    height: 50px;
+    width: 5vw;
+    height: 5vh;
   }
 
   .home-property-card-info {
     display: flex;
     flex-direction: row;
-    padding: 0.25rem 1rem;
     min-width: 0;         /* permite el truncado dentro del flex container */
+    padding: 0.25rem 1rem;
+    
+    @include screen-sm { padding: 0.25rem 0.2rem; }
 
     h3 {
       margin: 0;
@@ -116,6 +120,10 @@
       flex: 1;           /* permite que el texto use todo el espacio disponible */
       min-width: 0;      /* indispensable en contenedores flex */
       max-width: 100%;   /* evita que el texto se desborde del contenedor */
+
+      @include desktop { font-size: 1.3rem; }
+      @include screen-md { font-size: 1rem; }
+      @include screen-sm { font-size: 0.75rem; }
     }
   }
 
@@ -124,8 +132,10 @@
     margin-left: auto; /* 🔹 Empuja los botones al extremo derecho */
     display: flex;
     align-items: center;
-    gap: 0.5rem; /* Espacio entre los botones */
-    
+    gap: 1rem 0.5rem !important; /* Espacio entre los botones */
+
+    @include screen-sm { gap: 0 0.5rem !important; }
+
     button {
       background-color: transparent;
       border: none;

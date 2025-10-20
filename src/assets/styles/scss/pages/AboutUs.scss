@@ -16,12 +16,14 @@
   background-color: #fff;
   border: 1px solid #e5e7eb;
   border-radius: 20px;
-  padding: 2rem;
   box-shadow: 0 8px 25px rgba(0,0,0,0.1);
   color: #333;
   display: flex;
   flex-direction: column;
   gap: 2rem;
+  padding: 2rem;
+
+  @include screen-sm { padding: 1.5rem; }
 
   /* Slider */
   .aboutUs-slider {
@@ -166,12 +168,5 @@
       width: 100% !important;
       margin: 0 auto;
     }
-  }
-}
-
-/* Responsive */
-@include screen-sm {
-  .aboutUs-form {
-    padding: 1.5rem;
   }
 }

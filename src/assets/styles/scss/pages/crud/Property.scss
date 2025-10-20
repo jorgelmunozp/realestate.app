@@ -5,9 +5,11 @@
   display: flex;
   justify-content: center;
   align-items: flex-start;
-  padding: 3rem 1rem;
   background: #f6f8fb;
   min-height: 100vh;
+  padding: 3rem 1rem;
+
+  @include screen-sm { padding: 3rem 0.5rem; }
 }
 
 .property-card {
@@ -108,9 +110,11 @@
 
   .property-traces {
     background: #eef3ff;
-    padding: 1.5rem;
     border-radius: 14px;
     margin-bottom: 2rem;
+    padding: 1.5rem 1.5rem;
+
+    @include screen-sm { padding: 1.5rem 0.5rem; }
 
     h3 {
       color: $blue-color;
@@ -209,7 +213,7 @@
   }
 
   .property-info {
-    padding: 1.5rem;
+    padding: 1.5rem 0.5rem;
 
     .property-price {
       font-size: 1.3rem;
