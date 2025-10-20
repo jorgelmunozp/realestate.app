@@ -9,27 +9,36 @@ export const CrudProperty = () => {
   const navigate = useNavigate();
   const { propertyId } = useParams();
 
-  console.log("propertyId: ", propertyId)
-
   const url = propertyId ? `/api/property/${propertyId}` : null;
   const { data, loading, error } = useFetch(url, [propertyId]);
 
   const [item, setItem] = useState(propertyDto);
 
-  // 🔹 Actualiza el item cuando se obtienen los datos
+  // 🔹 Actualiza el item cuando se obtienen los datos y precarga imágenes si existen
   useEffect(() => {
-    if (data) setItem(data);
+    if (data) {
+      setItem((prev) => ({
+        ...data,
+        imagePreview: data.images[0].file || prev.imagePreview || null,
+        owner: {
+          ...data.owner,
+          photoPreview: data.owner?.photo || prev.owner.photoPreview || null,
+        },
+      }));
+    }
   }, [data]);
 
   // 🔹 Maneja cambios generales y anidados
-  const handleChange = (e, section) => {
+  const handleChange = (e, section, index = null) => {
     const { name, value } = e.target;
     setItem((prev) => {
       if (section === "owner") {
         return { ...prev, owner: { ...prev.owner, [name]: value } };
       }
-      if (section === "traces") {
-        return { ...prev, traces: [{ ...prev.traces[0], [name]: value }] };
+      if (section === "traces" && index !== null) {
+        const updatedTraces = [...prev.traces];
+        updatedTraces[index] = { ...updatedTraces[index], [name]: value };
+        return { ...prev, traces: updatedTraces };
       }
       return { ...prev, [name]: value };
     });
@@ -94,9 +103,11 @@ export const CrudProperty = () => {
         formData.append("image", item.imageFile);
       }
 
-      // Datos de venta
-      Object.entries(item.traces[0]).forEach(([key, value]) => {
-        formData.append(`traces[0][${key}]`, value);
+      // Datos de venta (traces dinámicos)
+      item.traces.forEach((trace, i) => {
+        Object.entries(trace).forEach(([key, value]) => {
+          formData.append(`traces[${i}][${key}]`, value);
+        });
       });
 
       await api.post("/api/property", formData, {
@@ -256,44 +267,51 @@ export const CrudProperty = () => {
         {/* Sección: Información de venta */}
         <div className="form-section">
           <h2>Información de venta</h2>
-          <div className="form-grid">
-            <div className="input-group">
-              <label>Fecha de venta</label>
-              <input
-                type="date"
-                name="dateSale"
-                value={item.traces[0].dateSale}
-                onChange={(e) => handleChange(e, "traces")}
-              />
+          {item.traces.map((trace, index) => (
+            <div key={index} className="form-grid trace-group">
+              <h3>Venta #{index + 1}</h3>
+
+              <div className="input-group">
+                <label>Fecha de venta</label>
+                <input
+                  type="date"
+                  name="dateSale"
+                  value={trace.dateSale}
+                  onChange={(e) => handleChange(e, "traces", index)}
+                />
+              </div>
+
+              <div className="input-group">
+                <label>Nombre del evento</label>
+                <input
+                  type="text"
+                  name="name"
+                  value={trace.name}
+                  onChange={(e) => handleChange(e, "traces", index)}
+                />
+              </div>
+
+              <div className="input-group">
+                <label>Valor</label>
+                <input
+                  type="number"
+                  name="value"
+                  value={trace.value}
+                  onChange={(e) => handleChange(e, "traces", index)}
+                />
+              </div>
+
+              <div className="input-group">
+                <label>Impuesto</label>
+                <input
+                  type="number"
+                  name="tax"
+                  value={trace.tax}
+                  onChange={(e) => handleChange(e, "traces", index)}
+                />
+              </div>
             </div>
-            <div className="input-group">
-              <label>Nombre del evento</label>
-              <input
-                type="text"
-                name="name"
-                value={item.traces[0].name}
-                onChange={(e) => handleChange(e, "traces")}
-              />
-            </div>
-            <div className="input-group">
-              <label>Valor</label>
-              <input
-                type="number"
-                name="value"
-                value={item.traces[0].value}
-                onChange={(e) => handleChange(e, "traces")}
-              />
-            </div>
-            <div className="input-group">
-              <label>Impuesto</label>
-              <input
-                type="number"
-                name="tax"
-                value={item.traces[0].tax}
-                onChange={(e) => handleChange(e, "traces")}
-              />
-            </div>
-          </div>
+          ))}
         </div>
 
         <button type="submit" className="crudproperty-btn primary">

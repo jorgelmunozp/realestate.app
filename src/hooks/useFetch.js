@@ -1,20 +1,20 @@
 import { useState, useEffect } from "react";
 import { api } from "../services/api";
 
-export const useFetch = (url, deps = []) => {
+export const useFetch = (apiUrl) => {
   const [data, setData] = useState(null);
-  const [loading, setLoading] = useState(Boolean(url));
+  const [loading, setLoading] = useState(Boolean(apiUrl));
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    // 🚫 No ejecutar si la URL no está definida
-    if (!url) return;
+    // No se ejecuta si la URL no está definida
+    if (!apiUrl) return;
 
     const fetchData = async () => {
       setLoading(true);
       setError(null);
       try {
-        const response = await api.get(url);
+        const response = await api.get(apiUrl);
         setData(response.data);
       } catch (err) {
         console.error("Error en useFetch:", err);
@@ -25,7 +25,7 @@ export const useFetch = (url, deps = []) => {
     };
 
     fetchData();
-  }, deps);
+  }, [apiUrl]);
 
   return { data, loading, error };
 };
