@@ -7,84 +7,96 @@ import { FiPlus, FiSearch } from "react-icons/fi";
 import Swal from 'sweetalert2';
 import '../assets/styles/scss/pages/Home.scss';
 
-/*** BORRAR!!!!!!!!!!!!!!!!!!!!!!! */
-const handleNewProperty = () => {
-  const userId = sessionStorage.getItem('userId');
+const handleDeleteProperty = () => {
+      Swal.fire({
+        title: "Eliminar Propiedad",
+        text: "Estás seguro?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Si, eliminar",
+        cancelButtonText: "Cancelar"
+      }).then((result) => {
+        if (result.isConfirmed) {
 
-  if (!userId) {
-    Swal.fire({ icon: "error", text: "No hay usuario autenticado" });
-    return;
-  }
-
-  Swal.fire({
-    html: `
-      <div class="swal-container">
-        <label for="swal-name">Nombre</label>
-        <input id="swal-name" class="swal2-input" placeholder="Nombre">
-        
-        <label for="swal-date">Fecha de entrega</label>
-        <input id="swal-date" type="date" class="swal2-input">
-
-        <label for="swal-time">Hora de entrega</label>
-        <input id="swal-time" type="time" class="swal2-input">
-
-        <label for="swal-message">Mensaje</label>
-        <textarea id="swal-message" class="swal2-textarea" placeholder="Mensaje"></textarea>
-      </div>
-    `,
-    focusConfirm: false,
-    confirmButtonText: "Crear",
-    customClass: {
-      confirmButton: 'home-accept-btn',
-      popup: 'home-swal-popup',
-    },
-    preConfirm: () => {
-      const nameTask = document.getElementById('swal-name').value;
-      const dateTask = document.getElementById('swal-date').value;
-      const timeTask = document.getElementById('swal-time').value;
-      const messageTask = document.getElementById('swal-message').value;
-
-      if (!nameTask || !dateTask || !timeTask || !messageTask) {
-        Swal.showValidationMessage(`Por favor completa todos los campos`);
-        return false;
-      }
-
-      return { nameTask, dateTask, timeTask, messageTask };
-    }
-  }).then(async (result) => {
-    if (result.isConfirmed) {
-      try {
-        const response = await api.post(`/api/property`, {
-          name: result.value.nameTask,
-          date: result.value.dateTask,
-          time: result.value.timeTask,
-          message: result.value.messageTask,
-        });
-
-        if (response.status >= 200 && response.status < 300) {
           Swal.fire({
-            icon: "success",
-            title: "Tarea creada",
-            html: `
-              <div style="text-align: left; margin-left: 5vw;">
-                <p><strong>Nombre:</strong> ${result.value.nameTask}</p>
-                <p><strong>Fecha:</strong> ${result.value.dateTask}</p>
-                <p><strong>Hora:</strong> ${result.value.timeTask}</p>
-                <p><strong>Mensaje:</strong> ${result.value.messageTask}</p>
-              </div>
-            `
+            title: "Propiedad Eliminada",
+            text: "La propiedad ha sido eliminada con éxito",
+            icon: "success"
           });
         }
+      });
 
-      } catch (error) {
-        Swal.fire({
-          text: error.response?.data?.error?.message || error.message,
-          icon: "error"
-        });
-        console.error('Error al crear tarea:', error);
-      }
-    }
-  });
+  // Swal.fire({
+  //   html: `
+  //     <div class="swal-container">
+  //       <label for="swal-name">Nombre</label>
+  //       <input id="swal-name" class="swal2-input" placeholder="Nombre">
+        
+  //       <label for="swal-date">Fecha de entrega</label>
+  //       <input id="swal-date" type="date" class="swal2-input">
+
+  //       <label for="swal-time">Hora de entrega</label>
+  //       <input id="swal-time" type="time" class="swal2-input">
+
+  //       <label for="swal-message">Mensaje</label>
+  //       <textarea id="swal-message" class="swal2-textarea" placeholder="Mensaje"></textarea>
+  //     </div>
+  //   `,
+  //   focusConfirm: false,
+  //   confirmButtonText: "Crear",
+  //   customClass: {
+  //     confirmButton: 'home-accept-btn',
+  //     popup: 'home-swal-popup',
+  //   },
+  //   preConfirm: () => {
+  //     const nameTask = document.getElementById('swal-name').value;
+  //     const dateTask = document.getElementById('swal-date').value;
+  //     const timeTask = document.getElementById('swal-time').value;
+  //     const messageTask = document.getElementById('swal-message').value;
+
+  //     if (!nameTask || !dateTask || !timeTask || !messageTask) {
+  //       Swal.showValidationMessage(`Por favor completa todos los campos`);
+  //       return false;
+  //     }
+
+  //     return { nameTask, dateTask, timeTask, messageTask };
+  //   }
+  // }).then(async (result) => {
+  //   if (result.isConfirmed) {
+  //     try {
+  //       const response = await api.post(`/api/property`, {
+  //         name: result.value.nameTask,
+  //         date: result.value.dateTask,
+  //         time: result.value.timeTask,
+  //         message: result.value.messageTask,
+  //       });
+
+  //       if (response.status >= 200 && response.status < 300) {
+  //         Swal.fire({
+  //           icon: "success",
+  //           title: "Tarea creada",
+  //           html: `
+  //             <div style="text-align: left; margin-left: 5vw;">
+  //               <p><strong>Nombre:</strong> ${result.value.nameTask}</p>
+  //               <p><strong>Fecha:</strong> ${result.value.dateTask}</p>
+  //               <p><strong>Hora:</strong> ${result.value.timeTask}</p>
+  //               <p><strong>Mensaje:</strong> ${result.value.messageTask}</p>
+  //             </div>
+  //           `
+  //         });
+  //       }
+
+  //     } catch (error) {
+  //       Swal.fire({
+  //         text: error.response?.data?.error?.message || error.message,
+  //         icon: "error"
+  //       });
+  //       console.error('Error al crear tarea:', error);
+  //     }
+  //   }
+  // });
 };
 
 export const Home = () => {
@@ -180,7 +192,7 @@ export const Home = () => {
                 </div>
                 <div className="home-property-card-buttons">
                   <button onClick={() => handleUpdateProperty(property.idProperty)}>✏️</button>
-                  <button>❌</button>
+                  <button onClick={() => handleDeleteProperty(property.idProperty)}>❌</button>
                 </div>
               </div>
             ))}
