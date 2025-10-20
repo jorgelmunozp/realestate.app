@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { api } from '../services/api';
 import { Title } from '../components/Title';
 import { Input } from '../components/Input';
-import { FiPlus, FiSearch } from "react-icons/fi";
+import { FiPlus, FiSearch, FiEdit } from "react-icons/fi";
 import Swal from 'sweetalert2';
 import '../assets/styles/scss/pages/Home.scss';
 
@@ -149,7 +149,7 @@ export const Home = () => {
     <div className="home-container">
       <div className="home-content">
         <div className="home-header">
-          <Title title="🏢 Inmuebles Disponibles" />
+          <Title title="Inmuebles" />
           <button className="home-add-btn" onClick={()=>navigate('/new-property')}><FiPlus /></button>
         </div>
 
@@ -171,8 +171,10 @@ export const Home = () => {
                 <img className="home-property-card-img" src={property.images[0]?.file} alt={`property${index}`} />
                 <div className="home-property-card-info">
                   <h3>{property.name}</h3>
-                  <p>{property.address}</p>
-                  <p className="price">${property.price.toLocaleString()}</p>
+                </div>
+                <div className="home-property-card-buttons">
+                  <button>✏️</button>
+                  <button>❌</button>
                 </div>
               </div>
             ))}

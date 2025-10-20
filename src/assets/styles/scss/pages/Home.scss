@@ -17,9 +17,11 @@
   background-color: #fff;
   border: 1px solid #e5e7eb;
   border-radius: 20px;
-  padding: 2rem;
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
   color: #333;
+  padding: 2rem 2rem;
+
+  @include screen-sm { padding: 1.5rem 0.5rem; }
 }
 
 .home-header {
@@ -79,6 +81,7 @@
 
 .home-property-card {
   display: flex;
+  flex-wrap: nowrap;
   background-color: #fff;
   border-radius: 16px;
   overflow: hidden;
@@ -93,31 +96,44 @@
   }
 
   .home-property-card-img {
-    width: 100px;
-    height: 100px;
+    width: 50px;
+    height: 50px;
   }
 
   .home-property-card-info {
+    display: flex;
+    flex-direction: row;
     padding: 0.25rem 1rem;
-    overflow-x: auto;
+    min-width: 0;         /* permite el truncado dentro del flex container */
 
     h3 {
       margin: 0;
       font-size: 1.3rem;
       color: #222;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      flex: 1;           /* permite que el texto use todo el espacio disponible */
+      min-width: 0;      /* indispensable en contenedores flex */
+      max-width: 100%;   /* evita que el texto se desborde del contenedor */
     }
+  }
 
-    p {
-      font-size: 0.95rem;
-      color: #555;
-      margin-top: 0.3rem;
-    }
+  
+  .home-property-card-buttons {
+    margin-left: auto; /* 🔹 Empuja los botones al extremo derecho */
+    display: flex;
+    align-items: center;
+    gap: 0.5rem; /* Espacio entre los botones */
+    
+    button {
+      background-color: transparent;
+      border: none;
+      text-align: right;
 
-    .price {
-      color: $blue-color;
-      font-weight: bold;
-      font-size: 1.1rem;
-      margin-top: 0.5rem;
+      &:hover {
+        transform: translateY(-7.5px);
+      }
     }
   }
 }
