@@ -1,32 +1,13 @@
-import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { api } from "../../services/api";
 import { Title } from "../../components/Title";
+import { useFetch } from "../../hooks/useFetch";
 import "../../assets/styles/scss/pages/crud/Property.scss";
 
 export const Property = () => {
   const navigate = useNavigate();
   const { propertyId } = useParams();
-  const [property, setProperty] = useState({
-    images: [],
-    owner: {},
-    traces: [],
-  });
-  const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const fetchProperty = async () => {
-      try {
-        const response = await api.get(`/api/property/${propertyId}`);
-        setProperty(response.data);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchProperty();
-  }, [propertyId]);
+  const { data: property, loading, error } = useFetch(`/api/property/${propertyId}`, [propertyId]);
 
   const goToHome = () => navigate("/home");
 
@@ -37,6 +18,10 @@ export const Property = () => {
         <p>Cargando propiedad...</p>
       </div>
     );
+  }
+
+  if (error) {
+    return <p style={{ textAlign: "center", color: "red" }}>Error al cargar la propiedad</p>;
   }
 
   return (

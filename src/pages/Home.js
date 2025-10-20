@@ -1,12 +1,13 @@
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { api } from '../services/api';
 import { Title } from '../components/Title';
 import { Input } from '../components/Input';
-import { FiPlus, FiSearch, FiEdit } from "react-icons/fi";
+import { FiPlus, FiSearch } from "react-icons/fi";
 import Swal from 'sweetalert2';
 import '../assets/styles/scss/pages/Home.scss';
 
+/*** BORRAR!!!!!!!!!!!!!!!!!!!!!!! */
 const handleNewProperty = () => {
   const userId = sessionStorage.getItem('userId');
 
@@ -88,6 +89,7 @@ const handleNewProperty = () => {
 
 export const Home = () => {
   const navigate = useNavigate();
+  const { propertyId } = useParams();
   const [properties, setProperties] = useState([]);
   const [queryPropertyName, setQueryPropertyName] = useState("");
   const [pagination, setPagination] = useState({
@@ -133,6 +135,10 @@ export const Home = () => {
     navigate(`/api/property/${propertyId}`);
   };
 
+  const handleUpdateProperty = (propertyId) => {
+    navigate(`/crud-property/${propertyId}`);
+  };
+
   const handleNextPage = () => {
     if (pagination.page < pagination.last_page) {
       setPagination(prev => ({ ...prev, page: prev.page + 1 }));
@@ -150,7 +156,7 @@ export const Home = () => {
       <div className="home-content">
         <div className="home-header">
           <Title title="Inmuebles" />
-          <button className="home-add-btn" onClick={()=>navigate('/new-property')}><FiPlus /></button>
+          <button className="home-add-btn" onClick={()=>navigate('/crud-property')}><FiPlus /></button>
         </div>
 
         <div className="home-search">
@@ -167,13 +173,13 @@ export const Home = () => {
           {properties
             .filter(property => property.name.toLowerCase().includes(queryPropertyName.toLowerCase()))
             .map((property, index) => (
-              <div key={`property${index}`} className="home-property-card" onClick={() => handleOpenProperty(property.idProperty)}>
+              <div key={`property${index}`} className="home-property-card">
                 <img className="home-property-card-img" src={property.images[0]?.file} alt={`property${index}`} />
                 <div className="home-property-card-info">
                   <h3>{property.name}</h3>
                 </div>
                 <div className="home-property-card-buttons">
-                  <button>✏️</button>
+                  <button onClick={() => handleUpdateProperty(property.idProperty)}>✏️</button>
                   <button>❌</button>
                 </div>
               </div>

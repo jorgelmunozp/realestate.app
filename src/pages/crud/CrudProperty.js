@@ -1,44 +1,34 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { api } from '../../services/api';
-import '../../assets/styles/scss/pages/crud/NewProperty.scss';
+import { useState, useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { api } from "../../services/api";
+import { useFetch } from "../../hooks/useFetch";
+import propertyDto from "./PropertyDto.json";
+import "../../assets/styles/scss/pages/crud/CrudProperty.scss";
 
-export const NewProperty = () => {
+export const CrudProperty = () => {
   const navigate = useNavigate();
+  const { propertyId } = useParams();
 
-  const [property, setProperty] = useState({
-    name: '',
-    address: '',
-    price: '',
-    codeInternal: '',
-    year: '',
-    owner: {
-      name: '',
-      address: '',
-      photoFile: null,
-      photoPreview: null,
-      birthday: '',
-    },
-    imageFile: null,
-    imagePreview: null,
-    traces: [
-      {
-        dateSale: '',
-        name: '',
-        value: '',
-        tax: '',
-      },
-    ],
-  });
+  console.log("propertyId: ", propertyId)
+
+  const url = propertyId ? `/api/property/${propertyId}` : null;
+  const { data, loading, error } = useFetch(url, [propertyId]);
+
+  const [item, setItem] = useState(propertyDto);
+
+  // 🔹 Actualiza el item cuando se obtienen los datos
+  useEffect(() => {
+    if (data) setItem(data);
+  }, [data]);
 
   // 🔹 Maneja cambios generales y anidados
   const handleChange = (e, section) => {
     const { name, value } = e.target;
-    setProperty((prev) => {
-      if (section === 'owner') {
+    setItem((prev) => {
+      if (section === "owner") {
         return { ...prev, owner: { ...prev.owner, [name]: value } };
       }
-      if (section === 'traces') {
+      if (section === "traces") {
         return { ...prev, traces: [{ ...prev.traces[0], [name]: value }] };
       }
       return { ...prev, [name]: value };
@@ -50,7 +40,7 @@ export const NewProperty = () => {
     const file = e.target.files[0];
     if (file) {
       const preview = URL.createObjectURL(file);
-      setProperty((prev) => ({
+      setItem((prev) => ({
         ...prev,
         imageFile: file,
         imagePreview: preview,
@@ -63,7 +53,7 @@ export const NewProperty = () => {
     const file = e.target.files[0];
     if (file) {
       const preview = URL.createObjectURL(file);
-      setProperty((prev) => ({
+      setItem((prev) => ({
         ...prev,
         owner: {
           ...prev.owner,
@@ -81,48 +71,63 @@ export const NewProperty = () => {
       const formData = new FormData();
 
       // Datos principales
-      formData.append('name', property.name);
-      formData.append('address', property.address);
-      formData.append('price', property.price);
-      formData.append('codeInternal', property.codeInternal);
-      formData.append('year', property.year);
+      formData.append("name", item.name);
+      formData.append("address", item.address);
+      formData.append("price", item.price);
+      formData.append("codeInternal", item.codeInternal);
+      formData.append("year", item.year);
 
       // Datos del propietario
-      Object.entries(property.owner).forEach(([key, value]) => {
-        if (key !== 'photoFile' && key !== 'photoPreview') {
+      Object.entries(item.owner).forEach(([key, value]) => {
+        if (key !== "photoFile" && key !== "photoPreview") {
           formData.append(`owner[${key}]`, value);
         }
       });
 
       // Imagen del propietario
-      if (property.owner.photoFile) {
-        formData.append('ownerPhoto', property.owner.photoFile);
+      if (item.owner.photoFile) {
+        formData.append("ownerPhoto", item.owner.photoFile);
       }
 
       // Imagen del inmueble
-      if (property.imageFile) {
-        formData.append('image', property.imageFile);
+      if (item.imageFile) {
+        formData.append("image", item.imageFile);
       }
 
       // Datos de venta
-      Object.entries(property.traces[0]).forEach(([key, value]) => {
+      Object.entries(item.traces[0]).forEach(([key, value]) => {
         formData.append(`traces[0][${key}]`, value);
       });
 
-      await api.post('/api/property', formData, {
-        headers: { 'Content-Type': 'multipart/form-data' },
+      await api.post("/api/property", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
       });
 
-      navigate('/home');
+      navigate("/home");
     } catch (error) {
-      console.error('Error creating property:', error.response?.data || error.message);
+      console.error("Error creating property:", error.response?.data || error.message);
     }
   };
 
+  if (loading) {
+    return (
+      <div className="property-loader">
+        <div className="spinner"></div>
+        <p>Cargando propiedad...</p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return <p style={{ textAlign: "center", color: "red" }}>Error al cargar la propiedad</p>;
+  }
+
   return (
-    <div className="newproperty-container">
-      <form className="newproperty-card" onSubmit={handleSubmit}>
-        <h1 className="newproperty-title">Registrar nueva propiedad</h1>
+    <div className="crudproperty-container">
+      <form className="crudproperty-card" onSubmit={handleSubmit}>
+        <h1 className="crudproperty-title">
+          {propertyId ? "Editar Propiedad" : "Registrar nueva propiedad"}
+        </h1>
 
         {/* Sección: Datos generales */}
         <div className="form-section">
@@ -133,8 +138,7 @@ export const NewProperty = () => {
               <input
                 type="text"
                 name="name"
-                placeholder="Loft en Chapinero"
-                value={property.name}
+                value={item.name}
                 onChange={handleChange}
                 required
               />
@@ -144,8 +148,7 @@ export const NewProperty = () => {
               <input
                 type="text"
                 name="address"
-                placeholder="Calle 60 #9-30, Bogotá"
-                value={property.address}
+                value={item.address}
                 onChange={handleChange}
                 required
               />
@@ -155,8 +158,7 @@ export const NewProperty = () => {
               <input
                 type="number"
                 name="price"
-                placeholder="1150000000"
-                value={property.price}
+                value={item.price}
                 onChange={handleChange}
                 required
               />
@@ -166,8 +168,7 @@ export const NewProperty = () => {
               <input
                 type="number"
                 name="codeInternal"
-                placeholder="21"
-                value={property.codeInternal}
+                value={item.codeInternal}
                 onChange={handleChange}
               />
             </div>
@@ -176,8 +177,7 @@ export const NewProperty = () => {
               <input
                 type="number"
                 name="year"
-                placeholder="2024"
-                value={property.year}
+                value={item.year}
                 onChange={handleChange}
               />
             </div>
@@ -193,9 +193,8 @@ export const NewProperty = () => {
               <input
                 type="text"
                 name="name"
-                placeholder="Daniel Rincón"
-                value={property.owner.name}
-                onChange={(e) => handleChange(e, 'owner')}
+                value={item.owner.name}
+                onChange={(e) => handleChange(e, "owner")}
               />
             </div>
             <div className="input-group">
@@ -203,9 +202,8 @@ export const NewProperty = () => {
               <input
                 type="text"
                 name="address"
-                placeholder="Carrera 10, Bogotá"
-                value={property.owner.address}
-                onChange={(e) => handleChange(e, 'owner')}
+                value={item.owner.address}
+                onChange={(e) => handleChange(e, "owner")}
               />
             </div>
 
@@ -214,17 +212,21 @@ export const NewProperty = () => {
               <input
                 type="date"
                 name="birthday"
-                value={property.owner.birthday}
-                onChange={(e) => handleChange(e, 'owner')}
+                value={item.owner.birthday}
+                onChange={(e) => handleChange(e, "owner")}
               />
             </div>
 
             <div className="input-group">
               <label>Foto del propietario</label>
               <input type="file" accept="image/*" onChange={handleOwnerImageChange} />
-              {property.owner.photoPreview && (
+              {item.owner.photoPreview && (
                 <div className="image-preview">
-                  <img className='owner-photo' src={property.owner.photoPreview} alt="Foto del propietario" />
+                  <img
+                    className="owner-photo"
+                    src={item.owner.photoPreview}
+                    alt="Foto del propietario"
+                  />
                 </div>
               )}
             </div>
@@ -238,9 +240,13 @@ export const NewProperty = () => {
             <div className="input-group">
               <label>Subir imagen</label>
               <input type="file" accept="image/*" onChange={handleImageChange} />
-              {property.imagePreview && (
+              {item.imagePreview && (
                 <div className="image-preview">
-                  <img className='property-image' src={property.imagePreview} alt="Vista previa del inmueble" />
+                  <img
+                    className="property-image"
+                    src={item.imagePreview}
+                    alt="Vista previa del inmueble"
+                  />
                 </div>
               )}
             </div>
@@ -256,8 +262,8 @@ export const NewProperty = () => {
               <input
                 type="date"
                 name="dateSale"
-                value={property.traces[0].dateSale}
-                onChange={(e) => handleChange(e, 'traces')}
+                value={item.traces[0].dateSale}
+                onChange={(e) => handleChange(e, "traces")}
               />
             </div>
             <div className="input-group">
@@ -265,9 +271,8 @@ export const NewProperty = () => {
               <input
                 type="text"
                 name="name"
-                placeholder="Compra Inicial"
-                value={property.traces[0].name}
-                onChange={(e) => handleChange(e, 'traces')}
+                value={item.traces[0].name}
+                onChange={(e) => handleChange(e, "traces")}
               />
             </div>
             <div className="input-group">
@@ -275,9 +280,8 @@ export const NewProperty = () => {
               <input
                 type="number"
                 name="value"
-                placeholder="1150000000"
-                value={property.traces[0].value}
-                onChange={(e) => handleChange(e, 'traces')}
+                value={item.traces[0].value}
+                onChange={(e) => handleChange(e, "traces")}
               />
             </div>
             <div className="input-group">
@@ -285,21 +289,20 @@ export const NewProperty = () => {
               <input
                 type="number"
                 name="tax"
-                placeholder="23000000"
-                value={property.traces[0].tax}
-                onChange={(e) => handleChange(e, 'traces')}
+                value={item.traces[0].tax}
+                onChange={(e) => handleChange(e, "traces")}
               />
             </div>
           </div>
         </div>
 
-        <button type="submit" className="newproperty-btn primary">
-          Crear Propiedad
+        <button type="submit" className="crudproperty-btn primary">
+          {propertyId ? "Actualizar Propiedad" : "Crear Propiedad"}
         </button>
         <button
           type="button"
-          className="newproperty-btn secondary"
-          onClick={() => navigate('/home')}
+          className="crudproperty-btn secondary"
+          onClick={() => navigate("/home")}
         >
           Cancelar
         </button>

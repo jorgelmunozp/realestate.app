@@ -1,7 +1,7 @@
 import { Routes, Route } from "react-router-dom";
 import { AppMenu } from '../components/AppMenu.js';
 import { Home } from '../pages/Home.js';
-import { NewProperty } from "../pages/crud/NewProperty.js";
+import { CrudProperty } from "../pages/crud/CrudProperty.js";
 
 const urlBaseFrontend = process.env.REACT_APP_FRONTEND_URL;
 
@@ -11,9 +11,12 @@ export const DashboardRoutes = () => {
       <div>
         
         <Routes>
-            <Route path={"/home"} element={<Home />} />
-            <Route path={"/new-property"} element={<NewProperty />} />
             <Route path={"/"} element={<Home />} />
+            <Route path={"/home"} element={<Home />} />
+            <Route path="/crud-property">
+              <Route index element={<CrudProperty />} />
+              <Route path=":propertyId" element={<CrudProperty />} />
+            </Route>
             <Route path={"*"} element={<Home />} />
         </Routes>
       </div>
