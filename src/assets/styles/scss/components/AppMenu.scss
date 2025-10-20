@@ -1,4 +1,5 @@
 @import '../mixins/colors';
+@import '../mixins/fonts';
 @import '../mixins/screen';
 
 /* === Botón hamburguesa === */
@@ -9,11 +10,25 @@
   top: 50px;
   left: 25px;
   z-index: 1000;
+
+  @include screen-md {
+    top: 35px;
+    left: 20px;
+    width: 26px;
+    height: 20px;
+  }
+
+  @include screen-sm {
+    top: 25px;
+    left: 15px;
+    width: 22px;
+    height: 18px;
+  }
 }
 
-/* barras del icono hamburguesa */
+/* Barras del icono hamburguesa */
 .bm-burger-bars {
-  background: $white-color; 
+  background: $white-color;
   border-radius: 2px;
 }
 
@@ -23,12 +38,32 @@
 
 /* Botón cerrar */
 .bm-cross-button {
-  height: 28px;
-  width: 28px;
+  height: 28px !important;
+  width: 28px !important;
+  right: 24px!important;
+
+  @include screen-md {
+    height: 24px !important;
+    width: 24px !important;
+  }
+
+  @include screen-sm {
+    height: 26px !important;
+    width: 26px !important;
+  }
 }
 
 .bm-cross {
   background: $blue-color;
+}
+
+/* === Menú === */
+.bm-menu-wrap {
+  width: 40vw !important;
+
+  @include screen-md { 
+    width: 60vw !important;
+  }
 }
 
 /* Fondo del menú */
@@ -39,9 +74,20 @@
   box-shadow: 4px 0 20px rgba(0,0,0,0.15);
   border-top-right-radius: 16px;
   border-bottom-right-radius: 16px;
+
+  @include screen-md {
+    padding: 1.5rem 1rem;
+    font-size: 0.95rem;
+  }
+
+  @include screen-sm {
+    padding: 1rem 0.8rem;
+    font-size: 0.9rem;
+    border-radius: 0;
+  }
 }
 
-/* overlay del fondo oscuro */
+/* Overlay del fondo oscuro */
 .bm-overlay {
   background: rgba(0, 0, 0, 0.5);
 }
@@ -56,13 +102,29 @@
     color: $blue-color;
     font-weight: 600;
     font-size: 1.4rem;
+
+    @include screen-md {
+      font-size: 1.2rem;
+    }
+
+    @include screen-sm {
+      font-size: 1rem;
+    }
   }
 }
 
 /* Línea horizontal */
 .bm-hr {
   border: 1px solid $blue-color;
-  margin: 0.5rem 0 1rem;
+  margin: 0.5rem 0.25rem;
+
+  @include screen-md {
+    margin: 1rem 0.325rem;
+  }
+
+  @include screen-sm {
+    margin: 1.5rem 0.5rem; 
+  }
 }
 
 /* Items del menú */
@@ -75,7 +137,7 @@
   text-decoration: none;
   font-family: 'Poppins', sans-serif;
   font-weight: 500;
-  font-size: 1rem;
+  font-size: 1.5rem;
   border-radius: 8px;
   transition: all 0.3s ease;
 
@@ -83,5 +145,48 @@
     color: #fff;
     background-color: $blue-color;
     transform: translateX(5px);
+  }
+
+  @include screen-md {
+    gap: 10px;
+    font-size: 1.325rem;
+    padding: 12px 0;
+  }
+
+  @include screen-sm {
+    gap: 8px;
+    font-size: 1.25rem;
+    padding: 10px 0;
+  }
+}
+
+/* === Orientaciones específicas === */
+@include mobileLandscape {
+  .bm-menu-wrap {
+    width: 50vw !important;
+  }
+
+  .bm-menu {
+    padding: 0.8rem;
+    font-size: 0.85rem;
+  }
+
+  .menu-header h2 {
+    font-size: 0.95rem;
+  }
+
+  .bm-burger-button {
+    top: 15px;
+    left: 10px;
+  }
+}
+
+@include mobilePortrait {
+  .bm-menu-wrap {
+    width: 80vw !important;
+  }
+
+  .bm-menu {
+    padding: 1rem;
   }
 }

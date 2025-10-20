@@ -15,20 +15,20 @@ export const AppMenu = () => {
         dispatch({ type: types.logout });
         navigate("/", { replace: true });
     }
-console.log("user: ", user.logged)
-  return (
+
+    return (
     <Menu left>
       <hr className='bm-hr' />
-      <a className="menu-item" href="/home">
+      <a className="menu-item" href={user.logged ? "/home":"/index"}>
         <FiHome color={primaryColor} /> Inmuebles
       </a>
-      <a className="menu-item" href="/about-us">
+      <a className="menu-item" href={user.logged ? "/crud-property":"/about-us"}>
         { user.logged ? (<><FiUpload color={primaryColor} /> Subir inmueble</>) : (<><FiUser color={primaryColor} /> Nosotros</>) }
       </a>
-      <a className="menu-item" href="/contact">
+      <a className="menu-item" href={user.logged ? "/crud-property":"/contact"}>
         { user.logged ? (<><FiUpload color={primaryColor} /> Cerrar sesión</>) : (<><FiPhone color={primaryColor} /> Contacto</>) }
       </a>
-      <a className="menu-item" href="/login" onClick={handleLogout}>
+      <a className="menu-item" href={user.logged ? "/index":"/login"} onClick={handleLogout}>
         { user.logged ? (<><FiLogOut color={primaryColor} /> Cerrar sesión</>) : (<><FiLogOut color={primaryColor} /> Ingresar</>) }
       </a>
     </Menu>

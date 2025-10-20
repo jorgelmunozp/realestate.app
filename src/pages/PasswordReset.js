@@ -1,8 +1,10 @@
 import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import { api } from '../services/api';
+import { Title } from '../components/Title';
 import { FiLock } from "react-icons/fi";
 import Swal from 'sweetalert2';
-import { api } from '../services/api';
+
 import '../assets/styles/scss/pages/PasswordReset.scss';
 
 export const PasswordReset = () => {
@@ -41,8 +43,7 @@ export const PasswordReset = () => {
   return (
     <div className="reset-container">
       <div className="reset-card">
-        <h1 className="reset-title">Crear Nueva Contraseña</h1>
-
+        <Title title="Crear Nueva Contraseña" />
         <div className="reset-input-group">
           <FiLock className="reset-icon" />
           <input

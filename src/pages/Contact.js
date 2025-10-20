@@ -42,7 +42,7 @@ export const Contact = () => {
   ];
 
   return (
-    <div className="contact-page">
+    <div className="contact-container">
       <Title title="Nuestro Equipo" />
       <p className="contact-subtitle">
         Conoce al equipo detrás de <strong>Real Estate</strong>, siempre listos para ayudarte a encontrar tu nuevo hogar.

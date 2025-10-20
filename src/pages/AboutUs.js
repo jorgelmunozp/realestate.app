@@ -40,8 +40,7 @@ export const AboutUs = () => {
     <div className="aboutUs-container">
       <div className="aboutUs-form home-content">
         <Title title="Nosotros" />
-
-        {/* Slider profesional */}
+        {/* Slider */}
         <div className="aboutUs-slider">
           {sliderImages.map((img, idx) => (
             <img

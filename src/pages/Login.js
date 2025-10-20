@@ -2,9 +2,10 @@ import { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../auth/authContext.js';
 import { types } from '../types/types.js';
+import { api } from '../services/api';
+import { Title } from '../components/Title';
 import { PiUserCircleFill } from "react-icons/pi";
 import { FiLock } from "react-icons/fi";
-import { api } from '../services/api';
 import Swal from 'sweetalert2';
 import '../assets/styles/scss/pages/Login.scss';
 
@@ -44,8 +45,7 @@ export const Login = () => {
   return (
     <div className="login-container">
       <div className="login-card">
-        <h1 className="login-title">Iniciar Sesión</h1>
-
+        <Title title="Iniciar Sesión" />
         <div className="login-input-group">
           <PiUserCircleFill className="login-icon" />
           <input

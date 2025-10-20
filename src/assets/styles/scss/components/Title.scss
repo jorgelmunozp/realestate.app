@@ -1,5 +1,6 @@
 @import '../mixins/colors';
 @import '../mixins/fonts';
+@import '../mixins/screen';
 
 .title {
     text-align: center;
@@ -8,7 +9,61 @@
 
     h1 {
         font-family: $primary-font;
-        font-weight: 300;
+        color: $blue-color;
+        font-weight: 600;
         margin: 0;
+        font-size: 2rem;
+
+        /* Ajuste para tablets */
+        @include screen-md {
+            font-size: 2.2rem !important;
+        }
+
+        @include tablet {
+            font-size: 2rem !important;
+        }
+
+        /* Ajuste para móviles */
+        @include screen-sm {
+            font-size: 1.8rem !important;
+        }
+
+        @include mobile {
+            font-size: 1.6rem !important;
+        }
+
+        @include mobilePortrait {
+            font-size: 1.6rem !important;
+        }
+
+        @include mobileLandscape {
+            font-size: 1.6rem !important;
+        }
+    }
+
+    /* Ajuste de padding para pantallas más pequeñas */
+    @include screen-md {
+        padding-top: 15px;
+        padding-bottom: 25px;
+    }
+
+    @include screen-sm {
+        padding-top: 10px;
+        padding-bottom: 20px;
+    }
+
+    @include mobile {
+        padding-top: 8px;
+        padding-bottom: 18px;
+    }
+
+    @include mobilePortrait {
+        padding-top: 6px;
+        padding-bottom: 15px;
+    }
+
+    @include mobileLandscape {
+        padding-top: 7px;
+        padding-bottom: 16px;
     }
 }

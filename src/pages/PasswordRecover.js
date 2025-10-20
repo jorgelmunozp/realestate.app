@@ -1,8 +1,10 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { api } from '../services/api';
+import { Title } from '../components/Title';
 import { FiAtSign } from "react-icons/fi";
 import Swal from 'sweetalert2';
-import { api } from '../services/api';
+
 import '../assets/styles/scss/pages/PasswordRecover.scss';
 
 export const PasswordRecover = () => {
@@ -36,8 +38,7 @@ export const PasswordRecover = () => {
   return (
     <div className="recover-container">
       <div className="recover-card">
-        <h1 className="recover-title">Recuperar Contraseña</h1>
-
+        <Title title="Recuperar Contraseña" />
         <div className="recover-input-group">
           <FiAtSign className="recover-icon" />
           <input

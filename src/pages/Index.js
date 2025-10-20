@@ -3,7 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { api } from '../services/api';
 import { Title } from '../components/Title';
 import { Input } from '../components/Input';
-import { FiPlus, FiSearch } from "react-icons/fi";
+import { FiSearch } from "react-icons/fi";
+
 import '../assets/styles/scss/pages/Index.scss';
 
 export const Index = () => {
@@ -62,7 +63,7 @@ export const Index = () => {
     <div className="index-container">
       <div className="index-content">
         <div className="index-header">
-          <Title title="🏢 Inmuebles Disponibles" />
+          <Title title={"Inmuebles Disponibles"} />
         </div>
 
         <div className="index-search">

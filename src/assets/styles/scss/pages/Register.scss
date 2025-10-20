@@ -22,13 +22,6 @@
   text-align: center;
   color: #333;
 
-  .register-title {
-    font-family: $primary-font;
-    color: $blue-color;
-    font-size: 2rem;
-    margin-bottom: 1.5rem;
-  }
-
   .register-input-group {
     display: flex;
     align-items: center;
@@ -99,9 +92,5 @@
 @media (max-width: 480px) {
   .register-card {
     padding: 1.5rem;
-  }
-
-  .register-title {
-    font-size: 1.6rem;
   }
 }

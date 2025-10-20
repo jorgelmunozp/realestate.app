@@ -27,7 +27,7 @@ export const AppRouter = () => {
         <Route path="/register" element={<PublicRoute><Register /></PublicRoute>} />
         <Route path="/password-recover" element={<PublicRoute><PasswordRecover /></PublicRoute>} />
         <Route path="/password-reset/:token" element={<PublicRoute><PasswordReset /></PublicRoute>} />
-        <Route path="/about-us" element={<PublicRoute><AboutUs /></PublicRoute>} />
+        <Route path="/about-us/*" element={<PublicRoute><AboutUs /></PublicRoute>} />
         <Route path="/contact" element={<PublicRoute><Contact /></PublicRoute>} />
 
         {/* Rutas privadas */}

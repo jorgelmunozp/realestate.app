@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FiUser, FiAtSign, FiLock, FiSettings } from "react-icons/fi";
 import { api } from '../services/api';
+import { Title } from '../components/Title';
+import { FiUser, FiAtSign, FiLock, FiSettings } from "react-icons/fi";
 import Swal from 'sweetalert2';
 import '../assets/styles/scss/pages/Register.scss';
 
@@ -33,8 +34,7 @@ export const Register = () => {
   return (
     <div className="register-container">
       <div className="register-card">
-        <h1 className="register-title">Crear cuenta</h1>
-
+        <Title title="Crear cuenta" />
         <div className="register-input-group">
           <FiUser className="register-icon" />
           <input

@@ -22,13 +22,6 @@
   text-align: center;
   color: #333;
 
-  .login-title {
-    font-family: $primary-font;
-    color: $blue-color;
-    font-size: 2rem;
-    margin-bottom: 1.5rem;
-  }
-
   .login-input-group {
     display: flex;
     align-items: center;
@@ -114,9 +107,5 @@
 @media (max-width: 480px) {
   .login-card {
     padding: 1.5rem;
-  }
-
-  .login-title {
-    font-size: 1.6rem;
   }
 }
