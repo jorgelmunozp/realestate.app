@@ -1,12 +1,4 @@
 // import logo from './logo.svg';
-
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import { Login } from './pages/Login';
-import { Register } from './pages/Register';
-import { Home } from './pages/Home';
-import { PasswordRecover } from './pages/PasswordRecover';
-import { Header } from './components/Header';
-
 import { useEffect, useReducer } from 'react';
 import { AuthContext } from './auth/authContext.js';
 import { authReducer } from './auth/authReducer.js';

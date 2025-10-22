@@ -7,8 +7,7 @@ export const useFetch = (apiUrl) => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    // No se ejecuta si la URL no está definida
-    if (!apiUrl) return;
+    if (!apiUrl) return;     // No se ejecuta si la URL no está definida
 
     const fetchData = async () => {
       setLoading(true);

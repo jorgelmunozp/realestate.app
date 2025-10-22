@@ -1,6 +1,6 @@
 import { Routes, Route } from "react-router-dom";
-import { Home } from '../pages/Home.js';
-import { CrudProperty } from "../pages/crud/CrudProperty.js";
+import { Home } from '../modules/Home.js';
+import { CrudProperty } from "../modules/properties/CrudProperty.js";
 
 const urlBaseFrontend = process.env.REACT_APP_FRONTEND_URL;
 

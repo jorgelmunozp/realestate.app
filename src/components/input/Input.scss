@@ -1,0 +1,26 @@
+@import '../../assets/styles/scss/mixins/colors';
+
+.input-with-icon {
+  position: relative;
+  display: flex;
+  align-items: center;
+
+  .input-icon {
+    position: absolute;
+    left: 10px;
+    font-size: 1.5rem;
+    color: $black-color
+  }
+
+  input {
+    // padding-left: 50px; // Espacio para el icono
+    padding-top: 10px;
+    padding-bottom: 10px;
+    height: 40px;
+    width: 100%;
+    font-size: 24px;
+    text-align: center;
+    border-radius: 8px;
+  }
+
+}
