@@ -21,6 +21,7 @@ export const Index = () => {
   useEffect(() => {
     const fetchItems = async () => {
       try {
+        // Interceptor para agregar token
         api.interceptors.request.use(
           (config) => {
             const token = sessionStorage.getItem('token');
@@ -31,6 +32,8 @@ export const Index = () => {
         );
 
         const response = await api.get(`/api/property?page=${pagination.page}&limit=${pagination.limit}`);
+        console.log("response: ", response.data);
+
         setProperties(response.data.data || []);
         setPagination(response.data.meta || pagination);
 
@@ -41,7 +44,7 @@ export const Index = () => {
     };
 
     fetchItems();
-  }, [pagination, navigate]);
+  }, [pagination.page, pagination.limit]); // SOLO estas propiedades
 
   const handleOpenProperty = (propertyId) => {
     navigate(`/api/property/${propertyId}`);
@@ -79,7 +82,7 @@ export const Index = () => {
         <div className="index-grid">
           {properties
             .filter(property => property.name.toLowerCase().includes(queryPropertyName.toLowerCase()))
-            .map((property, index) => {console.log(property.image); return(
+            .map((property, index) => (
               <div key={`property${index}`} className="index-property-card" onClick={() => handleOpenProperty(property.Id)}>
                 <img className="index-property-card-img" src={`data:image/jpg;base64,${property.image?.file}`} alt={`property${index}`} />
                 <div className="index-property-card-info">
@@ -88,7 +91,7 @@ export const Index = () => {
                   <p className="price">${property.price.toLocaleString()}</p>
                 </div>
               </div>
-            )})}
+            ))}
         </div>
 
         <div className="index-pagination">

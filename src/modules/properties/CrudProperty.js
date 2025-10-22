@@ -5,6 +5,7 @@ import propertyDto from "../property/dto/PropertyDto.json";
 import ownerDto from "../owner/dto/OwnerDto.json";
 import propertyImageDto from "../propertyImage/dto/PropertyImageDto.json";
 import propertyTraceDto from "../propertyTrace/dto/PropertyTraceDto.json";
+import Swal from 'sweetalert2';
 import "../../assets/styles/scss/modules/crud/CrudProperty.scss";
 
 export const CrudProperty = () => {
@@ -104,7 +105,7 @@ export const CrudProperty = () => {
       const base64 = await toBase64(file);
       const preview = URL.createObjectURL(file);
       setPropertyImage((prev) => ({
-        ...prev,
+        ...prev[0],
         File: base64,
         Enabled: true,
         imagePreview: preview,
@@ -121,7 +122,7 @@ export const CrudProperty = () => {
       setOwner((prev) => ({
         ...prev,
         Photo: base64,
-        // ownerPhotoPreview: preview,
+        ownerPhotoPreview: preview,
       }));
     }
   };
@@ -137,18 +138,63 @@ export const CrudProperty = () => {
       const payloadProperty = { ...itemProperty, IdOwner:responseOwner.data.id };
       const responseProperty = await api.post("/api/property", payloadProperty);
      
-      const payloadPropertyImage = { ...itemPropertyImage, Enabled:true, IdProperty:responseProperty.data.id };
-      const payloadPropertyTrace = { ...itemPropertyTrace, IdProperty:responseProperty.data.id };
+      const payloadPropertyImage = { ...itemPropertyImage, IdProperty:responseProperty.data.id };
       
+      itemPropertyTrace[0].Value = Number(itemPropertyTrace[0].Value);
+      itemPropertyTrace[0].Tax = Number(itemPropertyTrace[0].Tax);
+      itemPropertyTrace[0].IdProperty = responseProperty.data.id;
+      const payloadPropertyTrace = [ ...itemPropertyTrace];
+ 
+      let responsePropertyImage = null;
+      let responsePropertyTrace = null;
+
       if(responseProperty.data.id) {
-        await api.post("/api/propertyImage", payloadPropertyImage);
-        await api.post("/api/propertyTrace", payloadPropertyTrace);
+        responsePropertyImage = await api.post("/api/propertyImage", payloadPropertyImage);
+        responsePropertyTrace = await api.post("/api/propertyTrace", payloadPropertyTrace);
       }
 
+      if((200 <= responseOwner.status && responseOwner.status <= 299)
+        && (200 <= responseProperty.status && responseProperty.status <= 299)
+        && (200 <= responsePropertyImage.status && responsePropertyImage.status <= 299)
+        && (200 <= responsePropertyTrace.status && responsePropertyTrace.status <= 299)
+      ) {
+        Swal.fire({
+          title: "Propiedad Registrada",
+          icon: "success"
+        });
+      }
       navigate("/home");
-    } catch (err) {
-      console.error("Error creando/actualizando propiedad:", err.response?.data || err.message);
-    }
+    } catch (error) {
+        console.error('Error: ', error.response?.data?.errors);
+
+        const errors = error.response?.data?.errors;
+        let errorHtml = '';
+
+        if (errors) {
+          errorHtml = '<ul style="padding-left: 20px; text-align: justify; margin: 0;">';
+          for (const key in errors) {
+            if (errors[key] && errors[key].length > 0) {
+              for (const msg of errors[key]) {
+                errorHtml += `<li style="margin-bottom: 6px; color: #d33;">${msg}</li>`;
+              }
+            }
+          }
+          errorHtml += '</ul>';
+        } else {
+          errorHtml = '<span style="color: #d33;">Ocurrió un error inesperado</span>';
+        }
+
+        Swal.fire({
+          html: errorHtml,
+          icon: 'error',
+          confirmButtonText: 'Aceptar',
+          customClass: {
+            popup: 'home-swal-popup',  // usa tu estilo de popup
+            title: 'swal-title',       // puedes agregar clase propia si quieres estilizar el título
+            content: 'swal-content'    // opcional para el contenido
+          }
+        });
+      }
   };
 
   if (loading) {

@@ -7,29 +7,38 @@ import { FiPlus, FiSearch } from "react-icons/fi";
 import Swal from 'sweetalert2';
 import '../assets/styles/scss/modules/Home.scss';
 
-const handleDeleteProperty = (propertyId) => {
-    Swal.fire({
-      title: "Eliminar Propiedad",
-      text: "Estás seguro?",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Si, eliminar",
-      cancelButtonText: "Cancelar"
-    }).then(async (result) => {
-      if (result.isConfirmed) {
-        const response = await api.delete(`/api/property/${propertyId}`);
-        
-        if(200 <= response && response <= 299) {
-          Swal.fire({
-            title: "Propiedad Eliminada",
-            text: "La propiedad ha sido eliminada con éxito",
-            icon: "success"
-          });
-        }
+const handleDeleteProperty = async (propertyId, fetchItems) => {
+  const result = await Swal.fire({
+    title: "Eliminar Propiedad",
+    text: "Estás seguro?",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#3085d6",
+    cancelButtonColor: "#d33",
+    confirmButtonText: "Si, eliminar",
+    cancelButtonText: "Cancelar"
+  });
+
+  if (result.isConfirmed) {
+    try {
+      const response = await api.delete(`/api/property/${propertyId}`);
+      if (response.status >= 200 && response.status < 300) {
+        Swal.fire({
+          title: "Propiedad Eliminada",
+          text: "La propiedad ha sido eliminada con éxito",
+          icon: "success"
+        });
+        fetchItems(); // refrescar lista
       }
-    });
+    } catch (error) {
+      Swal.fire({
+        title: "Error",
+        text: "No se pudo eliminar la propiedad",
+        icon: "error"
+      });
+      console.error(error);
+    }
+  }
 };
 
 export const Home = () => {
@@ -45,41 +54,40 @@ export const Home = () => {
 
   const userId = sessionStorage.getItem('userId');
 
+  const fetchItems = async () => {
+    if (!userId) {
+      navigate('/index');
+      return;
+    }
+
+    try {
+      api.interceptors.request.use(
+        (config) => {
+          const token = sessionStorage.getItem('token');
+          if (token) config.headers.Authorization = `Bearer ${token}`;
+          return config;
+        },
+        (error) => Promise.reject(error)
+      );
+
+      const response = await api.get(`/api/property?page=${pagination.page}&limit=${pagination.limit}`);
+      setProperties(response.data.data || []);
+      setPagination(response.data.meta || pagination);
+
+    } catch (error) {
+      console.error('Error fetching data:', error.response?.data || error.message);
+      setProperties([]);
+    }
+  };
+
   useEffect(() => {
-    const fetchItems = async () => {
-      if (!userId) {
-        navigate('/index');
-        return;
-      }
-
-      try {
-        api.interceptors.request.use(
-          (config) => {
-            const token = sessionStorage.getItem('token');
-            if (token) config.headers.Authorization = `Bearer ${token}`;
-            return config;
-          },
-          (error) => Promise.reject(error)
-        );
-
-        const response = await api.get(`/api/property?page=${pagination.page}&limit=${pagination.limit}`);
-        setProperties(response.data.data || []);
-        setPagination(response.data.meta || pagination);
-
-      } catch (error) {
-        console.error('Error fetching data:', error.response?.data || error.message);
-        setProperties([]);
-      }
-    };
-
     fetchItems();
-  }, [pagination, navigate, userId]);
+  }, [pagination.page, pagination.limit]); // solo page y limit
 
   const handleUpdateProperty = (propertyId) => {
     navigate(`/crud-property/${propertyId}`);
   };
 
-  /** Pagination */
   const handleNextPage = () => {
     if (pagination.page < pagination.last_page) {
       setPagination(prev => ({ ...prev, page: prev.page + 1 }));
@@ -97,7 +105,7 @@ export const Home = () => {
       <div className="home-content">
         <div className="home-header">
           <Title title="Inmuebles" />
-          <button className="home-add-btn" onClick={()=>navigate('/crud-property')}><FiPlus /></button>
+          <button className="home-add-btn" onClick={() => navigate('/crud-property')}><FiPlus /></button>
         </div>
 
         <div className="home-search">
@@ -121,7 +129,7 @@ export const Home = () => {
                 </div>
                 <div className="home-property-card-buttons">
                   <button onClick={() => handleUpdateProperty(property.Id)}>✏️</button>
-                  <button onClick={() => handleDeleteProperty(property.Id)}>❌</button>
+                  <button onClick={() => handleDeleteProperty(property.Id, fetchItems)}>❌</button>
                 </div>
               </div>
             ))}

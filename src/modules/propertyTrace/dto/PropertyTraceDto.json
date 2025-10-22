@@ -2,8 +2,8 @@
   {
     "DateSale": "",
     "Name": "",
-    "Value": "",
-    "Tax": "",
+    "Value": 0,
+    "Tax": 0,
     "IdProperty":""
   }
 ]
