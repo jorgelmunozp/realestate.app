@@ -60,11 +60,11 @@ export const Property = () => {
           <p className="property-address">📍 {property.address}</p>
 
           <div className="property-price">
-            💰 {property.price?.toLocaleString("es-CO")} COP
+            💰 $ {property.price?.toLocaleString("es-CO")} COP
           </div>
 
           <div className="property-details">
-            <p><strong>ID Propiedad:</strong> {property.Id}</p>
+            <p><strong>ID Propiedad:</strong> {property.idProperty}</p>
             <p><strong>Código interno:</strong> {property.codeInternal}</p>
             <p><strong>Año construcción:</strong> {property.year}</p>
           </div>
@@ -106,8 +106,8 @@ export const Property = () => {
                   <p><strong>ID Venta:</strong> {trace.idPropertyTrace}</p>
                   <p><strong>Fecha:</strong> {trace.dateSale}</p>
                   <p><strong>Nombre:</strong> {trace.name}</p>
-                  <p><strong>Valor:</strong> {trace.value?.toLocaleString("es-CO")} COP</p>
-                  <p><strong>Impuesto:</strong> {trace.tax?.toLocaleString("es-CO")} COP</p>
+                  <p><strong>Valor:</strong> $ {trace.value?.toLocaleString("es-CO")} COP</p>
+                  <p><strong>Impuesto:</strong> $ {trace.tax?.toLocaleString("es-CO")} COP</p>
                 </div>
               ))
             ) : (

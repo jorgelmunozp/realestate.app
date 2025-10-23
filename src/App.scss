@@ -4,27 +4,5 @@
 @import './assets/styles/scss/mixins/colors';
 @import './assets/styles/scss/mixins/fonts';
 
-.swal2-actions {
-  width: 80% !important;
-}
-
-.swal2-confirm {
-  background-color: $blue-color !important;
-  font-family: $primary-font !important;
-  color: #fff !important;
-  border-radius: 8px !important;
-  padding: 0.7rem 1.5rem !important;
-  font-weight: bold !important;
-  border: none !important;
-  width: 100% !important;
-  transition: background 0.3s ease !important;
-
-  &:hover {
-    background-color: #1d4ed8 !important;
-  }
-}
-
-.swal2-cancel {
-  background-color: #e5e7eb !important;
-  color: #333 !important;
-}
+/* Swal2 styles */
+@import './assets/styles/scss/components/Alert.scss';

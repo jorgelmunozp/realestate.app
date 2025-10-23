@@ -1,107 +1,36 @@
-/* Popup general */
-.home-swal-popup {
-  background-color: #fff !important;
-  border-radius: 20px !important;
-  padding: 2rem 2.5rem !important;
-  color: #333 !important;
-  font-family: 'Poppins', sans-serif;
-  max-width: 420px !important;
-  width: 100% !important;
-  text-align: center;
-  border: 1px solid #e5e7eb !important;
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1) !important;
+@import '../mixins/colors';
+@import '../mixins/fonts';
+
+.swal2-html-container {
+  display: flex !important;
+  align-items: center;
+  justify-content: center !important;
 }
 
-/* Contenedor de inputs */
-.home-swal-popup .swal2-html-container {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-  margin-top: 0.5rem;
-  /* quitar align-items center para que los inputs llenen el ancho */
-  align-items: stretch;
+.swal2-actions {
+  width: 80% !important;
 }
 
-/* Labels */
-.home-swal-popup label {
-  display: block;
-  text-align: center;
-  font-weight: 500;
-  margin-bottom: 0.25rem;
-  color: $blue-color;
-  font-size: 0.95rem;
-}
-
-/* Inputs y textarea */
-.home-swal-popup input,
-.home-swal-popup textarea {
-  width: 100% !important;
-  box-sizing: border-box !important;
-  padding: 0.6rem 1rem !important;
-  border-radius: 12px !important;
-  border: 1px solid #d1d5db !important;
-  background-color: #f9fafb !important;
-  font-size: 1rem !important;
-  color: #333 !important;
-  outline: none !important;
-  transition: border 0.3s ease, box-shadow 0.3s ease;
-  margin-bottom: 0.75rem !important;
-
-  &:focus {
-    border-color: $blue-color !important;
-    box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2) !important;
-  }
-}
-
-/* Ajuste para textarea específico */
-.home-swal-popup textarea {
-  min-height: 100px !important;
-  resize: vertical !important;
-}
-
-/* Botón confirmar (azul) */
-.home-accept-btn {
+.swal2-confirm {
   background-color: $blue-color !important;
+  font-family: $primary-font !important;
   color: #fff !important;
+  border-radius: 8px !important;
+  padding: 0.7rem 1.5rem !important;
+  font-weight: bold !important;
   border: none !important;
-  border-radius: 12px !important;
-  padding: 0.9rem 1rem !important;
-  font-weight: 600 !important;
-  font-size: 1.05rem !important;
-  cursor: pointer !important;
-  transition: all 0.3s ease !important;
   width: 100% !important;
+  transition: background 0.3s ease !important;
 
   &:hover {
     background-color: #1d4ed8 !important;
   }
 }
 
-/* Botón cancelar (gris) */
-.home-swal-cancel {
+.swal2-cancel {
   background-color: #e5e7eb !important;
   color: #333 !important;
-  border: none !important;
-  border-radius: 12px !important;
-  padding: 0.9rem 1rem !important;
-  font-weight: 600 !important;
-  font-size: 1.05rem !important;
-  cursor: pointer !important;
-  width: 100% !important;
-  margin-top: 0.5rem !important;
-
-  &:hover {
-    background-color: #d1d5db !important;
-  }
 }
-
-/* Responsive */
-@media (max-width: 480px) {
-  .home-swal-popup {
-    padding: 1.5rem 1.8rem !important;
-  }
-}
-
 
 
 
