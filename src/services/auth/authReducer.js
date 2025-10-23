@@ -1,4 +1,4 @@
-import { types } from "../types/types.js";
+import { types } from "../../types/types.js";
 
 export const authReducer = (state = {}, action) => {
     

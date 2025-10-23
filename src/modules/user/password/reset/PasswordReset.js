@@ -1,11 +1,11 @@
 import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { api } from '../services/api';
-import { Title } from '../components/title/Title';
+import { api } from '../../../../services/api/api';
+import { Title } from '../../../../components/title/Title';
 import { FiLock } from "react-icons/fi";
 import Swal from 'sweetalert2';
 
-import '../assets/styles/scss/modules/PasswordReset.scss';
+import './PasswordReset.scss';
 
 export const PasswordReset = () => {
   const navigate = useNavigate();

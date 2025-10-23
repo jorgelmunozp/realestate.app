@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
-import { api } from "../services/api";
+import { api } from "../services/api/api";
 
-export const useFetch = (apiUrl) => {
+export const useFetchGet = (apiUrl) => {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(Boolean(apiUrl));
   const [error, setError] = useState(null);
@@ -16,7 +16,7 @@ export const useFetch = (apiUrl) => {
         const response = await api.get(apiUrl);
         setData(response.data);
       } catch (err) {
-        console.error("Error en useFetch:", err);
+        console.error("Error en useFetchGet:", err);
         setError(err);
       } finally {
         setLoading(false);

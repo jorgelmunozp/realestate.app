@@ -1,8 +1,9 @@
 import { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { AuthContext } from '../../auth/authContext.js';
+import { AuthContext } from '../../services/auth/authContext.js';
 import { types } from '../../types/types.js';
 import { slide as Menu } from "react-burger-menu";
+import { Header } from '../header/Header.js';
 import { FiHome, FiUser, FiPhone, FiLogOut, FiUpload, FiActivity } from "react-icons/fi";
 import { primaryColor } from '../../global.js';
 import "./AppMenu.scss";
@@ -18,6 +19,7 @@ export const AppMenu = () => {
 
     return (
     <Menu left>
+      <Header />
       <hr className='bm-hr' />
       <a className="menu-item" href={user.logged ? "/home":"/index"}>
         <FiHome color={primaryColor} /> Inmuebles

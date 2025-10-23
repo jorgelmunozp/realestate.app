@@ -4,20 +4,20 @@ import { Header } from "../components/header/Header.js";
 import { PublicRoute } from "./PublicRoute.js";
 import { PrivateRoute } from "./PrivateRoute.js";
 import { DashboardRoutes } from "./DashboardRoutes.js";
-import { Index } from "../modules/Index.js";
-import { Property } from "../modules/properties/Property.js";
+import { Index } from "../modules/core/index/Index.js";
+import { Property } from "../modules/property/Property.js";
 import { Login } from '../modules/auth/login/Login.js';
 import { Register } from '../modules/auth/register/Register.js';
-import { PasswordRecover } from '../modules/PasswordRecover.js';
-import { PasswordReset } from '../modules/PasswordReset.js';
+import { PasswordRecover } from '../modules/user/password/recover/PasswordRecover.js';
+import { PasswordReset } from '../modules/user/password/reset/PasswordReset.js';
 import { AboutUs } from '../modules/core/aboutus/AboutUs.js';
 import { Contact } from '../modules/core/contact/Contact.js';
 
 export const AppRouter = () => {
   return (
     <Router>
-      <Header />
       <AppMenu />
+      <Header />
       <Routes>
         {/* Rutas públicas */}
         <Route path="*" element={<PublicRoute><Index /></PublicRoute>} />

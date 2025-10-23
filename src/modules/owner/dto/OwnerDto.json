@@ -1,9 +1,8 @@
-[
-  {
+{
 
-    "Name": "",
-    "Address": "",
-    "Photo": "",
-    "Birthday": ""
-  }
-]
+  "IdOwner": "",
+  "Name": "",
+  "Address": "",
+  "Photo": "",
+  "Birthday": ""
+}

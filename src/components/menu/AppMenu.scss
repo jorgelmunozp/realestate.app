@@ -7,13 +7,13 @@
   position: absolute;
   width: 30px;
   height: 24px;
-  top: 30px;
+  top: 45px;
   right: 25px;
   filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
   z-index: 1000;
 
   @include screen-md {
-    top: 35px;
+    top: 40px;
     right: 20px;
     width: 26px !important;
     height: 20px !important;
@@ -21,9 +21,13 @@
 
   @include screen-sm {
     top: 20px;
-    right: 15px;
+    right: 12.5px !important;
     width: 22px !important;
     height: 18px !important;
+  }
+  
+  @include mobileLandscape { 
+    top: 22.5px !important;
   }
 }
 
@@ -58,7 +62,7 @@
   background: $blue-color;
 }
 
-/* === Menú === */
+/* ====== Menú ====== */
 .bm-menu-wrap {
   width: 40vw !important;
 
@@ -117,7 +121,7 @@
 /* Línea horizontal */
 .bm-hr {
   border: 1px solid $blue-color;
-  margin: 0.5rem 0.25rem;
+  margin: 1rem 0.25rem;
 
   @include screen-md {
     margin: 1rem 0.325rem;
@@ -130,11 +134,11 @@
 
 /* Items del menú */
 .menu-item {
-  display: flex;
+  display: flex !important;
   align-items: center;
-  gap: 12px;
+  gap: 16px;
   color: $black-color;
-  padding: 14px 0;
+  padding: 18px 0;
   text-decoration: none;
   font-family: 'Poppins', sans-serif;
   font-weight: 500;

@@ -1,5 +1,5 @@
-@import '../../mixins/colors';
-@import '../../mixins/screen';
+@import '../../assets/styles/scss/mixins/colors';
+@import '../../assets/styles/scss/mixins/screen';
 
 .property-container {
   display: flex;
@@ -157,14 +157,24 @@
 }
 
 /* Loader */
-.property-loader {
+.container-loader {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 100vh;
+  vertical-align: middle;
   color: #555;
   font-size: 1.2rem;
+
+  // Para loader de pantalla completa
+  &.full-screen {
+    height: 100vh;
+  }
+
+  // Para loader dentro de grilla o contenedores pequeños
+  &.inline {
+    height: 100%;
+  }
 
   .spinner {
     border: 4px solid #e0e0e0;

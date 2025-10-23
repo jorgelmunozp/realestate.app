@@ -1,8 +1,8 @@
 import { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { AuthContext } from '../../../auth/authContext.js';
+import { AuthContext } from '../../../services/auth/authContext.js';
 import { types } from '../../../types/types.js';
-import { api } from '../../../services/api.js';
+import { api } from '../../../services/api/api.js';
 import { Title } from '../../../components/title/Title.js';
 import { PiUserCircleFill } from "react-icons/pi";
 import { FiLock } from "react-icons/fi";

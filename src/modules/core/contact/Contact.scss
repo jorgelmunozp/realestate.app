@@ -10,6 +10,9 @@
   align-items: center;
   animation: fadeIn 0.5s ease-in-out;
 
+  @include screen-md { padding: 4rem 1.5em; }
+  @include screen-sm { padding: 4rem 1em; }
+
   h2 {
     color: $blue-color;
     font-family: 'Poppins', sans-serif;

@@ -99,7 +99,9 @@
   /* Contenido principal */
   .aboutUs-content {
     font-size: 1rem;
-    text-align: center;
+    text-align: justify;
+    text-align-last: center;
+
 
     @include desktop { font-size: 1.2rem; }
     @include screen-md { font-size: 1.1rem; }

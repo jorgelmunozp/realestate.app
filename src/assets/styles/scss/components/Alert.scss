@@ -101,3 +101,44 @@
     padding: 1.5rem 1.8rem !important;
   }
 }
+
+
+
+
+
+
+
+.custom-swal-popup {
+  background-color: #fff !important;
+  border-radius: 12px !important;
+  padding: 2rem !important;
+  color: #333 !important;
+}
+
+.custom-swal-confirm-btn {
+  background-color: red !important; // 💙 Azul primario
+  color: #fff !important;
+  border-radius: 8px !important;
+  padding: 0.7rem 1.5rem !important;
+  font-weight: bold !important;
+  border: none !important;
+  transition: background 0.3s ease !important;
+
+  &:hover {
+    background-color: darken(#2563eb, 10%) !important;
+  }
+}
+
+.custom-swal-cancel-btn {
+  background-color: #e5e7eb !important; // ⚪ Gris claro
+  color: #333 !important;
+  border-radius: 8px !important;
+  padding: 0.7rem 1.5rem !important;
+  font-weight: bold !important;
+  border: none !important;
+  transition: background 0.3s ease !important;
+
+  &:hover {
+    background-color: #d1d5db !important;
+  }
+}

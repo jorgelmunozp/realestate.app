@@ -1,8 +1,8 @@
-@import '../mixins/colors';
-@import '../mixins/screen';
-@import '../mixins/fonts';
+@import '../../../assets/styles/scss/mixins/colors';
+@import '../../../assets/styles/scss/mixins/screen';
+@import '../../../assets/styles/scss/mixins/fonts';
 
-.home-container {
+.index-container {
   display: flex;
   justify-content: center;
   align-items: start;
@@ -10,10 +10,11 @@
   background: #f6f8fb;
   padding: 2rem 2rem;
 
-  @include screen-sm { padding: 2rem 1rem; }
+  @include screen-sm { padding: 2rem 0.5rem; }
+
 }
 
-.home-content {
+.index-content {
   width: 100%;
   max-width: 1200px;
   background-color: #fff;
@@ -26,9 +27,9 @@
   @include screen-sm { padding: 1.5rem 0.5rem; }
 }
 
-.home-header {
+.index-header {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   margin-bottom: 2rem;
 
@@ -38,7 +39,7 @@
     font-size: 2.2rem;
   }
 
-  .home-add-btn {
+  .index-add-btn {
     background-color: $blue-color;
     color: #fff;
     border: none;
@@ -47,21 +48,15 @@
     padding: 0.5rem 0.8rem;
     cursor: pointer;
     transition: all 0.3s ease;
-    font-size: 2rem;
-    padding: 0.5rem 0.8rem;
-
-    @include desktop { font-size: 2rem; }
-    @include screen-md { font-size: 1.5rem; }
-    @include screen-sm { font-size: 1rem; }
 
     &:hover {
       background-color: #1d4ed8;
-      transform: translateY(-10px);
+      transform: rotate(90deg);
     }
   }
 }
 
-.home-search {
+.index-search {
   margin-bottom: 2rem;
   text-align: center;
 
@@ -81,79 +76,57 @@
   }
 }
 
-.home-grid {
-  display: inline-block;
-  width: 100%;
+.index-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 2rem;
 }
 
-.home-property-card {
-  display: flex;
-  flex-wrap: nowrap;
+.index-property-card {
   background-color: #fff;
-  border-radius: 2px;
+  border-radius: 16px;
   overflow: hidden;
+  cursor: pointer;
   transition: all 0.3s ease;
   border: 1px solid #e5e7eb;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
 
   &:hover {
-    transform: translateY(-5px);
+    transform: translateY(-8px);
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
   }
 
-  .home-property-card-img {
-    width: 5vw;
-    height: 5vh;
+  .index-property-card-img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
   }
 
-  .home-property-card-info {
-    display: flex;
-    flex-direction: row;
-    min-width: 0;         /* permite el truncado dentro del flex container */
-    padding: 0.25rem 1rem;
-    
-    @include screen-sm { padding: 0.25rem 0.2rem; }
+  .index-property-card-info {
+    padding: 1rem;
 
     h3 {
       margin: 0;
       font-size: 1.3rem;
       color: #222;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      flex: 1;           /* permite que el texto use todo el espacio disponible */
-      min-width: 0;      /* indispensable en contenedores flex */
-      max-width: 100%;   /* evita que el texto se desborde del contenedor */
-
-      @include desktop { font-size: 1.3rem; }
-      @include screen-md { font-size: 1rem; }
-      @include screen-sm { font-size: 0.75rem; }
     }
-  }
 
-  
-  .home-property-card-buttons {
-    margin-left: auto; /* 🔹 Empuja los botones al extremo derecho */
-    display: flex;
-    align-items: center;
-    gap: 1rem 0.5rem !important; /* Espacio entre los botones */
+    p {
+      font-size: 0.95rem;
+      color: #555;
+      margin-top: 0.3rem;
+    }
 
-    @include screen-sm { gap: 0 0.5rem !important; }
-
-    button {
-      background-color: transparent;
-      border: none;
-      text-align: right;
-
-      &:hover {
-        transform: translateY(-7.5px);
-      }
+    .price {
+      color: $blue-color;
+      font-weight: bold;
+      font-size: 1.1rem;
+      margin-top: 0.5rem;
     }
   }
 }
 
-.home-pagination {
+.index-pagination {
   margin-top: 2rem;
   display: flex;
   justify-content: center;
@@ -161,7 +134,7 @@
   gap: 1rem;
   color: #555;
 
-  .home-page-btn {
+  .index-page-btn {
     background-color: $blue-color;
     border: none;
     color: #fff;
@@ -190,7 +163,7 @@
   }
 }
 
-.home-accept-btn {
+.index-accept-btn {
   background-color: $blue-color;
   color: #fff;
   border-radius: 8px;
@@ -205,7 +178,7 @@
 }
 
 /* Estilo claro para SweetAlert */
-.home-swal-popup {
+.index-swal-popup {
   background-color: #ffffff !important;
   color: #333 !important;
   border-radius: 12px !important;
@@ -214,15 +187,12 @@
 
 /* Responsive */
 @media (max-width: 768px) {
-  .home-content {
-    padding: 1.5rem;
-  }
 
-  .home-header h1 {
+  .index-header h1 {
     font-size: 1.8rem;
   }
 
-  .home-search input {
+  .index-search input {
     width: 100%;
   }
 }

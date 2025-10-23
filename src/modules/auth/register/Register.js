@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { api } from '../../../services/api';
+import { api } from '../../../services/api/api';
 import { Title } from '../../../components/title/Title';
 import { FiUser, FiAtSign, FiLock } from "react-icons/fi";
 import Swal from 'sweetalert2';
@@ -46,7 +46,8 @@ export const Register = () => {
             customClass: {
               popup: 'home-swal-popup',  // usa tu estilo de popup
               title: 'swal-title',       // puedes agregar clase propia si quieres estilizar el título
-              content: 'swal-content'    // opcional para el contenido
+              content: 'swal-content',    // opcional para el contenido
+              confirmButton: "swal-confirm-btn"
             }
           });
         }

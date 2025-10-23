@@ -1,5 +1,5 @@
 import { useContext } from 'react';
-import { AuthContext } from '../auth/authContext';
+import { AuthContext } from '../services/auth/authContext.js';
 import { DashboardRoutes } from "./DashboardRoutes.js";
 
 export const PublicRoute = ({ children }) => {
