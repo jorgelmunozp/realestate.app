@@ -29,7 +29,7 @@ export const AddProperty = () => {
   const [error, setError] = useState(null);
   
   console.log(itemProperty)
-  // 🔹 Manejo de cambios en formularios
+  // Manejo de cambios en formularios
   const handleChange = (e, section = "property", index = null) => {
     const { name, value } = e.target;
 
@@ -67,7 +67,7 @@ export const AddProperty = () => {
     }
   };
 
-  // 🔹 Convertir archivo a Base64
+  // Convertir archivo a Base64
   const toBase64 = (file) => new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.readAsDataURL(file);
@@ -75,7 +75,7 @@ export const AddProperty = () => {
     reader.onerror = (error) => reject(error);
   });
 
-  // 🔹 Manejo de imagen del inmueble
+  // Manejo de imagen del inmueble
   const handleImageChange = async (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -90,7 +90,7 @@ export const AddProperty = () => {
     }
   };
 
-  // 🔹 Manejo de imagen del propietario
+  // Manejo de imagen del propietario
   const handleOwnerImageChange = async (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -104,7 +104,7 @@ export const AddProperty = () => {
     }
   };
 
-  // 🔹 Envío de formulario
+  // Envío de formulario
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -112,14 +112,14 @@ export const AddProperty = () => {
       const payloadOwner = { ...itemOwner };
       const responseOwner = await api.post(`${ownerEndpoint}`, payloadOwner);
 
-      const payloadProperty = { ...itemProperty, IdOwner:responseOwner.data.id };
+      const payloadProperty = { ...itemProperty, idOwner:responseOwner.data.id };
       const responseProperty = await api.post(`${propertyEndpoint}`, payloadProperty);
      
-      const payloadPropertyImage = { ...itemPropertyImage, IdProperty:responseProperty.data.id };
+      const payloadPropertyImage = { ...itemPropertyImage, idProperty:responseProperty.data.id };
       
       itemPropertyTrace[0].Value = Number(itemPropertyTrace[0].Value);
       itemPropertyTrace[0].Tax = Number(itemPropertyTrace[0].Tax);
-      itemPropertyTrace[0].IdProperty = responseProperty.data.id;
+      itemPropertyTrace[0].idProperty = responseProperty.data.id;
       const payloadPropertyTrace = [ ...itemPropertyTrace];
  
       let responsePropertyImage = null;

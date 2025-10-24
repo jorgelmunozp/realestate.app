@@ -2,7 +2,7 @@
 @import '../../../assets/styles/scss/mixins/screen';
 @import '../../../assets/styles/scss/mixins/fonts';
 
-/* 🔹 Contenedor principal */
+/* Contenedor principal */
 .crudproperty-container {
   display: flex;
   justify-content: center;
@@ -16,7 +16,7 @@
   }
 }
 
-/* 🔹 Tarjeta principal */
+/* Tarjeta principal */
 .crudproperty-card {
   width: 100%;
   max-width: 1100px;
@@ -33,39 +33,41 @@
   }
 }
 
-/* 🔹 Título */
+/* Título */
 .crudproperty-title {
   text-align: center;
   color: $blue-color;
   font-size: 2.2rem;
-  margin-bottom: 2rem;
+  margin-bottom: 2.5rem;
 
   @include screen-md {
     font-size: 1.8rem;
   }
 }
 
-/* 🔹 Secciones */
+/* Secciones */
 .form-section {
-  margin-bottom: 2rem;
+  margin-bottom: 2.5rem;
 
   h2 {
     color: $blue-color;
     font-size: 1.4rem;
-    margin-bottom: 1rem;
+    margin-bottom: 1.2rem;
     border-left: 4px solid $blue-color;
     padding-left: 0.5rem;
   }
 }
 
-/* 🔹 Grillas */
+/* Grillas */
 .form-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 1.2rem;
+  gap: 1.4rem;
 }
 
-/* 🔹 Estilo general de inputs y datepickers */
+/* =========================================================
+   MUI
+   ========================================================= */
 .MuiOutlinedInput-root {
   background-color: #f9fafb !important;
   border-radius: 10px;
@@ -90,23 +92,24 @@
 }
 
 /* =========================================================
-   🔹 IMÁGENES Y DROPZONES
+   IMÁGENES Y DROPZONES
    ========================================================= */
-
 .image-upload-container {
   width: 100%;
-  min-height: 200px;
+  min-height: 220px;
   display: flex;
   align-items: center;
   justify-content: center;
   position: relative;
   transition: all 0.3s ease;
+  margin-top: 1rem;
+  margin-bottom: 1.5rem;
 }
 
-/* 🔹 Caja de carga (Dropzone) */
+/* Caja de carga (Dropzone) */
 .dropzone-box {
   width: 100%;
-  min-height: 200px;
+  min-height: 220px;
   border: 2px dashed #107ACC;
   border-radius: 12px;
   padding: 1.5rem 1rem;
@@ -130,7 +133,6 @@
     margin: 0;
   }
 
-  /* 🔹 Animación de desvanecimiento */
   &.fade-out {
     opacity: 0;
     visibility: hidden;
@@ -138,10 +140,10 @@
   }
 }
 
-/* 🔹 Previsualización de imagen */
+/* Previsualización de imagen */
 .image-preview {
   width: 100%;
-  min-height: 200px;
+  min-height: 220px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -177,21 +179,24 @@
   }
 
   .owner-photo {
-    max-width: 140px;
-    max-height: 140px;
-    border-radius: 50%;
+    display: block;
+    margin: 0 auto;
+    max-width: 240px;
+    max-height: 180px;
+    border-radius: 12px;
+    object-fit: cover;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
   }
 
-  /* 🔹 Botón de reemplazo */
   .replace-btn {
-    margin-top: 0.8rem;
+    margin-top: 1.2rem;
     background-color: #e0f2fe;
     color: #0369a1;
     border: none;
     border-radius: 8px;
-    padding: 0.5rem 0.9rem;
+    padding: 0.6rem 1rem;
     font-weight: 600;
-    font-size: 0.9rem;
+    font-size: 0.95rem;
     cursor: pointer;
     transition: all 0.3s ease;
 
@@ -202,9 +207,8 @@
 }
 
 /* =========================================================
-   🔹 BOTONES
+   BOTONES
    ========================================================= */
-
 .crudproperty-btn {
   width: 100%;
   padding: 1rem;
@@ -214,7 +218,7 @@
   border: none;
   cursor: pointer;
   transition: all 0.3s ease;
-  margin-top: 0.8rem;
+  margin-top: 1rem;
 
   &.primary {
     background-color: $blue-color;
@@ -233,4 +237,45 @@
       background-color: #d1d5db;
     }
   }
+}
+
+/* =========================================================
+   Ajustes específicos
+   ========================================================= */
+
+/* Propietario: zona de carga a ancho completo */
+.form-grid .image-upload-container {
+  grid-column: 1 / -1;
+}
+
+/* Espaciado entre grupos del historial */
+.trace-group {
+  margin-bottom: 1.8rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid #e5e7eb;
+
+  &:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+  }
+}
+
+.trace-wrapper {
+  margin-bottom: 2.2rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #e5e7eb;
+
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.trace-title {
+  color: $blue-color;
+  font-weight: 600;
+  font-size: 1.1rem;
+  margin-bottom: 1rem;
+  text-align: left;
+  border-left: 3px solid $blue-color;
+  padding-left: 0.6rem;
 }

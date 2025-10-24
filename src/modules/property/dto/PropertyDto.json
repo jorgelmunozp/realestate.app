@@ -1,8 +1,8 @@
-
 {
   "Name": "",
   "Address": "",
   "Price": 0,
   "CodeInternal": 0,
-  "Year": 0
+  "Year": 0,
+  "IdOwner": ""
 }

@@ -1,31 +1,25 @@
-// src/mappers/propertyMapper.js
-
 /**
- * Convierte un objeto Property con claves en PascalCase (como viene del backend)
- * a un formato en camelCase para el frontend.
- * 
- * @param {Object} data - Objeto Property recibido del backend
- * @returns {Object} Objeto normalizado con nombres en camelCase
+ * Convierte un PropertyDto del backend (PascalCase) a formato frontend (camelCase)
  */
 export const normalizeProperty = (data = {}) => ({
-  name: data.name || data.Name || "",
-  address: data.address || data.Address || "",
-  price: data.price || data.Price || 0,
-  codeInternal: data.codeInternal || 0,
-  year: data.year || data.Year || 0,
+  idProperty: data?.IdProperty ?? "",
+  name: data?.Name ?? "",
+  address: data?.Address ?? "",
+  price: data?.Price ?? 0,
+  codeInternal: data?.CodeInternal ?? 0,
+  year: data?.Year ?? 0,
+  idOwner: data?.IdOwner ?? ""
 });
 
 /**
- * Convierte un objeto Property con claves camelCase (frontend)
- * a formato PascalCase para enviar al backend.
- * 
- * @param {Object} property - Objeto Property del frontend
- * @returns {Object} Objeto listo para enviar al backend
+ * Convierte un Property del frontend (camelCase) al formato backend (PascalCase)
  */
 export const mapPropertyToDto = (property = {}) => ({
-  Name: property.name,
-  Address: property.address,
-  Price: property.price,
-  CodeInternal: property.codeInternal,
-  Year: property.year
+  IdProperty: property?.idProperty ?? "",
+  Name: property?.name ?? "",
+  Address: property?.address ?? "",
+  Price: property?.price ?? 0,
+  CodeInternal: property?.codeInternal ?? 0,
+  Year: property?.year ?? 0,
+  IdOwner: property?.idOwner ?? ""
 });

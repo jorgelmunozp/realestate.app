@@ -107,7 +107,6 @@ export const Property = () => {
             ) : propertyTrace?.length > 0 ? (
               propertyTrace.map((trace, index) => (
                 <div key={index} className="trace-card">
-                  <p><strong>ID Venta:</strong> {trace.idPropertyTrace}</p>
                   <p><strong>Fecha:</strong> {trace.dateSale}</p>
                   <p><strong>Nombre:</strong> {trace.name}</p>
                   <p><strong>Valor:</strong> $ {trace.value?.toLocaleString("es-CO")} COP</p>

@@ -3,7 +3,7 @@
 @import '../../../assets/styles/scss/mixins/fonts';
 
 /* =========================================================
-   🔹 CONTENEDOR PRINCIPAL
+   CONTENEDOR PRINCIPAL
    ========================================================= */
 .login-container {
   display: flex;
@@ -19,7 +19,7 @@
 }
 
 /* =========================================================
-   🔹 TARJETA (idéntica al register)
+   TARJETA (idéntica al register)
    ========================================================= */
 .login-card {
   background-color: #fff;
@@ -78,7 +78,7 @@
       }
     }
 
-    /* 🔹 Íconos azul institucional */
+    /* Íconos azul institucional */
     .MuiInputAdornment-root svg {
       color: $blue-color !important;
       transition: color 0.2s ease-in-out;
@@ -147,7 +147,7 @@
 }
 
 /* =========================================================
-   🔹 RESPONSIVE
+   RESPONSIVE
    ========================================================= */
 @media (max-width: 480px) {
   .login-card {

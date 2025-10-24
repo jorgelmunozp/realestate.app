@@ -3,7 +3,7 @@
 @import '../../../assets/styles/scss/mixins/fonts';
 
 /* =========================================================
-   🔹 CONTENEDOR PRINCIPAL
+   CONTENEDOR PRINCIPAL
    ========================================================= */
 .register-container {
   display: flex;
@@ -19,7 +19,7 @@
 }
 
 /* =========================================================
-   🔹 TARJETA (Paper MUI)
+   TARJETA (Paper MUI)
    ========================================================= */
 .register-card {
   background-color: #fff;
@@ -75,7 +75,7 @@
       }
     }
 
-    /* 🔹 ICONOS AZULES INSTITUCIONALES */
+    /* ICONOS AZULES INSTITUCIONALES */
     .MuiInputAdornment-root svg {
       color: $blue-color !important;
       transition: color 0.2s ease-in-out;
@@ -119,7 +119,7 @@
 }
 
 /* =========================================================
-   🔹 RESPONSIVE
+   RESPONSIVE
    ========================================================= */
 @media (max-width: 480px) {
   .register-card {

@@ -26,7 +26,7 @@ export const Home = () => {
 
   const userId = sessionStorage.getItem('userId');
 
-  // 🔹 Configurar interceptor solo una vez
+  // Configurar interceptor solo una vez
   useEffect(() => {
     const interceptor = api.interceptors.request.use(
       (config) => {
@@ -54,7 +54,7 @@ export const Home = () => {
       const propertiesWithImages = await Promise.all(
         propertiesData.map(async (prop) => {
           try {
-            const resImg = await api.get(`${propertImageEndpoint}?IdProperty=${prop.idProperty}`);
+            const resImg = await api.get(`${propertImageEndpoint}?idProperty=${prop.idProperty}`);
             setLoadingImages(prev => ({ ...prev, [prop.idProperty]: false }));
             return { ...prop, image: resImg.data[0] || null };
           } catch {

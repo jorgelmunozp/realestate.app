@@ -3,6 +3,7 @@
     "DateSale": "",
     "Name": "",
     "Value": 0,
-    "Tax": 0
+    "Tax": 0,
+    "IdProperty": ""
   }
 ]

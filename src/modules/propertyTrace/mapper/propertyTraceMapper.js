@@ -1,25 +1,28 @@
-// src/mappers/propertyTraceMapper.js
-
 /**
- * Normaliza un PropertyTraceDto desde el backend, ya sea objeto o arreglo
+ * Convierte uno o varios PropertyTraceDto del backend (PascalCase)
+ * al formato frontend (camelCase)
  */
 export const normalizePropertyTrace = (data = []) => {
-  if (!Array.isArray(data)) data = [data];
-
-  return data.map(trace => ({
-    name: trace.Name || "",
-    value: trace.Value || 0,
-    tax: trace.Tax || 0,
-    dateSale: trace.DateSale || ""
+  const traces = Array.isArray(data) ? data : [data];
+  return traces.map(trace => ({
+    idPropertyTrace: trace?.IdPropertyTrace ?? "",
+    dateSale: trace?.DateSale ?? "",
+    name: trace?.Name ?? "",
+    value: trace?.Value ?? 0,
+    tax: trace?.Tax ?? 0,
+    idProperty: trace?.IdProperty ?? ""
   }));
 };
 
 /**
- * Mapea un PropertyTrace al formato del backend
+ * Convierte un PropertyTrace del frontend (camelCase)
+ *    al formato backend (PascalCase)
  */
 export const mapPropertyTraceToDto = (trace = {}) => ({
-  Name: trace.name,
-  Value: trace.value,
-  Tax: trace.tax,
-  DateSale: trace.dateSale
+  IdPropertyTrace: trace?.idPropertyTrace ?? "",
+  DateSale: trace?.dateSale ?? "",
+  Name: trace?.name ?? "",
+  Value: trace?.value ?? 0,
+  Tax: trace?.tax ?? 0,
+  IdProperty: trace?.idProperty ?? ""
 });

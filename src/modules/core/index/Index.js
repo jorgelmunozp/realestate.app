@@ -47,7 +47,7 @@ export const Index = () => {
       const propertiesWithImages = await Promise.all(
         propertiesData.map(async (prop) => {
           try {
-            const resImg = await api.get(`${propertImageEndpoint}?IdProperty=${prop.idProperty}`);
+            const resImg = await api.get(`${propertImageEndpoint}?idProperty=${prop.idProperty}`);
             setLoadingImages(prev => ({ ...prev, [prop.idProperty]: false }));
             return { ...prop, image: resImg.data[0] || null };
           } catch (err) {
