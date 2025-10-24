@@ -2,84 +2,113 @@
 @import '../../../assets/styles/scss/mixins/screen';
 @import '../../../assets/styles/scss/mixins/fonts';
 
+/* =========================================================
+   🔹 CONTENEDOR PRINCIPAL
+   ========================================================= */
 .login-container {
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 90vh;
+  min-height: 100vh;
   background: #f6f8fb;
   padding: 2rem;
+
+  @include screen-sm {
+    padding: 1rem;
+  }
 }
 
+/* =========================================================
+   🔹 TARJETA (idéntica al register)
+   ========================================================= */
 .login-card {
   background-color: #fff;
   border-radius: 20px;
-  padding: 2rem 2.5rem;
+  padding: 2.5rem 2rem; // igual que register
   width: 100%;
   max-width: 420px;
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
   border: 1px solid #e5e7eb;
   text-align: center;
   color: #333;
+  font-family: $primary-font;
+  transition: all 0.3s ease;
 
-  .login-input-group {
-    display: flex;
-    align-items: center;
-    border: 1px solid #d1d5db;
-    border-radius: 12px;
-    padding: 0.6rem 1rem;
-    margin-bottom: 1rem;
+  /* =========================================================
+     🔸 TÍTULO (idéntico a register)
+     ========================================================= */
+  h2,
+  .MuiTypography-root {
+    font-weight: 700;
+    color: $blue-color;
+  }
+
+  /* =========================================================
+     🔸 CAMPOS DE TEXTO
+     ========================================================= */
+  .MuiTextField-root {
     background-color: #f9fafb;
-    transition: border 0.3s ease, box-shadow 0.3s ease;
+    border-radius: 12px;
 
-    &:focus-within {
-      border-color: $blue-color;
-      box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
-    }
+    .MuiOutlinedInput-root {
+      border-radius: 12px;
 
-    .login-icon {
-      color: $blue-color;
-      margin-right: 0.5rem;
-      font-size: 1.3rem;
-    }
-
-    input {
-      border: none;
-      outline: none;
-      flex: 1;
-      font-size: 1rem;
-      background: transparent;
-      color: #333;
-
-      &::placeholder {
-        color: #9ca3af;
+      fieldset {
+        border-color: #d1d5db;
       }
+
+      &:hover fieldset {
+        border-color: $blue-color;
+      }
+
+      &.Mui-focused fieldset {
+        border-color: $blue-color;
+        box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.15);
+      }
+
+      input {
+        text-align: center !important;
+        font-size: 1rem;
+        color: #333;
+
+        &::placeholder {
+          text-align: center !important;
+          color: #9ca3af;
+        }
+      }
+    }
+
+    /* 🔹 Íconos azul institucional */
+    .MuiInputAdornment-root svg {
+      color: $blue-color !important;
+      transition: color 0.2s ease-in-out;
     }
   }
 
-  .login-btn {
+  /* =========================================================
+     🔸 BOTONES (igual que register)
+     ========================================================= */
+  .MuiButton-root {
     width: 100%;
-    padding: 0.9rem;
     border-radius: 12px;
     font-size: 1.05rem;
     font-weight: 600;
-    border: none;
-    cursor: pointer;
-    transition: all 0.3s ease;
+    text-transform: none;
+    padding: 0.9rem;
     margin-top: 0.6rem;
 
-    &.primary {
+    &.MuiButton-containedPrimary {
       background-color: $blue-color;
-      color: #fff;
 
       &:hover {
         background-color: #1d4ed8;
       }
     }
 
-    &.secondary {
+    &.MuiButton-outlinedSecondary {
       background-color: #e5e7eb;
       color: #333;
+      border: none;
 
       &:hover {
         background-color: #d1d5db;
@@ -87,25 +116,49 @@
     }
   }
 
+  /* =========================================================
+     🔸 LINKS (mantiene estilo limpio)
+     ========================================================= */
   .login-link {
-    background: none;
-    border: none;
     color: $blue-color;
+    font-weight: 500;
     font-size: 0.95rem;
     margin-top: 1rem;
-    text-decoration: none;
     cursor: pointer;
-    transition: color 0.3s ease;
+    transition: all 0.3s ease;
+    text-align: center;
+    display: block;
 
     &:hover {
       color: #1d4ed8;
+      text-decoration: underline;
+    }
+
+    &.back {
+      color: #555;
+      margin-top: 1.5rem;
+
+      &:hover {
+        color: #1d4ed8;
+        text-decoration: underline;
+      }
     }
   }
 }
 
-/* Responsive */
+/* =========================================================
+   🔹 RESPONSIVE
+   ========================================================= */
 @media (max-width: 480px) {
   .login-card {
     padding: 1.5rem;
+  }
+
+  .MuiTextField-root input {
+    font-size: 0.95rem;
+  }
+
+  .login-link {
+    font-size: 0.9rem;
   }
 }

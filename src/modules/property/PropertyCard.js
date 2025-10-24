@@ -1,10 +1,10 @@
-import { useFetchGet } from '../../hooks/useFetchGet';
+import { api } from '../../services/api/api.js';
+
+const propertImageEndpoint = process.env.REACT_APP_ENDPOINT_PROPERTYIMAGE;
 
 export const PropertyCard = ({ property, onClick }) => {
-  const { data: propertyImage, loading: loadingImage } = useFetchGet(
-    property.idProperty ? `/api/propertyImage/?IdProperty=${property.idProperty}` : null
-  );
-
+  const { propertyImage, loadingImage } = api.get(property.idProperty ? `${propertImageEndpoint}/?IdProperty=${property.idProperty}` : null)
+  
   return (
     <div className="index-property-card" onClick={onClick}>
       {loadingImage || !propertyImage ? (

@@ -8,13 +8,11 @@
  * @returns {Object} Objeto normalizado con nombres en camelCase
  */
 export const normalizeProperty = (data = {}) => ({
-  name: data.Name || "",
-  address: data.Address || "",
-  price: data.Price || 0,
-  codeInternal: data.CodeInternal || 0,
-  year: data.Year || 0,
-  idOwner: data.IdOwner || "",
-  id: data.Id || data.id || "",
+  name: data.name || data.Name || "",
+  address: data.address || data.Address || "",
+  price: data.price || data.Price || 0,
+  codeInternal: data.codeInternal || 0,
+  year: data.year || data.Year || 0,
 });
 
 /**
@@ -29,7 +27,5 @@ export const mapPropertyToDto = (property = {}) => ({
   Address: property.address,
   Price: property.price,
   CodeInternal: property.codeInternal,
-  Year: property.year,
-  IdOwner: property.idOwner,
-  Id: property.id,
+  Year: property.year
 });

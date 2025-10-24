@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { api } from "../services/api/api";
+import { api } from "../api/api";
 
 export const useFetchGet = (apiUrl) => {
   const [data, setData] = useState(null);

@@ -22,7 +22,7 @@ export const AppRouter = () => {
         {/* Rutas públicas */}
         <Route path="*" element={<PublicRoute><Index /></PublicRoute>} />
         <Route path="/index/*" element={<PublicRoute><Index /></PublicRoute>} />
-        <Route path="/api/property/:propertyId/*" element={<PublicRoute><Property /></PublicRoute>} />
+        <Route path="/property/:propertyId/*" element={<PublicRoute><Property /></PublicRoute>} />
         <Route path="/login/*" element={<PublicRoute><Login /></PublicRoute>} />
         <Route path="/register" element={<PublicRoute><Register /></PublicRoute>} />
         <Route path="/password-recover" element={<PublicRoute><PasswordRecover /></PublicRoute>} />

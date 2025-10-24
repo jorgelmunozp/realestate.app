@@ -2,6 +2,7 @@
 @import '../../../assets/styles/scss/mixins/screen';
 @import '../../../assets/styles/scss/mixins/fonts';
 
+/* 🔹 Contenedor principal */
 .crudproperty-container {
   display: flex;
   justify-content: center;
@@ -10,9 +11,12 @@
   background: #f6f8fb;
   padding: 3rem 1rem;
 
-  @include screen-sm { padding: 3rem 0.5rem; }
+  @include screen-sm {
+    padding: 3rem 0.5rem;
+  }
 }
 
+/* 🔹 Tarjeta principal */
 .crudproperty-card {
   width: 100%;
   max-width: 1100px;
@@ -24,18 +28,24 @@
   font-family: $primary-font;
   padding: 2rem 3rem;
 
-  @include screen-sm { padding: 2rem 1rem; }
+  @include screen-sm {
+    padding: 2rem 1rem;
+  }
 }
 
+/* 🔹 Título */
 .crudproperty-title {
   text-align: center;
   color: $blue-color;
   font-size: 2.2rem;
   margin-bottom: 2rem;
 
-  @include screen-md { font-size: 1.8rem; }
+  @include screen-md {
+    font-size: 1.8rem;
+  }
 }
 
+/* 🔹 Secciones */
 .form-section {
   margin-bottom: 2rem;
 
@@ -48,107 +58,152 @@
   }
 }
 
+/* 🔹 Grillas */
 .form-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
   gap: 1.2rem;
 }
 
-.input-group {
-  display: flex;
-  flex-direction: column;
+/* 🔹 Estilo general de inputs y datepickers */
+.MuiOutlinedInput-root {
+  background-color: #f9fafb !important;
+  border-radius: 10px;
 
-  label {
-    font-weight: 600;
-    margin-bottom: 0.4rem;
-    color: #333;
+  fieldset {
+    border-color: #d1d5db;
   }
 
-  input {
-    border: 1px solid #d1d5db;
-    border-radius: 10px;
-    padding: 0.7rem 1rem;
-    font-size: 1rem;
-    background-color: #f9fafb;
-    transition: all 0.3s ease;
-
-    &:focus {
-      outline: none;
-      border-color: $blue-color;
-      box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
-    }
+  &:hover fieldset {
+    border-color: #9ca3af;
   }
 
-  .image-preview {
-    margin-top: 1rem;
-    text-align: center;
-
-    img {
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    }
-
-    .property-image {
-      max-width: 240px;
-      border-radius: 12px;
-    }
-
-    .owner-photo {
-      max-width: 140px;
-      max-height: 140px;
-      border-radius: 50%;
-    }
+  &.Mui-focused fieldset {
+    border-color: $blue-color;
+    box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.15);
   }
 }
 
-/* 🔹 Nueva sección: estilos para múltiples traces */
-.trace-block {
-  background-color: #f9fafb;
-  border: 1px solid #e5e7eb;
-  border-radius: 12px;
-  padding: 1.2rem 1rem;
-  margin-bottom: 1.5rem;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+.year-input .MuiOutlinedInput-root {
+  background-color: #f9fafb !important;
+  border-radius: 10px;
+}
 
-  h3 {
-    font-size: 1.1rem;
-    color: $blue-color;
-    margin-bottom: 1rem;
-    font-weight: 600;
+/* =========================================================
+   🔹 IMÁGENES Y DROPZONES
+   ========================================================= */
+
+.image-upload-container {
+  width: 100%;
+  min-height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+/* 🔹 Caja de carga (Dropzone) */
+.dropzone-box {
+  width: 100%;
+  min-height: 200px;
+  border: 2px dashed #107ACC;
+  border-radius: 12px;
+  padding: 1.5rem 1rem;
+  text-align: center;
+  background-color: #f9fafb;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  opacity: 1;
+  visibility: visible;
+
+  &:hover {
+    background-color: #eff6ff;
   }
 
-  .remove-trace-btn {
-    display: inline-block;
+  p {
+    color: #555;
+    font-size: 0.95rem;
+    margin: 0;
+  }
+
+  /* 🔹 Animación de desvanecimiento */
+  &.fade-out {
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.4s ease, visibility 0.4s ease;
+  }
+}
+
+/* 🔹 Previsualización de imagen */
+.image-preview {
+  width: 100%;
+  min-height: 200px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: #f9fafb;
+  border-radius: 12px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 0;
+  visibility: hidden;
+  transform: scale(0.98);
+  transition: opacity 0.4s ease, visibility 0.4s ease, transform 0.4s ease;
+
+  &.filled {
+    opacity: 1;
+    visibility: visible;
+    transform: scale(1);
+    z-index: 2;
+  }
+
+  img {
+    max-width: 240px;
+    max-height: 180px;
+    border-radius: 12px;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+    object-fit: cover;
+    transition: transform 0.3s ease;
+  }
+
+  img:hover {
+    transform: scale(1.03);
+  }
+
+  .owner-photo {
+    max-width: 140px;
+    max-height: 140px;
+    border-radius: 50%;
+  }
+
+  /* 🔹 Botón de reemplazo */
+  .replace-btn {
     margin-top: 0.8rem;
-    padding: 0.5rem 0.8rem;
-    background-color: #fee2e2;
-    color: #b91c1c;
+    background-color: #e0f2fe;
+    color: #0369a1;
+    border: none;
     border-radius: 8px;
-    font-weight: 500;
+    padding: 0.5rem 0.9rem;
+    font-weight: 600;
     font-size: 0.9rem;
     cursor: pointer;
     transition: all 0.3s ease;
 
     &:hover {
-      background-color: #fecaca;
+      background-color: #bae6fd;
     }
   }
 }
 
-.add-trace-btn {
-  background-color: #e0f2fe;
-  color: #0369a1;
-  font-weight: 600;
-  padding: 0.7rem 1rem;
-  border-radius: 10px;
-  border: none;
-  cursor: pointer;
-  margin-top: 1rem;
-  transition: all 0.3s ease;
-
-  &:hover {
-    background-color: #bae6fd;
-  }
-}
+/* =========================================================
+   🔹 BOTONES
+   ========================================================= */
 
 .crudproperty-btn {
   width: 100%;

@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useEffect, useState, useCallback } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { api } from '../../../services/api/api';
 import { Title } from '../../../components/title/Title';
 import { Input } from '../../../components/input/Input';
@@ -7,8 +7,12 @@ import { FiPlus, FiSearch } from "react-icons/fi";
 import Swal from 'sweetalert2';
 import './Home.scss';
 
+const propertyEndpoint = process.env.REACT_APP_ENDPOINT_PROPERTY;
+const propertImageEndpoint = process.env.REACT_APP_ENDPOINT_PROPERTYIMAGE;
+
 export const Home = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [properties, setProperties] = useState([]);
   const [queryPropertyName, setQueryPropertyName] = useState("");
   const [pagination, setPagination] = useState({
@@ -35,15 +39,12 @@ export const Home = () => {
     return () => api.interceptors.request.eject(interceptor);
   }, []);
 
-  const fetchItems = async () => {
-    if (!userId) {
-      navigate('/index');
-      return;
-    }
+  const fetchItems = useCallback(async () => {
+    if (!userId) { navigate('/index'); return; }
 
     setLoading(true);
     try {
-      const responseProperty = await api.get(`/api/property?page=${pagination.page}&limit=${pagination.limit}`);
+      const responseProperty = await api.get(`${propertyEndpoint}?page=${pagination.page}&limit=${pagination.limit}`);
       const propertiesData = responseProperty.data.data || [];
 
       const loadingObj = {};
@@ -53,7 +54,7 @@ export const Home = () => {
       const propertiesWithImages = await Promise.all(
         propertiesData.map(async (prop) => {
           try {
-            const resImg = await api.get(`/api/propertyImage/?IdProperty=${prop.idProperty}`);
+            const resImg = await api.get(`${propertImageEndpoint}?IdProperty=${prop.idProperty}`);
             setLoadingImages(prev => ({ ...prev, [prop.idProperty]: false }));
             return { ...prop, image: resImg.data[0] || null };
           } catch {
@@ -75,11 +76,11 @@ export const Home = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [pagination.page, pagination.limit, userId, navigate]);
 
   useEffect(() => {
     fetchItems();
-  }, [pagination.page, pagination.limit]); // evitar loop infinito
+  }, [location.pathname, fetchItems]);        // evita loop infinito
 
   const handleUpdateProperty = (propertyId) => navigate(`/crud-property/${propertyId}`);
   const handleDeleteProperty = async (propertyId) => {
@@ -94,7 +95,7 @@ export const Home = () => {
 
     if (result.isConfirmed) {
       try {
-        await api.delete(`/api/property/${propertyId}`);
+        await api.delete(`${propertyEndpoint}/${propertyId}`);
         Swal.fire("Propiedad Eliminada", "La propiedad ha sido eliminada con éxito", "success");
         fetchItems();
       } catch {

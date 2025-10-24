@@ -1,14 +1,17 @@
-import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useEffect, useState, useCallback } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { api } from '../../../services/api/api';
 import { Title } from '../../../components/title/Title';
 import { Input } from '../../../components/input/Input';
 import { FiSearch } from "react-icons/fi";
-
 import './Index.scss';
+
+const propertyEndpoint = process.env.REACT_APP_ENDPOINT_PROPERTY;
+const propertImageEndpoint = process.env.REACT_APP_ENDPOINT_PROPERTYIMAGE;
 
 export const Index = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [properties, setProperties] = useState([]);
   const [queryPropertyName, setQueryPropertyName] = useState("");
   const [pagination, setPagination] = useState({
@@ -20,7 +23,7 @@ export const Index = () => {
   const [loading, setLoading] = useState(false);
   const [loadingImages, setLoadingImages] = useState({}); // loading por imagen
 
-  const fetchItems = async () => {
+  const fetchItems = useCallback(async () => {
     setLoading(true);
     try {
       api.interceptors.request.use(
@@ -32,7 +35,7 @@ export const Index = () => {
         (error) => Promise.reject(error)
       );
 
-      const responseProperty = await api.get(`/api/property?page=${pagination.page}&limit=${pagination.limit}`);
+      const responseProperty = await api.get(`${propertyEndpoint}?page=${pagination.page}&limit=${pagination.limit}`);
       const propertiesData = responseProperty.data.data || [];
 
       // Inicializamos loading de imágenes
@@ -44,7 +47,7 @@ export const Index = () => {
       const propertiesWithImages = await Promise.all(
         propertiesData.map(async (prop) => {
           try {
-            const resImg = await api.get(`/api/propertyImage/?IdProperty=${prop.idProperty}`);
+            const resImg = await api.get(`${propertImageEndpoint}?IdProperty=${prop.idProperty}`);
             setLoadingImages(prev => ({ ...prev, [prop.idProperty]: false }));
             return { ...prop, image: resImg.data[0] || null };
           } catch (err) {
@@ -54,7 +57,7 @@ export const Index = () => {
           }
         })
       );
-
+console.log(responseProperty.data)
       setProperties(propertiesWithImages);
       setPagination(responseProperty.data.meta || pagination);
     } catch (error) {
@@ -63,13 +66,13 @@ export const Index = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [pagination.page, pagination.limit]);
 
   useEffect(() => {
     fetchItems();
-  }, [pagination.page, pagination.limit]);
+  }, [location.pathname, fetchItems]);        // evita loop infinito
 
-  const handleOpenProperty = (propertyId) => navigate(`/api/property/${propertyId}`);
+  const handleOpenProperty = (propertyId) => navigate(`/property/${propertyId}`);
   const handleNextPage = () => pagination.page < pagination.last_page && setPagination(prev => ({ ...prev, page: prev.page + 1 }));
   const handlePrevPage = () => pagination.page > 1 && setPagination(prev => ({ ...prev, page: prev.page - 1 }));
 

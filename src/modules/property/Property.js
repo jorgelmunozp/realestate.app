@@ -1,34 +1,38 @@
 import { useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { Title } from "../../components/title/Title";
-import { useFetchGet } from "../../hooks/useFetchGet";
+import { Title } from "../../components/title/Title.js";
+import { useFetchGet } from "../../services/fetch/useFetchGet.js";
 import "./Property.scss";
+
+const propertyEndpoint = process.env.REACT_APP_ENDPOINT_PROPERTY;
+const ownerEndpoint = process.env.REACT_APP_ENDPOINT_OWNER;
+const propertImageEndpoint = process.env.REACT_APP_ENDPOINT_PROPERTYIMAGE;
+const propertTraceEndpoint = process.env.REACT_APP_ENDPOINT_PROPERTYTRACE;
 
 export const Property = () => {
   useEffect(() => { window.scrollTo(0, 0); }, []);      // Scroll al inicio al cargar
 
   const navigate = useNavigate();
   const { propertyId } = useParams();
+  const { data: property, loading: loadingProperty, error } = useFetchGet(`${propertyEndpoint}/${propertyId}`);
+  const { data: owner, loading: loadingOwner } = useFetchGet(property ? `${ownerEndpoint}/${property.idOwner}` : null);
+  const { data: propertyImage, loading: loadingPropertyImage } = useFetchGet(propertyId ? `${propertImageEndpoint}?idProperty=${propertyId}` : null);
+  const { data: propertyTrace, loading: loadingPropertyTrace } = useFetchGet(propertyId ? `${propertTraceEndpoint}?idProperty=${propertyId}` : null);
 
-  const { data: property, loading, error } = useFetchGet(`/api/property/${propertyId}`);
-  const { data: owner, loading: loadingOwner } = useFetchGet(property ? `/api/owner/${property.idOwner}` : null);
-  const { data: propertyImage, loading: loadingPropertyImage } = useFetchGet(propertyId ? `/api/propertyImage/?IdProperty=${propertyId}` : null);
-  const { data: propertyTrace, loading: loadingPropertyTrace } = useFetchGet(propertyId ? `/api/propertyTrace/?IdProperty=${propertyId}` : null);
-
-  const goToHome = () => navigate("/home");
+  const goToIndex = () => navigate("/index");
 
   // Loader general de propiedad
-  if (loading) {
+  if (loadingProperty) {
     return (
       <div className="container-loader full-screen">
         <div className="spinner"></div>
-        <p>Cargando propiedad...</p>
+        <p>Cargando inmueble...</p>
       </div>
     );
   }
 
   if (error) {
-    return <p style={{ textAlign: "center", color: "red" }}>Error al cargar la propiedad</p>;
+    return <p style={{ textAlign: "center" }}>❌ Error al cargar el inmueble</p>;
   }
 
   return (
@@ -115,7 +119,7 @@ export const Property = () => {
             )}
           </div>
 
-          <button className="property-button" onClick={goToHome}>
+          <button className="property-button" onClick={goToIndex}>
             ← Regresar
           </button>
         </div>

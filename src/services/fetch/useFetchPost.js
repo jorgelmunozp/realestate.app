@@ -1,20 +1,20 @@
 import { useState } from "react";
 import { api } from "../services/api/api";
 
-export const useFetchDelete = () => {
+export const useFetchPost = () => {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  const deleteData = async (apiUrl) => {
+  const postData = async (apiUrl, body) => {
     setLoading(true);
     setError(null);
     try {
-      const response = await api.delete(apiUrl);
+      const response = await api.post(apiUrl, body);
       setData(response.data);
       return response.data;
     } catch (err) {
-      console.error("Error en useFetchDelete:", err);
+      console.error("Error en useFetchPost:", err);
       setError(err);
       throw err;
     } finally {
@@ -22,5 +22,5 @@ export const useFetchDelete = () => {
     }
   };
 
-  return { data, loading, error, deleteData };
+  return { data, loading, error, postData };
 };

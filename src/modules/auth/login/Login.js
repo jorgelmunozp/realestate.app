@@ -1,29 +1,29 @@
 import { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { api } from '../../../services/api/api';
 import { AuthContext } from '../../../services/auth/authContext.js';
 import { types } from '../../../types/types.js';
-import { api } from '../../../services/api/api.js';
-import { Title } from '../../../components/title/Title.js';
-import { PiUserCircleFill } from "react-icons/pi";
-import { FiLock } from "react-icons/fi";
+import { Title } from '../../../components/title/Title';
 import Swal from 'sweetalert2';
+import { TextField, Button, InputAdornment, Box, Paper } from '@mui/material';
+import { PiUserCircleFill } from 'react-icons/pi';
+import { FiLock } from 'react-icons/fi';
 import './Login.scss';
+
+const loginEndpoint = process.env.REACT_APP_ENDPOINT_LOGIN;
 
 export const Login = () => {
   const navigate = useNavigate();
   const { dispatch } = useContext(AuthContext);
-
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
   const handleLogin = async () => {
     try {
-      const response = await api.post('/api/auth/login', { email, password });
-
+      const response = await api.post(`${loginEndpoint}`, { email, password });
       if (response.status >= 200 && response.status < 300) {
         sessionStorage.setItem('token', response.data.token);
         sessionStorage.setItem('userId', response.data.id);
-
         dispatch({ type: types.login, payload: { email } });
 
         const lastPath = localStorage.getItem('lastPath') || '/home';
@@ -31,7 +31,6 @@ export const Login = () => {
       }
     } catch (error) {
       console.error('Error user login: ', error.response?.data || error.message);
-
       Swal.fire({
         text: error.response?.data?.error?.message || 'Credenciales inválidas',
         icon: 'error',
@@ -39,51 +38,49 @@ export const Login = () => {
     }
   };
 
-  const goToIndex = () => navigate('/index');
-  const goToRegister = () => navigate('/register');
-  const forgotPassword = () => navigate('/password-recover');
+  const handleGoRegister = () => navigate('/register');
+  const handleForgotPassword = () => navigate('/password-recover');
 
   return (
-    <div className="login-container">
-      <div className="login-card">
-        <Title title="Iniciar Sesión" />
-        <div className="login-input-group">
-          <PiUserCircleFill className="login-icon" />
-          <input
-            type="text"
-            placeholder="Correo electrónico"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+    <Box className="login-container" display="flex" justifyContent="center" alignItems="center" minHeight="100vh" sx={{ background: '#f6f8fb', padding: 2 }}>
+      <Paper elevation={3} className="login-card" sx={{ borderRadius: 4, width: '100%', maxWidth: 420, p: 4, textAlign: 'center' }}>
+        <Title title="Iniciar sesión" />
+
+        <Box display="flex" flexDirection="column" gap={2} mt={3}>
+          <TextField label="Correo electrónico" type="email" variant="outlined" value={email} onChange={(e) => setEmail(e.target.value)} fullWidth
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <PiUserCircleFill color="#107ACC" size={20} />
+                </InputAdornment>
+              ),
+            }}
           />
-        </div>
 
-        <div className="login-input-group">
-          <FiLock className="login-icon" />
-          <input
-            type="password"
-            placeholder="Contraseña"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
+          <TextField label="Contraseña" type="password" variant="outlined" value={password} onChange={(e) => setPassword(e.target.value)} fullWidth
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <FiLock color="#107ACC" size={18} />
+                </InputAdornment>
+              ),
+            }}
           />
-        </div>
 
-        <button className="login-btn primary" onClick={handleLogin}>
-          Ingresar
-        </button>
+          <Button variant="contained" color="primary" onClick={handleLogin} sx={{ borderRadius: 2, textTransform: 'none', py: 1.2 }}>
+            Ingresar
+          </Button>
 
-        <button className="login-btn secondary" onClick={goToRegister}>
-          Crear cuenta
-        </button>
+          <Button variant="outlined" color="secondary" onClick={handleGoRegister} sx={{ borderRadius: 2, textTransform: 'none', py: 1.2 }}>
+            Crear cuenta
+          </Button>
 
-        <button className="login-link" onClick={forgotPassword}>
-          ¿Olvidaste tu contraseña?
-        </button>
-        <br /><br />
-        <button className="login-link" onClick={goToIndex}>
-          ← Volver al inicio
-        </button>
-      </div>
-    </div>
+          <Button variant="text" onClick={handleForgotPassword} sx={{ color: '#107ACC', textTransform: 'none', fontWeight: 500, fontSize: '0.95rem', mt: 1, '&:hover': { color: '#000' } }}>
+            ¿Olvidaste tu contraseña?
+          </Button>
+        </Box>
+      </Paper>
+    </Box>
   );
 };
 
