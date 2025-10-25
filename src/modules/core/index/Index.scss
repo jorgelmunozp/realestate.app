@@ -100,6 +100,11 @@
     width: 100%;
     height: 180px;
     object-fit: cover;
+    transition: transform 0.3s ease;
+  }
+
+  &:hover .index-property-card-img {
+    transform: scale(1.03);
   }
 
   .index-property-card-info {

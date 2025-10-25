@@ -72,3 +72,4 @@ export const PasswordRecover = () => {
 };
 
 export default PasswordRecover;
+

@@ -1,8 +1,8 @@
-import { useState, useContext } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { api } from '../../../services/api/api';
-import { AuthContext } from '../../../services/auth/authContext.js';
-import { types } from '../../../types/types.js';
+import { useDispatch } from 'react-redux';
+import { login } from '../../../services/store/authSlice.js';
 import { Title } from '../../../components/title/Title';
 import Swal from 'sweetalert2';
 import { TextField, Button, InputAdornment, Box, Paper } from '@mui/material';
@@ -14,7 +14,7 @@ const loginEndpoint = process.env.REACT_APP_ENDPOINT_LOGIN;
 
 export const Login = () => {
   const navigate = useNavigate();
-  const { dispatch } = useContext(AuthContext);
+  const dispatch = useDispatch();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
@@ -24,9 +24,9 @@ export const Login = () => {
       if (response.status >= 200 && response.status < 300) {
         sessionStorage.setItem('token', response.data.token);
         sessionStorage.setItem('userId', response.data.id);
-        dispatch({ type: types.login, payload: { email } });
+        dispatch(login({ email, id: response.data.id }));
 
-        const lastPath = localStorage.getItem('lastPath') || '/home';
+        const lastPath = sessionStorage.getItem('lastPath') || '/home';
         navigate(lastPath, { replace: true });
       }
     } catch (error) {
@@ -76,7 +76,7 @@ export const Login = () => {
           </Button>
 
           <Button variant="text" onClick={handleForgotPassword} sx={{ color: '#107ACC', textTransform: 'none', fontWeight: 500, fontSize: '0.95rem', mt: 1, '&:hover': { color: '#000' } }}>
-            ¿Olvidaste tu contraseña?
+            �&iquest;Olvidaste tu contraseña?
           </Button>
         </Box>
       </Paper>
@@ -85,3 +85,4 @@ export const Login = () => {
 };
 
 export default Login;
+

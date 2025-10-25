@@ -1,11 +1,10 @@
-import { useContext } from 'react';
-import { AuthContext } from '../services/auth/authContext.js';
+import { useSelector } from 'react-redux';
 import { DashboardRoutes } from "./DashboardRoutes.js";
 
 export const PublicRoute = ({ children }) => {
-    const { user } = useContext(AuthContext);
+    const user = useSelector((state) => state.auth.user);
 
-    return user.logged ? <DashboardRoutes /> : children
+    return user?.logged ? <DashboardRoutes /> : children
 }
 
 export default PublicRoute;

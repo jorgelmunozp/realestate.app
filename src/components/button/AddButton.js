@@ -3,7 +3,7 @@ import { FiPlus } from "react-icons/fi";
 import './AddButton.scss';
 
 export const AddButton = ({ label='', handleChange, className='' }) => {
-  const handleInputChange = useCallback( handleChange, [handleChange]); // 👈 depende de handleChange, así no se rompe
+  const handleInputChange = useCallback( handleChange, [handleChange]); // depende de handleChange, así no se rompe
     
   return (
     // <div className={`add-btn-container ${className}`}>

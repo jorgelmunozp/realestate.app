@@ -1,6 +1,7 @@
 import { useEffect, useState, useCallback } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { api } from '../../../services/api/api';
+import { errorWrapper } from "../../../services/api/errorWrapper";
 import { Title } from '../../../components/title/Title';
 import { Input } from '../../../components/input/Input';
 import { FiSearch } from "react-icons/fi";
@@ -21,22 +22,17 @@ export const Index = () => {
     total: 0,
   });
   const [loading, setLoading] = useState(false);
-  const [loadingImages, setLoadingImages] = useState({}); // loading por imagen
+  const [loadingImages, setLoadingImages] = useState({});
 
-  const fetchItems = useCallback(async () => {
+  const fetchItems = useCallback(async (refresh = false) => {
     setLoading(true);
     try {
-      api.interceptors.request.use(
-        (config) => {
-          const token = sessionStorage.getItem('token');
-          if (token) config.headers.Authorization = `Bearer ${token}`;
-          return config;
-        },
-        (error) => Promise.reject(error)
+      const res = await errorWrapper(
+        api.get(`${propertyEndpoint}?page=${pagination.page}&limit=${pagination.limit}${refresh ? '&refresh=true' : ''}`)
       );
-
-      const responseProperty = await api.get(`${propertyEndpoint}?page=${pagination.page}&limit=${pagination.limit}`);
-      const propertiesData = responseProperty.data.data || [];
+      if (!res.ok) throw res.error;
+      const body = res.data || {};
+      const propertiesData = Array.isArray(body) ? body : (body.data || []);
 
       // Inicializamos loading de imágenes
       const loadingObj = {};
@@ -47,9 +43,14 @@ export const Index = () => {
       const propertiesWithImages = await Promise.all(
         propertiesData.map(async (prop) => {
           try {
-            const resImg = await api.get(`${propertImageEndpoint}?idProperty=${prop.idProperty}`);
+            const resImg = await errorWrapper(
+              api.get(`${propertImageEndpoint}?idProperty=${prop.idProperty}${refresh ? '&refresh=true' : ''}`)
+            );
+            if (!resImg.ok) throw resImg.error;
+            const imgBody = resImg.data || [];
+            const firstImg = Array.isArray(imgBody) ? imgBody[0] : imgBody?.[0];
             setLoadingImages(prev => ({ ...prev, [prop.idProperty]: false }));
-            return { ...prop, image: resImg.data[0] || null };
+            return { ...prop, image: firstImg || null };
           } catch (err) {
             console.error(`Error cargando imagen para property ${prop.idProperty}:`, err);
             setLoadingImages(prev => ({ ...prev, [prop.idProperty]: false }));
@@ -57,9 +58,8 @@ export const Index = () => {
           }
         })
       );
-console.log(responseProperty.data)
       setProperties(propertiesWithImages);
-      setPagination(responseProperty.data.meta || pagination);
+      setPagination(body.meta || pagination);
     } catch (error) {
       console.error('Error fetching properties:', error);
       setProperties([]);
@@ -69,9 +69,17 @@ console.log(responseProperty.data)
   }, [pagination.page, pagination.limit]);
 
   useEffect(() => {
-    fetchItems();
-  }, [location.pathname, fetchItems]);        // evita loop infinito
+    const needsRefresh = location.state?.refresh === true;
+    fetchItems(needsRefresh);
+    if (location.state) {
+      navigate(location.pathname, { replace: true, state: {} });
+    }
+  }, [location.pathname, fetchItems, navigate, location.state]);
 
+  // Lógica simple: sin refetch especial al volver
+
+  // Refrescar al volver el foco a la pestaña
+  // Sin refresco por foco para mantenerlo simple
   const handleOpenProperty = (propertyId) => navigate(`/property/${propertyId}`);
   const handleNextPage = () => pagination.page < pagination.last_page && setPagination(prev => ({ ...prev, page: prev.page + 1 }));
   const handlePrevPage = () => pagination.page > 1 && setPagination(prev => ({ ...prev, page: prev.page - 1 }));
@@ -148,3 +156,4 @@ console.log(responseProperty.data)
 };
 
 export default Index;
+

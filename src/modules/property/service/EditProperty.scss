@@ -3,15 +3,15 @@
 @import '../../../assets/styles/scss/mixins/fonts';
 
 /* =========================================================
-   📘 ESTILOS PARA AddProperty
+   🧱 ESTILOS COMPLETOS PARA EditProperty
    ========================================================= */
 
-.addproperty-container {
+.editproperty-container {
   display: flex;
   justify-content: center;
   align-items: flex-start;
   min-height: 100vh;
-  background: #f6f8fb;
+  background-color: #f6f8fb;
   padding: 3rem 1rem;
 
   @include screen-sm {
@@ -19,7 +19,7 @@
   }
 }
 
-.addproperty-card {
+.editproperty-card {
   width: 100%;
   max-width: 1100px;
   background-color: #fff;
@@ -35,13 +35,16 @@
   }
 }
 
-.addproperty-title {
+.editproperty-title {
   text-align: center;
   color: $blue-color;
   font-size: 2.2rem;
   margin-bottom: 2.5rem;
 }
 
+/* =========================================================
+   SECCIONES
+   ========================================================= */
 .form-section {
   margin-bottom: 2.5rem;
 
@@ -61,7 +64,7 @@
 }
 
 /* =========================================================
-   CAMPO AÑO (formato y sombreado del CrudProperty)
+   CAMPO AÑO Y MUI
    ========================================================= */
 .year-input, .MuiOutlinedInput-root {
   background-color: #f9fafb !important;
@@ -85,111 +88,6 @@
     text-transform: lowercase;
     opacity: 0.8;
   }
-}
-
-/* =========================================================
-   IMAGEN PROPIETARIO A ANCHO COMPLETO
-   ========================================================= */
-.owner-grid .full-width {
-  grid-column: 1 / -1;
-}
-
-/* =========================================================
-   HISTORIAL (Trazas)
-   ========================================================= */
-.trace-wrapper {
-  margin-bottom: 1.5rem;
-  padding: 1rem 1rem 1.5rem;
-  background: #f9fafb;
-  border-radius: 12px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-}
-
-.trace-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)) 60px;
-  align-items: center;
-  gap: 1rem;
-}
-
-.trace-delete-btn {
-  background-color: #fee2e2;
-  color: #b91c1c;
-  border: none;
-  border-radius: 10px;
-  padding: 0.6rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.1rem;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  height: 42px;
-
-  &:hover {
-    background-color: #fecaca;
-    transform: translateY(-2px);
-  }
-}
-
-/* =========================================================
-   BOTONES
-   ========================================================= */
-.addproperty-btn {
-  width: 100%;
-  padding: 1rem;
-  border-radius: 12px;
-  font-size: 1.1rem;
-  font-weight: 600;
-  border: none;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  margin-top: 1rem;
-
-  &.primary {
-    background-color: $blue-color;
-    color: #fff;
-
-    &:hover {
-      background-color: #1d4ed8;
-    }
-  }
-
-  &.secondary {
-    background-color: #e5e7eb;
-    color: #333;
-
-    &:hover {
-      background-color: #d1d5db;
-    }
-  }
-}
-
-
-/* =========================================================
-   MUI
-   ========================================================= */
-.MuiOutlinedInput-root {
-  background-color: #f9fafb !important;
-  border-radius: 10px;
-
-  fieldset {
-    border-color: #d1d5db;
-  }
-
-  &:hover fieldset {
-    border-color: #9ca3af;
-  }
-
-  &.Mui-focused fieldset {
-    border-color: $blue-color;
-    box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.15);
-  }
-}
-
-.year-input .MuiOutlinedInput-root {
-  background-color: #f9fafb !important;
-  border-radius: 10px;
 }
 
 /* =========================================================
@@ -321,7 +219,104 @@
 }
 
 /* =========================================================
-   Ajustes específicos
+   HISTORIAL (Trazas)
+   ========================================================= */
+.trace-wrapper {
+  margin-bottom: 1.5rem;
+  padding: 1rem 1rem 1.5rem;
+  background-color: #f9fafb;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+}
+
+.trace-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)) 60px;
+  align-items: center;
+  gap: 1rem;
+}
+
+.trace-delete-btn {
+  background-color: #fee2e2;
+  color: #b91c1c;
+  border: none;
+  border-radius: 10px;
+  padding: 0.6rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  height: 42px;
+
+  &:hover {
+    background-color: #fecaca;
+    transform: translateY(-2px);
+  }
+}
+
+/* =========================================================
+   BOTONES
+   ========================================================= */
+.editproperty-btn {
+  width: 100%;
+  padding: 1rem;
+  border-radius: 12px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 1rem;
+
+  &.primary {
+    background-color: $blue-color;
+    color: #fff;
+
+    &:hover {
+      background-color: #1d4ed8;
+    }
+  }
+
+  &.secondary {
+    background-color: #e5e7eb;
+    color: #333;
+
+    &:hover {
+      background-color: #d1d5db;
+    }
+  }
+}
+
+/* =========================================================
+   MUI GLOBAL (duplicado)
+   ========================================================= */
+.MuiOutlinedInput-root {
+  background-color: #f9fafb !important;
+  border-radius: 10px;
+
+  fieldset {
+    border-color: #d1d5db;
+  }
+
+  &:hover fieldset {
+    border-color: #9ca3af;
+  }
+
+  &.Mui-focused fieldset {
+    border-color: $blue-color;
+    box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.15);
+  }
+}
+
+.year-input .MuiOutlinedInput-root {
+  background-color: #f9fafb !important;
+  border-radius: 10px;
+}
+
+/* =========================================================
+   AJUSTES ESPECÍFICOS
    ========================================================= */
 
 /* Propietario: zona de carga a ancho completo */

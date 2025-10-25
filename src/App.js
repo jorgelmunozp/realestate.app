@@ -1,24 +1,17 @@
-// import logo from './logo.svg';
-import { useEffect, useReducer } from 'react';
-import { AuthContext } from './services/auth/authContext.js';
-import { authReducer } from './services/auth/authReducer.js';
+﻿// import logo from './logo.svg';
+import { Provider } from "react-redux";
+import { PersistGate } from "redux-persist/integration/react";
+import { store, persistor } from "./services/store/store.js";
 import { AppRouter } from './routers/AppRouter';
 import './App.scss';
 
-const init = () => { return JSON.parse(sessionStorage.getItem('user') ) || { logged: false}; }
-
 function App() {
-  const [ user, dispatch ] = useReducer( authReducer, {}, init );
-
-  useEffect( () => {
-    if( !user ) return;
-    sessionStorage.setItem('user', JSON.stringify(user));
-  }, [user] );
-
   return (
-    <AuthContext.Provider value={{ user,dispatch }}>
-      <AppRouter />
-    </AuthContext.Provider>
+    <Provider store={store}>
+      <PersistGate loading={<div>Cargando sesi&oacute;n...</div>} persistor={persistor}>
+        <AppRouter />
+      </PersistGate>
+    </Provider>
   );
 }
 

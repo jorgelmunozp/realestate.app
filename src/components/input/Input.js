@@ -2,7 +2,7 @@ import { memo, useCallback } from 'react';
 import './Input.scss';
 
 export const Input = ({ Icon=null, type='text', value, placeholder='', handleChange, setState }) => {
-  const handleInputChange = useCallback((event) => handleChange(event.target.value), [handleChange]); // 👈 depende de handleChange, así no se rompe
+  const handleInputChange = useCallback((event) => handleChange(event.target.value), [handleChange]); // depende de handleChange, así no se rompe
 
   return (
     <div className="input-with-icon">

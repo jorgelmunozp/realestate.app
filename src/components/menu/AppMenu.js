@@ -1,7 +1,6 @@
-import { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { AuthContext } from '../../services/auth/authContext.js';
-import { types } from '../../types/types.js';
+import { useDispatch, useSelector } from 'react-redux';
+import { logout } from '../../services/store/authSlice.js';
 import { slide as Menu } from "react-burger-menu";
 import { Header } from '../header/Header.js';
 import { FiHome, FiUser, FiPhone, FiLogOut, FiUpload, FiActivity } from "react-icons/fi";
@@ -9,11 +8,16 @@ import { primaryColor } from '../../global.js';
 import "./AppMenu.scss";
 
 export const AppMenu = () => {
-    const { user, dispatch } = useContext(AuthContext);
+    const dispatch = useDispatch();
+    const user = useSelector((state) => state.auth.user);
     const navigate = useNavigate();
 
     const handleLogout = () => {
-        dispatch({ type: types.logout });
+        dispatch(logout());
+        try {
+          sessionStorage.removeItem('token');
+          sessionStorage.removeItem('userId');
+        } catch (_) {}
         navigate("/", { replace: true });
     }
 
