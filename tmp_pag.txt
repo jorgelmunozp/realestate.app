@@ -1,5 +1,4 @@
 import React from 'react';
-import { primaryColor } from '../../global';
 
 export const Pagination = ({
   page = 1,
@@ -13,7 +12,6 @@ export const Pagination = ({
 }) => {
   const prevDisabled = disabled || page <= 1;
   const nextDisabled = disabled || page >= lastPage;
-  const lastDisabled = disabled || page >= lastPage;
 
   const handlePrev = () => {
     if (!prevDisabled && typeof onPageChange === 'function') {
@@ -27,12 +25,6 @@ export const Pagination = ({
     }
   };
 
-  const handleGoLast = () => {
-    if (!lastDisabled && typeof onPageChange === 'function') {
-      onPageChange(lastPage);
-    }
-  };
-
   return (
     <div className={className}>
       <button
@@ -41,28 +33,10 @@ export const Pagination = ({
         onClick={handlePrev}
         aria-label="Anterior"
       >
-        <span>{prevLabel}</span>
+        <span aria-hidden="true">←</span> <span>{prevLabel}</span>
       </button>
       <span>
-        Página {page} de{' '}
-        <button
-          type="button"
-          onClick={handleGoLast}
-          disabled={lastDisabled}
-          aria-label="Ir a la última página"
-          style={{
-            color: primaryColor,
-            textDecoration: 'none',
-            background: 'transparent',
-            border: 'none',
-            padding: 0,
-            margin: 0,
-            fontWeight: 600,
-            cursor: lastDisabled ? 'default' : 'pointer',
-          }}
-        >
-          {lastPage}
-        </button>
+        Página {page} de {lastPage}
       </span>
       <button
         className={buttonClassName}
@@ -70,11 +44,12 @@ export const Pagination = ({
         onClick={handleNext}
         aria-label="Siguiente"
       >
-        <span>{nextLabel}</span>
+        <span>{nextLabel}</span> <span aria-hidden="true">→</span>
       </button>
     </div>
   );
 };
 
 export default Pagination;
+
 

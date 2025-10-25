@@ -66,4 +66,3 @@ const propertySlice = createSlice({
 });
 
 export default propertySlice.reducer;
-

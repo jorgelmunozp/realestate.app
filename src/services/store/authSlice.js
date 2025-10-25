@@ -16,8 +16,14 @@ const authSlice = createSlice({
     logout: (state) => {
       state.user = { logged: false };
     },
+    // Actualiza los datos del usuario manteniendo logged
+    updateProfile: (state, { payload }) => {
+      const current = state.user || { logged: false };
+      const data = payload && typeof payload === 'object' ? payload : {};
+      state.user = { ...current, ...data };
+    },
   },
 });
 
-export const { login, logout } = authSlice.actions;
+export const { login, logout, updateProfile } = authSlice.actions;
 export default authSlice.reducer;

@@ -1,0 +1,34 @@
+@import '../../../assets/styles/scss/mixins/colors';
+@import '../../../assets/styles/scss/mixins/screen';
+@import '../../../assets/styles/scss/mixins/fonts';
+
+.edituser-container {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  background: #f6f8fb;
+  min-height: 60vh;
+  padding: 2rem 1rem;
+}
+
+.edituser-card {
+  width: 100%;
+  max-width: 720px;
+  padding: 1.5rem 2rem;
+  border-radius: 16px;
+}
+
+.edituser-form {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+
+  @include screen-md { grid-template-columns: 1fr; }
+
+  .edituser-btn {
+    grid-column: 1 / -1;
+    justify-self: end;
+    margin-top: 0.5rem;
+  }
+}
+

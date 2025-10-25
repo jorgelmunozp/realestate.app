@@ -116,3 +116,8 @@
     border: 1px solid #fecaca;
   }
 }
+
+.user-header { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:8px; }
+.user-edit-btn { background:#107ACC; color:#fff; padding:8px 14px; border-radius:10px; text-decoration:none; font-weight:600; font-size:0.95rem; }
+.user-edit-btn:hover { background:#0d63c6; }
+

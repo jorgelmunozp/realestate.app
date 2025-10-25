@@ -4,6 +4,7 @@ import { AddProperty } from "../modules/property/service/AddProperty.js";
 import { EditProperty } from "../modules/property/service/EditProperty.js";
 import { User } from "../modules/user/User.js";
 import { EditUser } from "../modules/user/service/EditUser.js";
+import { AdminRoute } from "./AdminRoute.js";
 
 const urlBaseFrontend = process.env.REACT_APP_FRONTEND_URL;
 
@@ -15,15 +16,11 @@ export const DashboardRoutes = () => {
         <Route path="/" element={<Home />} />
         <Route path="/home" element={<Home />} />
 
-        {/* Registrar nueva propiedad */}
+        {/* Rutas */}
         <Route path="/add-property" element={<AddProperty />} />
-
-        {/* Editar propiedad existente */}
         <Route path="/edit-property/:propertyId" element={<EditProperty />} />
-
-        {/* Perfil de usuario */}
         <Route path="/profile" element={<User />} />
-        <Route path="/profile/edit" element={<EditUser />} />
+        <Route path="/profile/edit" element={<AdminRoute><EditUser /></AdminRoute>} />
 
         {/* Cualquier ruta no existente redirige al Home */}
         <Route path="*" element={<Home />} />
