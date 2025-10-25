@@ -1,0 +1,54 @@
+import React from 'react';
+
+export const Pagination = ({
+  page = 1,
+  lastPage = 1,
+  onPageChange,
+  className = 'index-pagination',
+  buttonClassName = 'index-page-btn',
+  prevLabel = 'Anterior',
+  nextLabel = 'Siguiente',
+  disabled = false,
+}) => {
+  const prevDisabled = disabled || page <= 1;
+  const nextDisabled = disabled || page >= lastPage;
+
+  const handlePrev = () => {
+    if (!prevDisabled && typeof onPageChange === 'function') {
+      onPageChange(page - 1);
+    }
+  };
+
+  const handleNext = () => {
+    if (!nextDisabled && typeof onPageChange === 'function') {
+      onPageChange(page + 1);
+    }
+  };
+
+  return (
+    <div className={className}>
+      <button
+        className={buttonClassName}
+        disabled={prevDisabled}
+        onClick={handlePrev}
+        aria-label="Anterior"
+      >
+        <span aria-hidden="true">←</span> <span>{prevLabel}</span>
+      </button>
+      <span>
+        Página {page} de {lastPage}
+      </span>
+      <button
+        className={buttonClassName}
+        disabled={nextDisabled}
+        onClick={handleNext}
+        aria-label="Siguiente"
+      >
+        <span>{nextLabel}</span> <span aria-hidden="true">→</span>
+      </button>
+    </div>
+  );
+};
+
+export default Pagination;
+

@@ -28,11 +28,11 @@ export const AppMenu = () => {
       <a className="menu-item" href={user.logged ? "/home":"/index"}>
         <FiHome color={primaryColor} /> Inmuebles
       </a>
-      <a className="menu-item" href={user.logged ? "/crud-property":"/about-us"}>
+      <a className="menu-item" href={user.logged ? "/add-property":"/about-us"}>
         { user.logged ? (<><FiUpload color={primaryColor} /> Subir inmueble</>) : (<><FiUser color={primaryColor} /> Nosotros</>) }
       </a>
-      <a className="menu-item" href={user.logged ? "/crud-property":"/contact"}>
-        { user.logged ? (<><FiActivity color={primaryColor} /> Estadísticas</>) : (<><FiPhone color={primaryColor} /> Contacto</>) }
+      <a className="menu-item" href={user.logged ? "/profile":"/contact"}>
+        { user.logged ? (<><FiUser color={primaryColor} /> Perfil</>) : (<><FiPhone color={primaryColor} /> Contacto</>) }
       </a>
       <a className="menu-item" href={user.logged ? "/index":"/login"} onClick={handleLogout}>
         { user.logged ? (<><FiLogOut color={primaryColor} /> Cerrar sesión</>) : (<><FiLogOut color={primaryColor} /> Ingresar</>) }

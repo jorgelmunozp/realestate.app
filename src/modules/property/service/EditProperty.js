@@ -83,12 +83,22 @@ export const EditProperty = () => {
     loadAll();
   }, [propertyId]);
 
+  const clampNonNegative = (v) => {
+    const n = Number(v);
+    return Number.isFinite(n) ? Math.max(0, n) : 0;
+  };
+
   const handleChange = (e, section = "property", index = null) => {
     const { name, value } = e.target;
-    if (section === "owner") setOwner((prev) => ({ ...prev, [name]: value }));
-    else if (section === "traces")
-      setPropertyTrace((prev) => prev.map((t, i) => (i === index ? { ...t, [name]: value } : t)));
-    else setProperty((prev) => ({ ...prev, [name]: value }));
+    if (section === "owner") {
+      setOwner((prev) => ({ ...prev, [name]: value }));
+    } else if (section === "traces") {
+      const newVal = (name === "value" || name === "tax") ? clampNonNegative(value) : value;
+      setPropertyTrace((prev) => prev.map((t, i) => (i === index ? { ...t, [name]: newVal } : t)));
+    } else {
+      const newVal = (name === "price" || name === "codeInternal") ? clampNonNegative(value) : value;
+      setProperty((prev) => ({ ...prev, [name]: newVal }));
+    }
   };
 
   const handleImageChange = async (e, type = "property") => {

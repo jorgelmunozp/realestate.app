@@ -8,7 +8,7 @@ import './App.scss';
 function App() {
   return (
     <Provider store={store}>
-      <PersistGate loading={<div>Cargando sesi&oacute;n...</div>} persistor={persistor}>
+      <PersistGate loading={<div>Cargando sesión...</div>} persistor={persistor}>
         <AppRouter />
       </PersistGate>
     </Provider>

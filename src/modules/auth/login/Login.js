@@ -24,7 +24,12 @@ export const Login = () => {
       if (response.status >= 200 && response.status < 300) {
         sessionStorage.setItem('token', response.data.token);
         sessionStorage.setItem('userId', response.data.id);
-        dispatch(login({ email, id: response.data.id }));
+        dispatch(login({
+          email,
+          id: response.data.id,
+          name: response.data.name || response.data.fullName || response.data.username,
+          role: response.data.role || (Array.isArray(response.data?.roles) ? response.data.roles[0] : undefined),
+        }));
 
         const lastPath = sessionStorage.getItem('lastPath') || '/home';
         navigate(lastPath, { replace: true });
@@ -76,7 +81,7 @@ export const Login = () => {
           </Button>
 
           <Button variant="text" onClick={handleForgotPassword} sx={{ color: '#107ACC', textTransform: 'none', fontWeight: 500, fontSize: '0.95rem', mt: 1, '&:hover': { color: '#000' } }}>
-            �&iquest;Olvidaste tu contraseña?
+            ¿Olvidaste tu contraseña?
           </Button>
         </Box>
       </Paper>

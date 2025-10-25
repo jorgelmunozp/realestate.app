@@ -1,0 +1,100 @@
+@import '../../assets/styles/scss/mixins/colors';
+@import '../../assets/styles/scss/mixins/screen';
+@import '../../assets/styles/scss/mixins/fonts';
+
+.user-profile {
+  padding: 0 16px 32px;
+}
+
+.user-card {
+  max-width: 920px;
+  margin: 0 auto;
+  background: $white-color;
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+  display: grid;
+  grid-template-columns: 180px 1fr;
+  gap: 24px;
+  padding: 24px;
+
+  @include screen-md {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+}
+
+.user-avatar {
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f1f5f9;
+  border: 1px solid #e2e8f0;
+  margin: auto;
+}
+
+.user-info {
+  padding: 8px 0;
+}
+
+.user-name {
+  font-family: $primary-font;
+  color: #111827;
+  font-weight: 600;
+  font-size: 1.6rem;
+  margin: 0 0 6px 0;
+}
+
+.user-email {
+  color: #4b5563;
+  margin: 0 0 18px 0;
+  font-size: 0.98rem;
+}
+
+.user-meta {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+}
+
+.meta-item {
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 14px 16px;
+}
+
+.meta-label {
+  display: block;
+  font-size: 0.85rem;
+  color: #6b7280;
+  margin-bottom: 4px;
+}
+
+.meta-value {
+  color: #111827;
+  font-weight: 600;
+}
+
+.meta-badge {
+  display: inline-block;
+  padding: 6px 10px;
+  border-radius: 9999px;
+  font-size: 0.85rem;
+  font-weight: 600;
+
+  &.ok {
+    background: #e0f2fe;
+    color: $blue-color;
+    border: 1px solid #bae6fd;
+  }
+
+  &.off {
+    background: #fee2e2;
+    color: #b91c1c;
+    border: 1px solid #fecaca;
+  }
+}

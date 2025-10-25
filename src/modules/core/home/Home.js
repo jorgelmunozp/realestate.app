@@ -1,86 +1,41 @@
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 import { api } from "../../../services/api/api";
 import { errorWrapper } from "../../../services/api/errorWrapper";
 import { Title } from "../../../components/title/Title";
 import { Input } from "../../../components/input/Input";
 import { FiPlus, FiSearch, FiEdit2, FiTrash2 } from "react-icons/fi";
+import { Pagination } from "../../../components/pagination/Pagination";
+import { fetchProperties } from "../../../services/store/propertySlice";
 import Swal from "sweetalert2";
 import "./Home.scss";
 
 const propertyEndpoint = process.env.REACT_APP_ENDPOINT_PROPERTY;
-const propertyImageEndpoint = process.env.REACT_APP_ENDPOINT_PROPERTYIMAGE;
 
 export const Home = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const [properties, setProperties] = useState([]);
+  const dispatch = useDispatch();
+  const { properties, loading, meta } = useSelector((state) => state.property);
   const [queryPropertyName, setQueryPropertyName] = useState("");
   const [pagination, setPagination] = useState({ last_page: 1, limit: 6, page: 1, total: 0 });
-  const [loading, setLoading] = useState(false);
-  const [loadingImages, setLoadingImages] = useState({});
-  const userId = sessionStorage.getItem("userId");
+      const userId = sessionStorage.getItem("userId");
 
-  // Cargar propiedades con sus imagenes
-  const fetchItems = useCallback(async (refresh = false) => {
-    if (!userId) return navigate("/index");
-
-    setLoading(true);
-    try {
-      const res = await errorWrapper(
-        api.get(`${propertyEndpoint}?page=${pagination.page}&limit=${pagination.limit}${refresh ? "&refresh=true" : ""}`)
-      );
-      if (!res.ok) throw res.error;
-      const body = res.data || {};
-      const propertiesData = Array.isArray(body) ? body : (body.data || []);
-      const loadingObj = {};
-      propertiesData.forEach((p) => (loadingObj[p.idProperty] = true));
-      setLoadingImages(loadingObj);
-
-      const propertiesWithImages = await Promise.all(
-        propertiesData.map(async (prop) => {
-          try {
-            const resImg = await errorWrapper(
-              api.get(`${propertyImageEndpoint}?idProperty=${prop.idProperty}${refresh ? "&refresh=true" : ""}`)
-            );
-            if (!resImg.ok) throw resImg.error;
-            const imgBody = resImg.data || [];
-            const firstImg = Array.isArray(imgBody) ? imgBody[0] : imgBody?.[0];
-            setLoadingImages((prev) => ({ ...prev, [prop.idProperty]: false }));
-            return { ...prop, image: firstImg || null };
-          } catch {
-            setLoadingImages((prev) => ({ ...prev, [prop.idProperty]: false }));
-            return { ...prop, image: null };
-          }
-        })
-      );
-
-      setProperties(propertiesWithImages);
-      setPagination((prev) => ({
-        ...prev,
-        ...(body.meta || {}),
-        page: prev.page,
-      }));
-    } catch (error) {
-      console.error("Error fetching properties:", error);
-      setProperties([]);
-    } finally {
-      setLoading(false);
-    }
-  }, [pagination.page, pagination.limit, userId, navigate]);
-
+  // Cargar propiedades desde Redux (incluye imÃ¡genes)
   useEffect(() => {
+    if (!userId) { navigate("/index"); return; }
     const needsRefresh = location.state?.refresh === true;
-    fetchItems(needsRefresh);
+    dispatch(fetchProperties({ page: pagination.page, limit: pagination.limit, refresh: needsRefresh }));
     if (location.state) {
       navigate(location.pathname, { replace: true, state: {} });
     }
-  }, [location.pathname, fetchItems, navigate, location.state]);
+  }, [location.pathname, pagination.page, pagination.limit, dispatch, navigate, location.state, userId]);
 
-  // Navegar a edición
+  // Navegar a edicion
   const handleEditProperty = (propertyId) => navigate(`/edit-property/${propertyId}`);
 
-  // Navegar a creación
+  // Navegar a creacion
   const handleAddProperty = () => navigate("/add-property");
 
   // Eliminar propiedad
@@ -107,7 +62,7 @@ export const Home = () => {
           icon: "success",
           confirmButtonColor: "#107ACC",
         });
-        fetchItems(true);
+          dispatch(fetchProperties({ page: pagination.page, limit: pagination.limit, refresh: true }));
       } catch {
         Swal.fire("Error", "No se pudo eliminar la propiedad", "error");
       }
@@ -115,11 +70,7 @@ export const Home = () => {
   };
 
   // Paginacion
-  const handleNextPage = () =>
-    pagination.page < pagination.last_page &&
-    setPagination((prev) => ({ ...prev, page: prev.page + 1 }));
-  const handlePrevPage = () =>
-    pagination.page > 1 && setPagination((prev) => ({ ...prev, page: prev.page - 1 }));
+  const handleChangePage = (newPage) => setPagination((prev) => ({ ...prev, page: newPage }));
 
   // Pantalla de carga moderna
   if (loading) {
@@ -154,7 +105,7 @@ export const Home = () => {
 
         {/* Tarjetas de propiedades */}
         <div className="home-grid">
-          {properties
+          {(properties || [])
             .filter((property) =>
               property.name.toLowerCase().includes(queryPropertyName.toLowerCase())
             )
@@ -164,9 +115,7 @@ export const Home = () => {
                   className="home-property-card-img-wrapper"
                   onClick={() => handleEditProperty(property.idProperty)}
                 >
-                  {loadingImages[property.idProperty] ? (
-                    <div className="loader-inline"></div>
-                  ) : property.image ? (
+                  {property.image ? (
                     <img
                       className="home-property-card-img"
                       src={`data:image/png;base64,${property.image.file}`}
@@ -212,27 +161,12 @@ export const Home = () => {
         </div>
 
         {/* Paginacion */}
-        <div className="home-pagination">
-          <button
-            className="home-page-btn"
-            disabled={pagination.page === 1}
-            onClick={handlePrevPage}
-          >
-            &larr; <span>Anterior</span>
-          </button>
-          <span>P&aacute;gina {pagination.page} de {pagination.last_page}</span>
-          <button
-            className="home-page-btn"
-            disabled={pagination.page === pagination.last_page}
-            onClick={handleNextPage}
-          >
-            <span>Siguiente</span> &rarr;
-          </button>
-        </div>
+        <Pagination page={pagination.page} lastPage={meta?.last_page || pagination.last_page} onPageChange={handleChangePage} className="home-pagination" buttonClassName="home-page-btn" prevLabel="Anterior" nextLabel="Siguiente" disabled={loading} />
       </div>
     </div>
   );
 };
 
 export default Home;
+
 
