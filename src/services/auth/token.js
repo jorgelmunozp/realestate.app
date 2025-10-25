@@ -53,3 +53,32 @@ export const getUserFromToken = (payload) => {
 
   return { id, name, email, role };
 };
+
+export const getTokenExp = (payload) => {
+  const p = payload || getTokenPayload('token');
+  if (!p || typeof p !== 'object') return null;
+  const exp = typeof p.exp === 'number' ? p.exp : null; // seconds since epoch
+  return exp ?? null;
+};
+
+export const isTokenExpired = (payload, skewSeconds = 0) => {
+  const exp = getTokenExp(payload);
+  if (!exp) return true;
+  const nowSec = Math.floor(Date.now() / 1000);
+  return nowSec >= (exp - skewSeconds);
+};
+
+export const isTokenNearExpiry = (payload, skewSeconds = 60) => {
+  const exp = getTokenExp(payload);
+  if (!exp) return true;
+  const nowSec = Math.floor(Date.now() / 1000);
+  return (exp - nowSec) <= skewSeconds;
+};
+
+export const saveToken = (token, key = 'token', storage = sessionStorage) => {
+  try { storage.setItem(key, token); } catch (_) {}
+};
+
+export const clearToken = (key = 'token', storage = sessionStorage) => {
+  try { storage.removeItem(key); } catch (_) {}
+};
