@@ -1,13 +1,13 @@
 ﻿import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { api } from '../../../../services/api/api';
-import { Title } from '../../../../components/title/Title';
+import { api } from '../../../services/api/api';
+import { Title } from '../../../components/title/Title';
 import Swal from 'sweetalert2';
 import { Box, Paper, TextField, Button, InputAdornment } from '@mui/material';
 import { FiLock } from 'react-icons/fi';
 import './PasswordReset.scss';
 
-const resetEndpoint = `${process.env.REACT_APP_ENDPOINT_PASSWORD}/update`;
+const resetEndpoint = process.env.REACT_APP_ENDPOINT_PASSWORD_RESET;
 
 export const PasswordReset = () => {
   const navigate = useNavigate();

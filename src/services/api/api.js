@@ -1,8 +1,9 @@
 import axios from 'axios';
 import { installAuthInterceptors } from '../auth/session';
+import { getBaseURL } from './config';
 
 export const api = axios.create({
-  baseURL: process.env.REACT_APP_BACKEND_URL, // URL del backend
+  baseURL: getBaseURL(), // URL del backend con fallback
   timeout: 20000,
   headers: {
     'Content-Type': 'application/json',

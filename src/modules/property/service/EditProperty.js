@@ -14,7 +14,7 @@ import Swal from "sweetalert2";
 import { Box, Typography } from "@mui/material";
 import { mapOwnerToDto } from "../../owner/mapper/OwnerMapper";
 import { mapPropertyToDto } from "../mapper/propertyMapper";
-import { mapPropertyImageToDto, normalizePropertyImage } from "../../propertyImage/mapper/propertyImageMapper";
+import { mapPropertyImageToDto } from "../../propertyImage/mapper/propertyImageMapper";
 import "./EditProperty.scss";
 
 export const EditProperty = () => {
@@ -42,6 +42,9 @@ export const EditProperty = () => {
     reader.readAsDataURL(file);
   }), []);
 
+  // ===========================================================
+  // 🔹 Cargar datos de propiedad (ya con imagen incluida)
+  // ===========================================================
   useEffect(() => {
     const loadAll = async () => {
       try {
@@ -49,28 +52,26 @@ export const EditProperty = () => {
         const resProperty = await errorWrapper(
           api.get(`${endpoints.property}/${propertyId}${needsRefresh ? `?refresh=true` : ``}`)
         );
-        setProperty(resProperty.data);
+        const property = resProperty.data;
+        setProperty(property);
 
+        // Imagen embebida en property.image
+        if (property.image) {
+          setPropertyImage({
+            ...property.image,
+            imagePreview: property.image.file
+              ? `data:image/jpeg;base64,${property.image.file}`
+              : "",
+          });
+        }
+
+        // Propietario
         const resOwner = await errorWrapper(
-          api.get(`${endpoints.owner}/${resProperty.data.idOwner}${needsRefresh ? `?refresh=true` : ``}`)
+          api.get(`${endpoints.owner}/${property.idOwner}${needsRefresh ? `?refresh=true` : ``}`)
         );
         setOwner(resOwner.data);
 
-        const resImage = await errorWrapper(
-          api.get(`${endpoints.image}?idProperty=${propertyId}${needsRefresh ? `&refresh=true` : ``}`),
-          { unwrap: false }
-        );
-        const bodyImg = resImage.data || [];
-        const listImg = Array.isArray(bodyImg) ? bodyImg : (Array.isArray(bodyImg.items) ? bodyImg.items : (Array.isArray(bodyImg.data) ? bodyImg.data : []));
-        const image = listImg[0] || {};
-        const normalized = normalizePropertyImage(image);
-        setPropertyImage({
-          ...normalized,
-          imagePreview: normalized.file
-            ? `data:image/jpeg;base64,${normalized.file}`
-            : (normalized.url || ""),
-        });
-
+        // Trazas
         const resTraces = await errorWrapper(
           api.get(`${endpoints.trace}?idProperty=${propertyId}${needsRefresh ? `&refresh=true` : ``}`)
         );
@@ -83,8 +84,11 @@ export const EditProperty = () => {
       }
     };
     loadAll();
-  }, [propertyId, location.state, endpoints.property, endpoints.owner, endpoints.image, endpoints.trace]);
+  }, [propertyId, location.state, endpoints.property, endpoints.owner, endpoints.trace]);
 
+  // ===========================================================
+  // 🔹 Handlers generales
+  // ===========================================================
   const clampNonNegative = (v) => {
     const n = Number(v);
     return Number.isFinite(n) ? Math.max(0, n) : 0;
@@ -109,10 +113,16 @@ export const EditProperty = () => {
     const base64 = await toBase64(file);
     const preview = URL.createObjectURL(file);
 
-    if (type === "owner")
+    if (type === "owner") {
       setOwner((prev) => ({ ...prev, photo: base64, ownerPhotoPreview: preview }));
-    else
-      setPropertyImage((prev) => ({ ...prev, file: base64, enabled: true, imagePreview: preview }));
+    } else {
+      setPropertyImage((prev) => ({
+        ...prev,
+        file: base64,
+        enabled: true,
+        imagePreview: preview,
+      }));
+    }
   };
 
   const handleAddTrace = () => {
@@ -126,7 +136,7 @@ export const EditProperty = () => {
     const trace = itemPropertyTrace[index];
     try {
       if (trace?.idPropertyTrace) {
-        await errorWrapper( api.delete(`${endpoints.trace}/${trace.idPropertyTrace}`) );
+        await errorWrapper(api.delete(`${endpoints.trace}/${trace.idPropertyTrace}`));
       }
       setPropertyTrace((prev) => prev.filter((_, i) => i !== index));
       setTraceAlert({ message: "Traza eliminada correctamente", severity: "success" });
@@ -136,54 +146,58 @@ export const EditProperty = () => {
     }
   };
 
+  // ===========================================================
+  // 🔹 Guardar cambios
+  // ===========================================================
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      // Validaciones requeridas de imágenes
       if (!itemPropertyImage?.imagePreview && !itemPropertyImage?.file) {
-        Swal.fire({ icon: 'warning', title: 'Imagen requerida', text: 'Debes cargar la imagen de la propiedad.' });
+        Swal.fire({ icon: "warning", title: "Imagen requerida", text: "Debes cargar la imagen de la propiedad." });
         return;
       }
       if (!itemOwner?.ownerPhotoPreview && !itemOwner?.photo) {
-        Swal.fire({ icon: 'warning', title: 'Foto requerida', text: 'Debes cargar la imagen del propietario.' });
+        Swal.fire({ icon: "warning", title: "Foto requerida", text: "Debes cargar la imagen del propietario." });
         return;
       }
 
-      // Actualizar propietario (DTO PascalCase)
+      // Actualizar propietario
       const ownerDto = mapOwnerToDto(itemOwner);
-      await errorWrapper( api.patch(`${endpoints.owner}/${itemOwner.idOwner}`, ownerDto) );
+      await errorWrapper(api.patch(`${endpoints.owner}/${itemOwner.idOwner}`, ownerDto));
 
-      // Actualizar propiedad (DTO PascalCase)
+      // Actualizar propiedad
       const propertyDto = mapPropertyToDto({ ...itemProperty, idProperty: propertyId });
-      await errorWrapper( api.patch(`${endpoints.property}/${propertyId}`, propertyDto) );
+      await errorWrapper(api.patch(`${endpoints.property}/${propertyId}`, propertyDto));
 
-      // Actualizar o crear imagen de propiedad
+      // Crear o actualizar imagen (solo si cambió)
       if (itemPropertyImage?.file) {
         const imgId = itemPropertyImage?.idPropertyImage || itemPropertyImage?.IdPropertyImage;
-        const imageDto = mapPropertyImageToDto({ ...itemPropertyImage, idProperty: propertyId, idPropertyImage: imgId });
+        const imageDto = mapPropertyImageToDto({
+          ...itemPropertyImage,
+          idProperty: propertyId,
+          idPropertyImage: imgId,
+        });
         if (imgId) {
-          await errorWrapper( api.patch(`${endpoints.image}/${imgId}`, imageDto), { unwrap: false } );
+          await errorWrapper(api.patch(`${endpoints.image}/${imgId}`, imageDto), { unwrap: false });
         } else {
-          await errorWrapper( api.post(endpoints.image, imageDto), { unwrap: false } );
+          await errorWrapper(api.post(endpoints.image, imageDto), { unwrap: false });
         }
       }
 
-      // Actualizar o crear trazas
+      // Actualizar trazas
       for (const trace of itemPropertyTrace) {
         if (trace.idPropertyTrace) {
-          await errorWrapper( api.patch(`${endpoints.trace}/${trace.idPropertyTrace}`, trace) );
+          await errorWrapper(api.patch(`${endpoints.trace}/${trace.idPropertyTrace}`, trace));
         } else if (trace.name || trace.dateSale) {
-          await errorWrapper( api.post(endpoints.trace, [trace]) );
+          await errorWrapper(api.post(endpoints.trace, [trace]));
         }
       }
 
-      // Confirmación final
       Swal.fire({
         title: "Propiedad actualizada",
         icon: "success",
         confirmButtonText: "Aceptar",
       });
-
       navigate("/home", { state: { refresh: true } });
     } catch (error) {
       console.error("Error al actualizar:", error);
@@ -195,6 +209,9 @@ export const EditProperty = () => {
     }
   };
 
+  // ===========================================================
+  // 🔹 Renderizado condicional
+  // ===========================================================
   if (loading)
     return (
       <div className="container-loader full-screen">
@@ -206,6 +223,9 @@ export const EditProperty = () => {
   if (!itemProperty)
     return <p style={{ textAlign: "center", color: "red" }}>Propiedad no encontrada</p>;
 
+  // ===========================================================
+  // 🔹 Render principal
+  // ===========================================================
   return (
     <div className="addproperty-container">
       <form className="addproperty-card" onSubmit={handleSubmit}>

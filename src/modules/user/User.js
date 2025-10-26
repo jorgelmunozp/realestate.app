@@ -3,6 +3,7 @@ import { Title } from '../../components/title/Title';
 import { Link } from 'react-router-dom';
 import { PiUserCircleFill } from 'react-icons/pi';
 import { getTokenPayload, getUserFromToken } from '../../services/auth/token';
+import { hasAnyRole } from '../../services/auth/roles';
 import './User.scss';
 
 export const User = () => {
@@ -18,7 +19,7 @@ export const User = () => {
     <div className="user-profile">
       <div className="user-header">
         <Title title="Mi perfil" />
-        {String(role).toLowerCase() === 'admin' && (
+        {hasAnyRole(role, ['admin', 'editor']) && (
           <Link to="/profile/edit" className="user-edit-btn">Editar</Link>
         )}
       </div>

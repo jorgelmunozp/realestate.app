@@ -6,7 +6,6 @@ import { EditProperty } from "../modules/property/service/EditProperty.js";
 import { User } from "../modules/user/User.js";
 import { EditUser } from "../modules/user/service/EditUser.js";
 
-
 const urlBaseFrontend = process.env.REACT_APP_FRONTEND_URL;
 
 export const DashboardRoutes = () => {
@@ -21,7 +20,7 @@ export const DashboardRoutes = () => {
         <Route path="/add-property" element={<AddProperty />} />
         <Route path="/edit-property/:propertyId" element={<RoleRoute allowed={["editor", "admin"]}><EditProperty /></RoleRoute>} />
         <Route path="/profile" element={<User />} />
-        <Route path="/profile/edit" element={<RoleRoute allowed={["admin"]}><EditUser /></RoleRoute>} />
+        <Route path="/profile/edit" element={<RoleRoute allowed={["admin", "editor", "user"]}><EditUser /></RoleRoute>} />
 
         {/* Cualquier ruta no existente redirige al Home */}
         <Route path="*" element={<Home />} />

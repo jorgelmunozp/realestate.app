@@ -1,13 +1,13 @@
 ﻿import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { api } from '../../../../services/api/api';
-import { Title } from '../../../../components/title/Title';
+import { api } from '../../../services/api/api';
+import { Title } from '../../../components/title/Title';
 import Swal from 'sweetalert2';
 import { Box, Paper, TextField, Button, InputAdornment, Typography } from '@mui/material';
 import { FiAtSign } from 'react-icons/fi';
 import './PasswordRecover.scss';
 
-const recoverEndpoint = `${process.env.REACT_APP_ENDPOINT_PASSWORD}/recover`;
+const recoverEndpoint = process.env.REACT_APP_ENDPOINT_PASSWORD_RECOVER;
 
 export const PasswordRecover = () => {
   const navigate = useNavigate();
@@ -18,7 +18,7 @@ export const PasswordRecover = () => {
     if (!email) return;
     setSending(true);
     try {
-      const { errorWrapper } = await import('../../../../services/api/errorWrapper');
+      const { errorWrapper } = await import('../../../services/api/errorWrapper');
       const { ok, data, error } = await errorWrapper(api.post(`${recoverEndpoint}`, { email }), { unwrap: false });
       if (ok) {
         const msg = data?.message || 'Revisa tu bandeja de entrada para continuar.';

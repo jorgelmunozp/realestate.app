@@ -1,11 +1,12 @@
 import axios from 'axios';
 import { getToken, getTokenPayload, isTokenNearExpiry, saveToken, clearToken } from './token';
+import { getBaseURL } from '../api/config';
 import { store } from '../store/store';
 import { logout } from '../store/authSlice';
 
 let refreshPromise = null;
 
-const getRefreshEndpoint = () => process.env.REACT_APP_ENDPOINT_REFRESH || '/api/auth/refresh';
+const getRefreshEndpoint = () => process.env.REACT_APP_ENDPOINT_TOKEN_REFRESH;
 
 const redirectToLogin = () => {
   try {
@@ -27,7 +28,7 @@ export const refreshToken = async () => {
   const endpoint = getRefreshEndpoint();
   if (!endpoint) return null;
 
-  const baseURL = process.env.REACT_APP_BACKEND_URL;
+  const baseURL = getBaseURL();
   const currentToken = getToken('token');
   if (!currentToken) return null;
 

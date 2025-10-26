@@ -11,6 +11,7 @@ export const Index = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const dispatch = useDispatch();
+
   const { properties = [], loading = false, meta = {} } = useSelector((s) => s.property || {});
   const [queryPropertyName, setQueryPropertyName] = useState('');
   const [pagination, setPagination] = useState({ last_page: 1, limit: 6, page: 1, total: 0 });
@@ -18,10 +19,12 @@ export const Index = () => {
   useEffect(() => {
     const needsRefresh = location.state?.refresh === true;
     dispatch(fetchProperties({ page: pagination.page, limit: pagination.limit, refresh: needsRefresh }));
-    if (location.state) {
+
+    // Limpia el state solo si realmente venía con refresh
+    if (needsRefresh) {
       navigate(location.pathname, { replace: true, state: {} });
     }
-  }, [location.pathname, pagination.page, pagination.limit, dispatch, navigate, location.state]);
+  }, [location.pathname, pagination.page, pagination.limit, dispatch, navigate]);
 
   const handleOpenProperty = (propertyId) => navigate(`/property/${propertyId}`);
   const handleChangePage = (newPage) => setPagination((prev) => ({ ...prev, page: newPage }));
@@ -42,38 +45,46 @@ export const Index = () => {
           <Title title="Inmuebles Disponibles" />
         </div>
 
-        <Search value={queryPropertyName} onChange={setQueryPropertyName} placeholder="Buscar inmueble..." />
+        <Search
+          value={queryPropertyName}
+          onChange={setQueryPropertyName}
+          placeholder="Buscar inmueble..."
+        />
 
         <div className="index-grid">
           {properties
-            .filter((property) => property.name.toLowerCase().includes(queryPropertyName.toLowerCase()))
-            .map((property) => (
+            .filter((p) => p.name?.toLowerCase().includes(queryPropertyName.toLowerCase()))
+            .map((p) => (
               <div
-                key={property.idProperty}
+                key={p.idProperty}
                 className="index-property-card"
-                onClick={() => handleOpenProperty(property.idProperty)}
+                onClick={() => handleOpenProperty(p.idProperty)}
               >
-                {property.image ? (
+                {p.image && p.image.file ? (
                   <img
                     className="index-property-card-img"
-                    src={`data:image/jpg;base64,${property.image.file}`}
-                    alt={property.name}
+                    src={`data:image/jpeg;base64,${p.image.file}`}
+                    alt={p.name}
                     loading="lazy"
                   />
                 ) : (
-                  <div className="container-loader"><div className="spinner"></div></div>
+                  <div className="no-image">Sin imagen</div>
                 )}
 
                 <div className="index-property-card-info">
-                  <h3>{property.name}</h3>
-                  <p>{property.address}</p>
-                  <p className="price">${property.price.toLocaleString()}</p>
+                  <h3>{p.name}</h3>
+                  <p>{p.address}</p>
+                  <p className="price">${p.price.toLocaleString()}</p>
                 </div>
               </div>
             ))}
         </div>
 
-        <Pagination page={pagination.page} lastPage={meta?.last_page || pagination.last_page} onPageChange={handleChangePage} />
+        <Pagination
+          page={pagination.page}
+          lastPage={meta?.last_page || pagination.last_page}
+          onPageChange={handleChangePage}
+        />
       </div>
     </div>
   );

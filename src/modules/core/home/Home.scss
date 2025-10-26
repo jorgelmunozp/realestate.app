@@ -77,10 +77,28 @@
 
 .home-role {
   margin: -0.5rem 0 1rem 0.25rem;
-  color: #6b7280;
-  font-size: 0.95rem;
-  font-weight: 500;
-  font-style: italic;
+  /* Compact pill with icon + text, matching palette */
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.25rem 0.6rem;
+  border-radius: 9999px;
+  background-color: #e0f2fe; /* light blue */
+  color: $blue-color; /* primary blue */
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.12);
+  font-style: normal;
+  font-size: 0.9rem;
+  font-weight: 600;
+
+  svg {
+    width: 16px;
+    height: 16px;
+    flex: none;
+  }
+
+  .home-role__label {
+    line-height: 1;
+  }
 }
 
 .home-meta {
@@ -181,6 +199,16 @@
         }
       }
 
+      /* Editor: botón de editar verde */
+      &.btn-edit.editor {
+        background-color: #d1fae5; /* green-100 */
+        color: #065f46; /* green-800 */
+
+        &:hover {
+          background-color: #a7f3d0; /* green-200 */
+        }
+      }
+
       &.btn-delete {
         background-color: #fee2e2;
         color: #b91c1c;
@@ -276,4 +304,13 @@
   border-top-color: $blue-color;
   border-radius: 50%;
   animation: spin 0.9s linear infinite;
+}
+
+/* Admin: mismo estilo que editor para botón editar */
+.home-property-card .home-property-card-buttons button.btn-edit.admin {
+  background-color: #d1fae5; /* green-100 */
+  color: #065f46; /* green-800 */
+}
+.home-property-card .home-property-card-buttons button.btn-edit.admin:hover {
+  background-color: #a7f3d0; /* green-200 */
 }

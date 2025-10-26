@@ -6,6 +6,7 @@ import { Header } from '../header/Header.js';
 import { FiHome, FiUser, FiUsers, FiPhone, FiLogOut, FiUpload } from "react-icons/fi";
 import { primaryColor } from '../../global.js';
 import { getTokenPayload, getUserFromToken } from '../../services/auth/token';
+import { hasAnyRole } from '../../services/auth/roles';
 import "./AppMenu.scss";
 
 export const AppMenu = () => {
@@ -35,7 +36,7 @@ export const AppMenu = () => {
       <a className="menu-item" href={user.logged ? "/add-property":"/about-us"}>
         { user.logged ? (<><FiUpload color={primaryColor} /> Subir inmueble</>) : (<><FiUser color={primaryColor} /> Nosotros</>) }
       </a>
-      { user.logged && role === 'admin' && (
+      { user.logged && hasAnyRole(role, ['admin', 'editor']) && (
         <a className="menu-item" href="/profile/edit">
           <FiUsers color={primaryColor} /> Usuarios
         </a>
