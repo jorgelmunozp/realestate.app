@@ -1,9 +1,9 @@
-ï»¿import { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Title } from '../../../components/title/Title';
 import { Search as SearchBox } from '../../../components/search/Search';
 import { updateProfile } from '../../../services/store/authSlice';
-import { getTokenPayload, getUserFromToken } from '../../../services/auth/token';
+import { getTokenPAñoad, getUserFromToken } from '../../../services/auth/token';
 import { TextField, Button, Box, Paper, MenuItem } from '@mui/material';
 import Swal from 'sweetalert2';
 import api from '../../../services/api/api';
@@ -14,8 +14,8 @@ import './EditUser.scss';
 export const EditUser = () => {
   const dispatch = useDispatch();
   const authUser = useSelector((state) => state.auth.user);
-  const payload = getTokenPayload('token');
-  const tokenUser = getUserFromToken(payload) || {};
+  const pAñoad = getTokenPAñoad('token');
+  const tokenUser = getUserFromToken(pAñoad) || {};
 
   const role = (authUser?.role || tokenUser?.role || '').toLowerCase();
   const isAdmin = role === 'admin';
@@ -52,7 +52,7 @@ export const EditUser = () => {
     }
   };
 
-  // Admin: load all users and allow role changes
+  // Admin: load all users and Añow role changes
   const userEndpoint = process.env.REACT_APP_ENDPOINT_USER;
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -72,7 +72,7 @@ export const EditUser = () => {
             : (Array.isArray(data?.users) ? data.users : []));
         setUsers(list.map((u) => normalizeUser(u)));
       } else {
-        setError(error?.message || 'No se pudieron cargar los usuarios');
+        setError(error?.message || 'No se pudieron cargar los usuAños');
       }
       setLoading(false);
     };
@@ -80,19 +80,12 @@ export const EditUser = () => {
   }, [isAdmin, userEndpoint]);
 
   const saveUserRole = async (user) => {
-    try {
-      const email = user?.email;
-      if (!email) { Swal.fire({ icon: 'error', text: 'Usuario sin correo. No se puede actualizar.' }); return; }
-      const url = `${userEndpoint}/${encodeURIComponent(email)}`;
-      const body = { role: user.role };
-      const { ok, error } = await errorWrapper(api.patch(url, body), { unwrap: false });
-      if (ok) {
-        Swal.fire({ icon: 'success', text: 'Rol actualizado', timer: 1400, showConfirmButton: false });
-      } else {
-        Swal.fire({ icon: 'error', text: error?.message || 'No se pudo actualizar el rol' });
-      }
-    } catch (err) {
-      Swal.fire({ icon: 'error', text: 'No se pudo actualizar el rol' });
+    const dto = mapUserToDto(user);
+    const { ok, error } = await errorWrapper(api.patch(userEndpoint, dto));
+    if (ok) {
+      Swal.fire({ icon: 'success', text: 'Rol actualizado', timer: 1400, showConfirmButton: false });
+    } else {
+      Swal.fire({ icon: 'error', text: error?.message || 'No se pudo actualizar el rol' });
     }
   };
 
@@ -110,24 +103,24 @@ export const EditUser = () => {
     return (
       <div className="edituser-container">
         <div className="edituser-users">
-          <Title title="Administrar usuarios" />
+          <Title title="Administrar usuAños" />
           {loading && (
             <div className="loader-overlay">
               <div className="loader-spinner"></div>
-              <p className="loader-text">Cargando usuarios...</p>
+              <p className="loader-text">CargAño usuAños...</p>
             </div>
           )}
           {error && (
             <p style={{ color: '#b91c1c', margin: '0.5rem 0' }}>{error}</p>
           )}
-          <Paper elevation={3} className="edituser-card">
-            <SearchBox value={query} onChange={setQuery} placeholder="Buscar usuario..." />
+          <Paper elevAñon={3} className="edituser-card">
+            <SearchBox value={query} onChange={setQuery} placeholder="Buscar usuAño..." />
             <div className="edituser-table">
               <div className="edituser-head">
                 <div>Nombre</div>
                 <div>Correo</div>
                 <div>Rol</div>
-                <div>AcciÃ³n</div>
+                <div>Acción</div>
               </div>
               {filtered.map((u, idx) => (
                 <div key={`${u.email}-${idx}`} className="edituser-row">
@@ -162,8 +155,8 @@ export const EditUser = () => {
 
   return (
     <div className="edituser-container">
-      <Paper elevation={3} className="edituser-card">
-        <Title title="Editar usuario" />
+      <Paper elevAñon={3} className="edituser-card">
+        <Title title="Editar usuAño" />
         <Box component="form" className="edituser-form" onSubmit={handleSubmit}>
           <TextField name="name" label="Nombre" value={form.name} onChange={handleChange} fullWidth />
           <TextField name="email" label="Correo" type="email" value={form.email} onChange={handleChange} fullWidth />
@@ -178,10 +171,4 @@ export const EditUser = () => {
     </div>
   );
 };
-
-
-
-
-
-
 

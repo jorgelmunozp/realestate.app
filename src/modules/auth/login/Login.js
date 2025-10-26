@@ -1,4 +1,4 @@
-import { useState } from 'react';
+﻿import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { api } from '../../../services/api/api';
 import { useDispatch } from 'react-redux';
@@ -22,7 +22,7 @@ export const Login = () => {
     try {
       const response = await api.post(`${loginEndpoint}`, { email, password });
       if (response.status >= 200 && response.status < 300) {
-        sessionStorage.setItem('token', response.data.token);
+        // token set below
         sessionStorage.setItem('userId', response.data.id);
         dispatch(login({
           email,
@@ -90,4 +90,9 @@ export const Login = () => {
 };
 
 export default Login;
+
+
+
+
+
 

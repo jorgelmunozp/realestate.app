@@ -10,30 +10,65 @@ export const fetchProperties = createAsyncThunk(
     const propertyImageEndpoint = process.env.REACT_APP_ENDPOINT_PROPERTYIMAGE;
 
     const res = await errorWrapper(
-      api.get(`${propertyEndpoint}?page=${page}&limit=${limit}${refresh ? '&refresh=true' : ''}`)
+      api.get(`${propertyEndpoint}?page=${page}&limit=${limit}${refresh ? '&refresh=true' : ''}`),
+      { unwrap: false }
     );
     if (!res.ok) throw res.error;
     const body = res.data || {};
-    const items = Array.isArray(body) ? body : body.data || [];
+    // body puede ser:
+    // - array de propiedades
+    // - objeto { data: [...], meta }
+    // - objeto { items: [...], meta }
+    // - objeto { data: { items: [...], meta } }
+    let items = [];
+    let meta = undefined;
+    if (Array.isArray(body)) {
+      items = body;
+    } else if (Array.isArray(body.items)) {
+      items = body.items;
+      meta = body.meta;
+    } else if (Array.isArray(body.data)) {
+      items = body.data;
+      meta = body.meta;
+    } else if (body.data && typeof body.data === 'object') {
+      const inner = body.data;
+      if (Array.isArray(inner.items)) {
+        items = inner.items;
+        meta = inner.meta || body.meta;
+      }
+    }
 
     const withImages = await Promise.all(
       items.map(async (p) => {
+        const idProp = p?.idProperty ?? p?.IdProperty ?? p?.id ?? p?.Id;
+        const norm = {
+          ...p,
+          idProperty: idProp,
+          name: p?.name ?? p?.Name ?? '',
+          address: p?.address ?? p?.Address ?? '',
+          price: p?.price ?? p?.Price ?? 0,
+        };
         try {
           const resImg = await errorWrapper(
-            api.get(`${propertyImageEndpoint}?idProperty=${p.idProperty}${refresh ? '&refresh=true' : ''}`)
+            api.get(`${propertyImageEndpoint}?idProperty=${idProp}${refresh ? '&refresh=true' : ''}`),
+            { unwrap: false }
           );
           if (!resImg.ok) throw resImg.error;
           const imgBody = resImg.data || [];
-          const firstImg = Array.isArray(imgBody) ? imgBody[0] : imgBody?.[0];
-          return { ...p, image: firstImg || null };
+          const imgItems = Array.isArray(imgBody)
+            ? imgBody
+            : (Array.isArray(imgBody.items) ? imgBody.items
+              : (Array.isArray(imgBody.data) ? imgBody.data : []));
+          const firstImg = imgItems[0];
+          return { ...norm, image: firstImg || null };
         } catch {
-          return { ...p, image: null };
+          return { ...norm, image: null };
         }
       })
     );
 
-    const meta = body.meta || { page, limit, total: withImages.length, last_page: 1 };
-    return { items: withImages, meta };
+    const finalMeta = meta || body.meta || { page, limit, total: withImages.length, last_page: 1 };
+    return { items: withImages, meta: finalMeta };
   }
 );
 

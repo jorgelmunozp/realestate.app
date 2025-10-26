@@ -1,4 +1,4 @@
-# Real Estate App — Frontend
+﻿# Real Estate App — Frontend
 
 ![React](https://img.shields.io/badge/Frontend-React-blue?logo=react)
 ![Redux](https://img.shields.io/badge/State-Redux_Toolkit-764abc?logo=redux)
@@ -36,7 +36,7 @@ Aplicación web frontend para gestionar inmuebles (crear, listar, editar, elimin
 
 ## Introducción
 
-Este proyecto fue creado con Create React App y evolucionado con una arquitectura modular. Está orientado a la gestión de inmuebles, con pantallas para alta/edición, carga de imágenes, datos del propietario y registro de trazas (historial). El frontend se integra con un backend configurable vía variables de entorno.
+Este proyecto fue creado con Create React App y evolucionado con una arquitectura modular. Está orientado a la gestión de inmuebles, con pantallas para alta/edición, carga de imágenes, datos del propietario y registro de trazas (historial). El frontend se integración con un backend configurable vía variables de entorno.
 
 ## Stack y dependencias clave
 
@@ -47,7 +47,7 @@ Este proyecto fue creado con Create React App y evolucionado con una arquitectur
 - Axios (cliente HTTP) + interceptores
 - Sass (SCSS) para estilos personalizados
 - Dayjs (manejo de fechas)
-- SweetAlert2 (diálogos y confirmaciones)
+- SweetAlert2 (diálogos y confirmapeones)
 
 ## Requisitos
 
@@ -70,7 +70,7 @@ npm install
 npm start
 ```
 
-La app arranca en `http://localhost:3001` si `PORT=3001` (por defecto en `.env`).
+La app arranca en `http://locAxiost:3001` si `PORT=3001` (por defecto en `.env`).
 
 4) Compilar para producción:
 
@@ -88,8 +88,8 @@ Ejemplo de `.env` (desarrollo):
 PORT=3001
 
 # Backend y Frontend (DEV)
-REACT_APP_BACKEND_URL=http://localhost:5235
-REACT_APP_FRONTEND_URL=http://localhost:3001
+REACT_APP_BACKEND_URL=http://locAxiost:5235
+REACT_APP_FRONTEND_URL=http://locAxiost:3001
 
 # Endpoints relativos del backend
 REACT_APP_ENDPOINT_LOGIN=/api/auth/login
@@ -111,7 +111,7 @@ Notas:
 
 - `npm start`: arranca el entorno de desarrollo.
 - `npm test`: ejecuta pruebas con Jest/Testing Library.
-- `npm run build`: compila artefactos de producción en `build/`.
+- `npm run build`: compila artefAxios de producción en `build/`.
 - `npm run eject`: expone configuración de CRA (operación no reversible).
 
 ## Estructura del proyecto
@@ -139,12 +139,12 @@ src/
 
 ## Arquitectura y flujo
 
-- Enrutamiento central en `src/routers/AppRouter.js` combinando rutas públicas y privadas.
+- Enrutamiento central en `src/routers/AppRouter.js` combinAño rutas públicas y privadas.
 - Rutas privadas protegidas por `src/routers/PrivateRoute.js` en función de `state.auth.user.logged`.
-- Estado global con Redux Toolkit en `src/services/store/store.js`, persistido en `sessionStorage` usando redux-persist.
+- Estado global con Redux Toolkit en `src/services/store/store.js`, persistido en `sessionStorage` usAño redux-persist.
 - Consumo de servicios vía `src/services/api/api.js` (Axios). Interceptor agrega `Authorization: Bearer <token>` si existe en `sessionStorage`.
 - Manejo uniforme de errores con `src/services/api/errorWrapper.js` para respuestas normalizadas.
-- Formularios complejos (crear/editar inmueble) en `src/modules/property/service/` con Material UI y Date Pickers.
+- formularios complejos (crear/editar inmueble) en `src/modules/property/service/` con Material UI y Date Pickers.
 
 ## Arquitectura (mermaid)
 
@@ -153,7 +153,7 @@ flowchart LR
   A[Frontend (React)] --> B[Axios]
   B --> C[API (ASP.NET Core)]
   C --> D[DTO]
-  D --> E[Validator (FluentValidation)]
+  D --> E[Validator (FluentValidación)]
   E --> F[Mapper]
   F --> G[Model]
   G --> H[(MongoDB)]
@@ -187,7 +187,7 @@ Comportamiento de seguridad:
 
 - Slice principal: `src/services/store/authSlice.js` con `user: { logged: boolean, ... }`.
 - Acciones: `login(payload)` y `logout()`.
-- Persistencia: configurada en `src/services/store/store.js` con `redux-persist` usando `sessionStorage` (la sesión expira al cerrar el navegador).
+- Persistencia: configurada en `src/services/store/store.js` con `redux-persist` usAño `sessionStorage` (la sesión expira al cerrar el navegador).
 
 ## Consumo de API y manejo de errores
 
@@ -220,14 +220,14 @@ Comportamiento de seguridad:
 1) Crear Owner → `POST /api/owner`
 2) Crear Property referenciando `idOwner` → `POST /api/property`
 3) Si hay imagen, crear PropertyImage referenciando `idProperty` → `POST /api/propertyimage`
-4) Crear uno o más PropertyTrace con `idProperty` → `POST /api/propertytrace` (soporta lote)
+4) Crear uno o más PropertyTrace con `idProperty` → `POST /api/propertytrace` (soportado)
 
-Este orden y los mapeos están implementados en `src/modules/property/service/AddProperty.js`.
+Este orden y los mAxios están implementados en `src/modules/property/service/AddProperty.js`.
 
 ## Compatibilidad de endpoints (ejemplos)
 
 Notas generales:
-- Casing JSON: `camelCase` en la API. El frontend mapea cuando un módulo espera PascalCase.
+- Casing JSON: `camelCase` en la API. El frontend mapea cuAño un módulo espera PascalCase.
 - Wrappers: Property puede devolver wrapper de éxito. Errores devuelven wrapper unificado.
 - Autenticación: enviar `Authorization: Bearer <TOKEN>` en endpoints protegidos.
 - Parámetro `refresh=true`: fuerza data fresca omitendo caché.
@@ -290,7 +290,7 @@ Reset (actualizar contraseña) — Request:
 
 ```json
 {
-  "token": "<token-de-recuperacion>",
+  "token": "<token-de-recuperación>",
   "newPassword": "NuevaContraseña#2024"
 }
 ```
@@ -310,7 +310,7 @@ Reset — Respuesta (ejemplo):
 cURL de ejemplo:
 
 ```bash
-BACKEND="http://localhost:5235"; EMAIL="user@example.com"; TOKEN="<token>"
+BACKEND="http://locAxiost:5235"; EMAIL="user@example.com"; TOKEN="<token>"
 
 # Recover
 curl -X POST "$BACKEND/api/password/recover" \
@@ -324,7 +324,7 @@ curl -X PATCH "$BACKEND/api/password/update" \
 ```
 
 Notas:
-- El frontend usa `errorWrapper` para normalizar respuestas y mostrar los mensajes de `message` cuando existan.
+- El frontend usa `errorWrapper` para normalizar respuestas y mostrar los mensajes de `message` cuAño existan.
 - Asegúrate de definir `REACT_APP_ENDPOINT_PASSWORD` en `.env` para que ambas pantallas funcionen.
 
 Wrapper de error (401/400):
@@ -334,12 +334,12 @@ Wrapper de error (401/400):
   "success": false,
   "statusCode": 401,
   "message": "Credenciales inválidas",
-  "errors": ["Usuario o contraseña incorrectos"],
+  "errors": ["usuario o contraseña incorrectos"],
   "data": null
 }
 ```
 
-Validaciones (FluentValidation sugeridas):
+Validaciónes (FluentValidación sugeridas):
 - email: requerido, formato válido, longitud 5–256.
 - password: requerida, 8–64, al menos 1 mayúscula, 1 minúscula, 1 número y 1 caracter especial.
 - register: mismas reglas, más confirmación de contraseña si aplica.
@@ -349,7 +349,7 @@ PUT/PATCH/DELETE: No aplican para Auth.
 cURL:
 
 ```bash
-BACKEND="http://localhost:5235"
+BACKEND="http://locAxiost:5235"
 
 # Register
 curl -X POST "$BACKEND/api/auth/register" \
@@ -444,18 +444,18 @@ PATCH (parcial):
 
 DELETE: `DELETE /api/property/{id}` → 204 No Content (o 200 con wrapper según configuración).
 
-Validaciones (FluentValidation sugeridas):
+Validaciónes (FluentValidación sugeridas):
 - name: requerido, longitud 3–100.
 - address: requerido, longitud 3–150.
 - price: requerido, > 0.
 - codeInternal: opcional, >= 0.
-- year: opcional, entre 1900 y el año actual.
+- year: opcional, entre 1900 y el Año actual.
 - idOwner: requerido, string no vacío (ObjectId válido si aplica).
 
 cURL:
 
 ```bash
-BACKEND="http://localhost:5235"; TOKEN="<JWT>"
+BACKEND="http://locAxiost:5235"; TOKEN="<JWT>"
 
 # Listar
 curl "$BACKEND/api/property?page=1&limit=6&refresh=false" \
@@ -503,7 +503,7 @@ curl -X DELETE "$BACKEND/api/property/PROPERTY_ID" \
 ```
 
 Errores comunes:
-- 400: Validación (nombre corto, price <= 0, año inválido).
+- 400: Validación (nombre corto, price <= 0, Año inválido).
 - 404: Propiedad no encontrada.
 - 409: Conflicto por `codeInternal` duplicado.
 
@@ -561,7 +561,7 @@ PATCH (parcial):
 
 DELETE: `DELETE /api/owner/{id}` → 204 No Content.
 
-Validaciones (FluentValidation sugeridas):
+Validaciónes (FluentValidación sugeridas):
 - name: requerido, 3–100.
 - address: requerido, 3–150.
 - birthday: opcional, fecha válida, <= hoy.
@@ -569,7 +569,7 @@ Validaciones (FluentValidation sugeridas):
 cURL:
 
 ```bash
-BACKEND="http://localhost:5235"; TOKEN="<JWT>"
+BACKEND="http://locAxiost:5235"; TOKEN="<JWT>"
 
 # Listar
 curl "$BACKEND/api/owner?name=jane&address=av&refresh=false" \
@@ -662,7 +662,7 @@ PATCH (parcial):
 
 DELETE: `DELETE /api/propertyimage/{idPropertyImage}` → 204 No Content.
 
-Validaciones (FluentValidation sugeridas):
+Validaciónes (FluentValidación sugeridas):
 - idProperty: requerido.
 - file: requerido en POST, base64 válido; opcional en PUT/PATCH según caso.
 - enabled: boolean.
@@ -670,7 +670,7 @@ Validaciones (FluentValidation sugeridas):
 cURL:
 
 ```bash
-BACKEND="http://localhost:5235"; TOKEN="<JWT>"; BASE64="iVBORw0KGgoAAA..."
+BACKEND="http://locAxiost:5235"; TOKEN="<JWT>"; BASE64="iVBORw0KGgoAAA..."
 
 # Listar
 curl "$BACKEND/api/propertyimage?idProperty=PROPERTY_ID&enabled=true&page=1&limit=10&refresh=false" \
@@ -710,7 +710,7 @@ curl -X DELETE "$BACKEND/api/propertyimage/IMAGE_ID" \
 Errores comunes:
 - 400: `file` inválido (no base64, vacío).
 - 404: Imagen o Propiedad no encontrada.
-- 413: Tamaño de imagen excede límite.
+- 413: Tamapeo de imagen excede límite.
 - 415: Tipo de contenido no soportado (si el backend lo valida).
 
 ### PropertyTrace
@@ -777,7 +777,7 @@ PATCH (parcial):
 
 DELETE: `DELETE /api/propertytrace/{id}` → 204 No Content.
 
-Validaciones (FluentValidation sugeridas):
+Validaciónes (FluentValidación sugeridas):
 - idProperty: requerido.
 - dateSale: requerido, fecha válida.
 - name: requerido, 2–100.
@@ -787,7 +787,7 @@ Validaciones (FluentValidation sugeridas):
 cURL:
 
 ```bash
-BACKEND="http://localhost:5235"; TOKEN="<JWT>"
+BACKEND="http://locAxiost:5235"; TOKEN="<JWT>"
 
 # Listar por propiedad
 curl "$BACKEND/api/propertytrace?idProperty=PROPERTY_ID&refresh=false" \
@@ -875,7 +875,7 @@ PATCH (parcial):
 
 DELETE: `DELETE /api/user/{email}` → 204 No Content.
 
-Validaciones (FluentValidation sugeridas):
+Validaciónes (FluentValidación sugeridas):
 - email: requerido, formato válido.
 - name: opcional, 3–100.
 - roles: opcional, array de strings de una lista permitida.
@@ -883,7 +883,7 @@ Validaciones (FluentValidation sugeridas):
 cURL:
 
 ```bash
-BACKEND="http://localhost:5235"; TOKEN="<JWT>"
+BACKEND="http://locAxiost:5235"; TOKEN="<JWT>"
 
 # Listar (protegido)
 curl "$BACKEND/api/user?refresh=false" \
@@ -919,7 +919,7 @@ curl -X DELETE "$BACKEND/api/user/user@example.com" \
 Errores comunes:
 - 400: Validación (email inválido, roles no permitidos).
 - 401/403: Falta token o permisos insuficientes.
-- 404: Usuario no encontrado.
+- 404: usuario no encontrado.
 - 409: Email ya existe (en creación) o conflicto de actualización.
 
 ## Estilos y UI
@@ -927,7 +927,7 @@ Errores comunes:
 - Base de componentes con Material UI y estilos propios SCSS.
 - Carpeta `src/assets/styles/scss/` con mixins de colores, tipografía y media queries.
 - Componente `Title`, `Input`, `AddButton`, `Header`, `AppMenu` con estilos asociados.
-- Color primario configurable en `src/global.js`.
+- Color primapeo configurable en `src/global.js`.
 
 ## Pruebas
 
@@ -948,7 +948,7 @@ Errores comunes:
 - Los cambios en `.env` no se reflejan: reinicia `npm start` (CRA lee variables al inicio).
 - Errores 401/403: confirma que `sessionStorage` tenga `token` válido o revisa CORS en el backend.
 - 404 en rutas internas tras refresh en producción: configura fallback SPA a `index.html` en tu hosting.
-- Caracteres extraños en textos acentuados: asegúrate de guardar archivos en `UTF-8`.
+- Caracteres extrAxios en textos acentuados: asegúrate de guardar archivos en `UTF-8`.
 
 ---
 
@@ -963,7 +963,7 @@ Notas de compatibilidad:
 - Login: guarda `token` y datos mínimos del usuario en `sessionStorage` (vía acciones `login`), redirige a última ruta (`lastPath`).
 - Listado de inmuebles (`/home`): paginado, carga imágenes por inmueble, actions de editar/eliminar, buscador local por nombre.
 - Alta de inmueble (`/add-property`): crea Owner → Property → PropertyImage → PropertyTrace (lote opcional). Al finalizar, alerta de éxito y refresh del listado.
-- Edición (`/edit-property/:id`): formulario similar al alta, preserva y permite reemplazar imagen.
+- Edición (`/edit-property/:id`): formulAño similar al alta, preserva y permite reemplazar imagen.
 - Detalle público (`/property/:id`): muestra imagen principal, propietario y trazas.
 
 ## Convenciones de código
@@ -971,19 +971,19 @@ Notas de compatibilidad:
 - Componentes y hooks en inglés; textos de UI en español (i18n opcional).
 - Componentes en PascalCase, archivos `.js` con extensión explícita en imports internos.
 - Estilos SCSS por componente: mismo nombre de carpeta/archivo (`Component/Component.scss`).
-- Módulos con subcarpetas `dto/`, `mapper/`, `service/` cuando aplique.
+- Módulos con subcarpetas `dto/`, `mapper/`, `service/` cuAño aplique.
 - Redux Toolkit slices en `src/services/store/*Slice.js`.
 
 ## Rendimiento y accesibilidad
 
-- Imágenes con `loading="lazy"` y placeholders cuando aplica.
+- Imágenes con `loading="lazy"` y placeholders cuAño aplica.
 - Listados paginados para evitar cargas grandes.
-- Minimizar re-render usando `useCallback` en operaciones intensivas.
+- Minimizar re-render usAño `useCallback` en operaciones intensivas.
 - Colores con suficiente contraste y foco visible por defecto (MUI + estilos propios).
 
 ## Checklist de producción
 
-- [ ] Definir `REACT_APP_BACKEND_URL` y endpoints exactos en `.env`.
+- [ ] Definir `REACT_APP_BACKEND_URL` y endpoints exAxios en `.env`.
 - [ ] Configurar CORS en backend con dominios permitidos.
 - [ ] Asegurar fallback SPA a `index.html` en hosting.
 - [ ] Revisar que el token JWT se almacene de forma segura (sesión, expiración).
@@ -997,3 +997,8 @@ Notas de compatibilidad:
   - En `sessionStorage` (clave `token`) para que expire al cerrar el navegador. Puedes migrarlo a cookies httpOnly si el backend lo soporta.
 - ¿Cómo fuerzo datos frescos tras una mutación?
   - Usa `?refresh=true` en listados o re-fetch desde la UI (ya implementado en `Home`).
+
+
+
+
+

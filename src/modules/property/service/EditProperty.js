@@ -14,7 +14,7 @@ import Swal from "sweetalert2";
 import { Box, Typography } from "@mui/material";
 import { mapOwnerToDto } from "../../owner/mapper/OwnerMapper";
 import { mapPropertyToDto } from "../mapper/propertyMapper";
-import { mapPropertyImageToDto } from "../../propertyImage/mapper/propertyImageMapper";
+import { mapPropertyImageToDto, normalizePropertyImage } from "../../propertyImage/mapper/propertyImageMapper";
 import "./EditProperty.scss";
 
 export const EditProperty = () => {
@@ -35,16 +35,12 @@ export const EditProperty = () => {
   const [loading, setLoading] = useState(true);
   const [traceAlert, setTraceAlert] = useState({ message: "", severity: "success" });
 
-  const toBase64 = useCallback(
-    (file) =>
-      new Promise((res, rej) => {
-        const reader = new FileReader();
-        reader.onload = () => res(reader.result.split(",")[1]);
-        reader.onerror = (e) => rej(e);
-        reader.readAsDataURL(file);
-      }),
-    []
-  );
+  const toBase64 = useCallback((file) => new Promise((res, rej) => {
+    const reader = new FileReader();
+    reader.onload = () => res(reader.result.split(",")[1]);
+    reader.onerror = (e) => rej(e);
+    reader.readAsDataURL(file);
+  }), []);
 
   useEffect(() => {
     const loadAll = async () => {
@@ -61,15 +57,18 @@ export const EditProperty = () => {
         setOwner(resOwner.data);
 
         const resImage = await errorWrapper(
-          api.get(`${endpoints.image}?idProperty=${propertyId}${needsRefresh ? `&refresh=true` : ``}`)
+          api.get(`${endpoints.image}?idProperty=${propertyId}${needsRefresh ? `&refresh=true` : ``}`),
+          { unwrap: false }
         );
-        const image = resImage.data[0] || {};
+        const bodyImg = resImage.data || [];
+        const listImg = Array.isArray(bodyImg) ? bodyImg : (Array.isArray(bodyImg.items) ? bodyImg.items : (Array.isArray(bodyImg.data) ? bodyImg.data : []));
+        const image = listImg[0] || {};
+        const normalized = normalizePropertyImage(image);
         setPropertyImage({
-          ...image,
-          imagePreview:
-            image.file || image.fileBase64
-              ? `data:image/jpeg;base64,${image.file || image.fileBase64}`
-              : image.url || "",
+          ...normalized,
+          imagePreview: normalized.file
+            ? `data:image/jpeg;base64,${normalized.file}`
+            : (normalized.url || ""),
         });
 
         const resTraces = await errorWrapper(
@@ -77,14 +76,14 @@ export const EditProperty = () => {
         );
         setPropertyTrace(resTraces.data || []);
       } catch (err) {
-        console.error("❌ Error al cargar datos:", err);
+        console.error("Error al cargar datos:", err);
         Swal.fire({ icon: "error", title: "Error", text: "No se pudieron cargar los datos" });
       } finally {
         setLoading(false);
       }
     };
     loadAll();
-  }, [propertyId]);
+  }, [propertyId, location.state, endpoints.property, endpoints.owner, endpoints.image, endpoints.trace]);
 
   const clampNonNegative = (v) => {
     const n = Number(v);
@@ -140,6 +139,16 @@ export const EditProperty = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      // Validaciones requeridas de imágenes
+      if (!itemPropertyImage?.imagePreview && !itemPropertyImage?.file) {
+        Swal.fire({ icon: 'warning', title: 'Imagen requerida', text: 'Debes cargar la imagen de la propiedad.' });
+        return;
+      }
+      if (!itemOwner?.ownerPhotoPreview && !itemOwner?.photo) {
+        Swal.fire({ icon: 'warning', title: 'Foto requerida', text: 'Debes cargar la imagen del propietario.' });
+        return;
+      }
+
       // Actualizar propietario (DTO PascalCase)
       const ownerDto = mapOwnerToDto(itemOwner);
       await errorWrapper( api.patch(`${endpoints.owner}/${itemOwner.idOwner}`, ownerDto) );
@@ -150,20 +159,20 @@ export const EditProperty = () => {
 
       // Actualizar o crear imagen de propiedad
       if (itemPropertyImage?.file) {
-        const imageDto = mapPropertyImageToDto({ ...itemPropertyImage, idProperty: propertyId });
-        if (itemPropertyImage?.idPropertyImage) {
-          await errorWrapper( api.patch(`${endpoints.image}/${itemPropertyImage.idPropertyImage}`, imageDto) );
+        const imgId = itemPropertyImage?.idPropertyImage || itemPropertyImage?.IdPropertyImage;
+        const imageDto = mapPropertyImageToDto({ ...itemPropertyImage, idProperty: propertyId, idPropertyImage: imgId });
+        if (imgId) {
+          await errorWrapper( api.patch(`${endpoints.image}/${imgId}`, imageDto), { unwrap: false } );
         } else {
-          await errorWrapper( api.post(endpoints.image, imageDto) );
+          await errorWrapper( api.post(endpoints.image, imageDto), { unwrap: false } );
         }
       }
 
       // Actualizar o crear trazas
       for (const trace of itemPropertyTrace) {
         if (trace.idPropertyTrace) {
-          // ✅ Corregido: ahora llama correctamente con el id del trace, no con ?idProperty
           await errorWrapper( api.patch(`${endpoints.trace}/${trace.idPropertyTrace}`, trace) );
-        } else {
+        } else if (trace.name || trace.dateSale) {
           await errorWrapper( api.post(endpoints.trace, [trace]) );
         }
       }
@@ -177,7 +186,7 @@ export const EditProperty = () => {
 
       navigate("/home", { state: { refresh: true } });
     } catch (error) {
-      console.error("❌ Error al actualizar:", error);
+      console.error("Error al actualizar:", error);
       Swal.fire({
         icon: "error",
         title: "Error",
@@ -185,7 +194,6 @@ export const EditProperty = () => {
       });
     }
   };
-
 
   if (loading)
     return (
@@ -210,7 +218,7 @@ export const EditProperty = () => {
             <TextField name="name" label="Nombre" value={itemProperty.name || ""} onChange={handleChange} required />
             <TextField name="address" label="Dirección" value={itemProperty.address || ""} onChange={handleChange} required />
             <TextField name="price" label="Precio" type="number" value={itemProperty.price || 0} onChange={handleChange} required />
-            <TextField name="codeInternal" label="Código interno" type="number" value={itemProperty.codeInternal || 0} onChange={handleChange} />
+            <TextField name="codeInternal" label="Código interno" type="number" value={itemProperty.codeInternal || 0} onChange={handleChange} required />
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DatePicker
                 label="Año"
@@ -222,6 +230,7 @@ export const EditProperty = () => {
                     fullWidth: true,
                     className: "year-input",
                     InputLabelProps: { shrink: true },
+                    required: true,
                   },
                 }}
               />
@@ -238,7 +247,7 @@ export const EditProperty = () => {
                 <Typography variant="body1" color="textSecondary">
                   Haz clic o arrastra una imagen
                 </Typography>
-                <input id="propertyFileInput" type="file" accept="image/*" hidden onChange={(e) => handleImageChange(e, "property")} />
+                <input id="propertyFileInput" type="file" accept="image/*" hidden onChange={(e) => handleImageChange(e, "property")} required aria-required="true" />
               </Box>
             ) : (
               <div className="image-preview filled">
@@ -257,14 +266,14 @@ export const EditProperty = () => {
         <div className="form-section">
           <h2>Propietario</h2>
           <div className="form-grid owner-grid">
-            <TextField name="name" label="Nombre" value={itemOwner.name || ""} onChange={(e) => handleChange(e, "owner")} />
-            <TextField name="address" label="Dirección" value={itemOwner.address || ""} onChange={(e) => handleChange(e, "owner")} />
-            <TextField type="date" name="birthday" label="Fecha de nacimiento" value={itemOwner.birthday || ""} onChange={(e) => handleChange(e, "owner")} InputLabelProps={{ shrink: true }} />
+            <TextField name="name" label="Nombre" value={itemOwner.name || ""} onChange={(e) => handleChange(e, "owner")} required />
+            <TextField name="address" label="Dirección" value={itemOwner.address || ""} onChange={(e) => handleChange(e, "owner")} required />
+            <TextField type="date" name="birthday" label="Fecha de nacimiento" value={itemOwner.birthday || ""} onChange={(e) => handleChange(e, "owner")} InputLabelProps={{ shrink: true }} required />
             <div className="image-upload-container full-width">
               {!itemOwner.ownerPhotoPreview && !itemOwner.photo ? (
                 <Box className="dropzone-box" onClick={() => document.getElementById("ownerFileInput").click()}>
                   <Typography variant="body1" color="textSecondary">Cargar imagen del propietario</Typography>
-                  <input id="ownerFileInput" type="file" accept="image/*" hidden onChange={(e) => handleImageChange(e, "owner")} />
+                  <input id="ownerFileInput" type="file" accept="image/*" hidden onChange={(e) => handleImageChange(e, "owner")} required aria-required="true" />
                 </Box>
               ) : (
                 <div className="image-preview filled">
@@ -286,10 +295,10 @@ export const EditProperty = () => {
           {itemPropertyTrace.map((trace, index) => (
             <div key={index} className="trace-wrapper">
               <div className="trace-grid">
-                <TextField type="date" name="dateSale" label="Fecha" value={trace.dateSale || ""} onChange={(e) => handleChange(e, "traces", index)} InputLabelProps={{ shrink: true }} />
-                <TextField name="name" label="Evento" value={trace.name || ""} onChange={(e) => handleChange(e, "traces", index)} />
-                <TextField type="number" name="value" label="Valor" value={trace.value || 0} onChange={(e) => handleChange(e, "traces", index)} />
-                <TextField type="number" name="tax" label="Impuesto" value={trace.tax || 0} onChange={(e) => handleChange(e, "traces", index)} />
+                <TextField type="date" name="dateSale" label="Fecha" value={trace.dateSale || ""} onChange={(e) => handleChange(e, "traces", index)} InputLabelProps={{ shrink: true }} required />
+                <TextField name="name" label="Evento" value={trace.name || ""} onChange={(e) => handleChange(e, "traces", index)} required />
+                <TextField type="number" name="value" label="Valor" value={trace.value || 0} onChange={(e) => handleChange(e, "traces", index)} required />
+                <TextField type="number" name="tax" label="Impuesto" value={trace.tax || 0} onChange={(e) => handleChange(e, "traces", index)} required />
                 <button type="button" className="trace-delete-btn" onClick={() => handleDeleteTrace(index)}>
                   <FiTrash2 />
                 </button>
@@ -317,4 +326,3 @@ export const EditProperty = () => {
 };
 
 export default EditProperty;
-

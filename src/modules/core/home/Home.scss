@@ -66,6 +66,29 @@
   }
 }
 
+/* Saludo sutil al usuario */
+.home-greeting {
+  margin: -0.5rem 0 1rem 0.25rem;
+  color: #6b7280; /* Gray-500 */
+  font-size: 0.95rem;
+  font-weight: 500;
+  font-style: italic;
+}
+
+.home-role {
+  margin: -0.5rem 0 1rem 0.25rem;
+  color: #6b7280;
+  font-size: 0.95rem;
+  font-weight: 500;
+  font-style: italic;
+}
+
+.home-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
 /* Search styles are centralized in components/search/Search.scss */
 
 /* =========================================================
@@ -235,8 +258,6 @@
 
   .loader-text {
     margin-top: 1.2rem;
-    color: $blue-color;
-    font-weight: 600;
     font-size: 1.1rem;
   }
 }

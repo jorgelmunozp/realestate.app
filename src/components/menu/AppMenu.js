@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '../../services/store/authSlice.js';
 import { slide as Menu } from "react-burger-menu";
 import { Header } from '../header/Header.js';
-import { FiHome, FiUser, FiUsers, FiPhone, FiLogOut, FiUpload, FiActivity } from "react-icons/fi";
+import { FiHome, FiUser, FiUsers, FiPhone, FiLogOut, FiUpload } from "react-icons/fi";
 import { primaryColor } from '../../global.js';
 import { getTokenPayload, getUserFromToken } from '../../services/auth/token';
 import "./AppMenu.scss";

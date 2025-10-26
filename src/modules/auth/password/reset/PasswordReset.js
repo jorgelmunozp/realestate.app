@@ -1,4 +1,4 @@
-import { useState } from 'react';
+﻿import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { api } from '../../../../services/api/api';
 import { Title } from '../../../../components/title/Title';
@@ -40,7 +40,7 @@ export const PasswordReset = () => {
   return (
     <Box className="reset-container" display="flex" justifyContent="center" alignItems="center" minHeight="100vh" sx={{ background: '#f6f8fb', padding: 2 }}>
       <Paper elevation={3} className="reset-card" sx={{ borderRadius: 4, width: '100%', maxWidth: 420, p: 4, textAlign: 'center' }}>
-        <Title title="Crear Nueva Contraseña" />
+        <Title title="Crear Nueva contraseña" />
 
         <Box display="flex" flexDirection="column" gap={2} mt={3}>
           <TextField label="Nueva contraseña" type="password" variant="outlined" value={password} onChange={(e) => setPassword(e.target.value)} fullWidth
@@ -67,4 +67,7 @@ export const PasswordReset = () => {
 };
 
 export default PasswordReset;
+
+
+
 

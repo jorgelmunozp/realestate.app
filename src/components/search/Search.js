@@ -1,4 +1,4 @@
-import React, { memo, useCallback, useRef, useState, useEffect } from 'react';
+import { memo, useCallback, useRef, useState, useEffect } from 'react';
 import { FiSearch } from 'react-icons/fi';
 import { Input } from '../input/Input';
 import './Search.scss';

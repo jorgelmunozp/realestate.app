@@ -9,16 +9,16 @@ export const User = () => {
   const authUser = useSelector((state) => state.auth.user);
   const payload = getTokenPayload('token');
   const tokenUser = getUserFromToken(payload) || {};
-  const name = tokenUser.name || 'Usuario';
-  const email = tokenUser.email || 'correo@dominio.com';
-  const role = tokenUser.role || 'user';
-  const userId = tokenUser.id || '-';
+  const name = authUser?.name || tokenUser?.name || 'Usuario';
+  const email = authUser?.email || tokenUser?.email || 'correo@dominio.com';
+  const role = authUser?.role || tokenUser?.role || 'user';
+  const userId = authUser?.id || tokenUser?.id || '-';
 
   return (
     <div className="user-profile">
       <div className="user-header">
         <Title title="Mi perfil" />
-        {role === 'admin' && (
+        {String(role).toLowerCase() === 'admin' && (
           <Link to="/profile/edit" className="user-edit-btn">Editar</Link>
         )}
       </div>

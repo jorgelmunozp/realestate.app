@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+﻿import { useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { api } from "../../../services/api/api";
 import { errorWrapper } from "../../../services/api/errorWrapper";
@@ -27,7 +27,7 @@ export const AddProperty = () => {
     property: process.env.REACT_APP_ENDPOINT_PROPERTY,
     owner: process.env.REACT_APP_ENDPOINT_OWNER,
     image: process.env.REACT_APP_ENDPOINT_PROPERTYIMAGE,
-    trace: process.env.REACT_APP_ENDPOINT_PROPERTYTRACE
+    trace: process.env.REACT_APP_ENDPOINT_PROPERTYTRACE,
   };
 
   const [itemProperty, setProperty] = useState(normalizeProperty(propertyDto));
@@ -35,10 +35,10 @@ export const AddProperty = () => {
   const [itemPropertyImage, setPropertyImage] = useState(normalizePropertyImage(propertyImageDto));
   const [itemPropertyTrace, setPropertyTrace] = useState(normalizePropertyTrace(propertyTraceDto));
 
-  const toBase64 = useCallback(file => new Promise((res, rej) => {
+  const toBase64 = useCallback((file) => new Promise((res, rej) => {
     const reader = new FileReader();
     reader.onload = () => res(reader.result.split(",")[1]);
-    reader.onerror = e => rej(e);
+    reader.onerror = (e) => rej(e);
     reader.readAsDataURL(file);
   }), []);
 
@@ -51,12 +51,12 @@ export const AddProperty = () => {
     const { name, value } = e.target;
     if (section === "traces") {
       const newVal = (name === "value" || name === "tax") ? clampNonNegative(value) : value;
-      setPropertyTrace(prev => prev.map((t, i) => (i === index ? { ...t, [name]: newVal } : t)));
+      setPropertyTrace((prev) => prev.map((t, i) => (i === index ? { ...t, [name]: newVal } : t)));
     } else if (section === "owner") {
-      setOwner(prev => ({ ...prev, [name]: value }));
+      setOwner((prev) => ({ ...prev, [name]: value }));
     } else {
       const newVal = (name === "price" || name === "codeInternal") ? clampNonNegative(value) : value;
-      setProperty(prev => ({ ...prev, [name]: newVal }));
+      setProperty((prev) => ({ ...prev, [name]: newVal }));
     }
   };
 
@@ -64,71 +64,69 @@ export const AddProperty = () => {
     if (!e?.target?.files?.[0]) return;
     const file = e.target.files[0];
     const base64 = await toBase64(file);
-    const preview = URL.createObjectURL(file);
+    const preview = URL.creAñobjectURL(file);
     if (type === "owner") {
-      setOwner(prev => ({ ...prev, photo: base64, ownerPhotoPreview: preview }));
+      setOwner((prev) => ({ ...prev, photo: base64, ownerPhotoPreview: preview }));
     } else {
-      setPropertyImage(prev => ({ ...prev, file: base64, enabled: true, imagePreview: preview }));
+      setPropertyImage((prev) => ({ ...prev, file: base64, enabled: true, imagePreview: preview }));
     }
   };
 
   const handleAddTrace = () => {
-    setPropertyTrace(prev => [...prev, { name: "", value: 0, tax: 0, dateSale: "", idProperty: "" }]);
+    setPropertyTrace((prev) => ([...prev, { name: "", value: 0, tax: 0, dateSale: "", idProperty: "" }]));
   };
 
   const handleDeleteTrace = (index) => {
-    setPropertyTrace(prev => prev.filter((_, i) => i !== index));
+    setPropertyTrace((prev) => prev.filter((_, i) => i !== index));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      // Crear propietario (DTO PascalCase)
+      // Validaciones requeridas de imágenes
+      if (!itemPropertyImage?.file) {
+        Swal.fire({ icon: 'warning', title: 'Imagen requerida', text: 'Debes cargar la imagen de la propiedad.' });
+        return;
+      }
+      if (!itemOwner?.ownerPhotoPreview && !itemOwner?.photo) {
+        Swal.fire({ icon: 'warning', title: 'Foto requerida', text: 'Debes cargar la imagen del Propietario.' });
+        return;
+      }
+
+      // Crear Propietario
       const ownerDtoPayload = mapOwnerToDto(itemOwner);
-      const resOwner = await errorWrapper( api.post(endpoints.owner, ownerDtoPayload) );
+      const resOwner = await errorWrapper(api.post(endpoints.owner, ownerDtoPayload));
       const ownerId = resOwner?.data?.idOwner ?? resOwner?.data?.IdOwner ?? resOwner?.data?.id ?? "";
 
-      // Crear propiedad (DTO PascalCase)
+      // Crear propiedad
       const propertyPayload = mapPropertyToDto({
         ...itemProperty,
         idOwner: ownerId,
         price: Number(itemProperty.price),
         codeInternal: Number(itemProperty.codeInternal),
       });
-      const resProperty = await errorWrapper( api.post(endpoints.property, propertyPayload) );
+      const resProperty = await errorWrapper(api.post(endpoints.property, propertyPayload));
+      const propertyId = resProperty?.data?.idProperty ?? resProperty?.data?.IdProperty ?? resProperty?.data?.id ?? "";
 
-      // Crear imagen solo si hay archivo
-      if (itemPropertyImage?.file) {
-        const imagePayload = mapPropertyImageToDto({
-          ...itemPropertyImage,
-          idProperty: resProperty?.data?.idProperty ?? resProperty?.data?.IdProperty ?? resProperty?.data?.id ?? "",
-        });
-        await errorWrapper( api.post(endpoints.image, imagePayload) );
+      // Crear imagen
+      const imagePayload = mapPropertyImageToDto({
+        ...itemPropertyImage,
+        idProperty: propertyId,
+      });
+      await errorWrapper(api.post(endpoints.image, imagePayload));
+
+      // Crear trazas (si existen y al menos tienen nombre/fecha)
+      const traces = (itemPropertyTrace || []).filter(t => t && (t.name || t.dateSale));
+      if (traces.length) {
+        const dto = traces.map(t => mapPropertyTraceToDto({ ...t, idProperty: propertyId }));
+        await errorWrapper(api.post(endpoints.trace, dto));
       }
 
-      // Crear trazas (DTO PascalCase)
-      const propId = resProperty?.data?.idProperty ?? resProperty?.data?.IdProperty ?? resProperty?.data?.id ?? "";
-      const traces = itemPropertyTrace.map(t => mapPropertyTraceToDto({
-        ...t,
-        idProperty: propId,
-        value: Number(t.value),
-        tax: Number(t.tax),
-      }));
-      await Promise.all(traces.map(t => errorWrapper( api.post(endpoints.trace, [t]) )));
-
-      Swal.fire({ title: "Inmueble registrado", icon: "success", confirmButtonText: "Aceptar" });
-      navigate("/home", { state: { refresh: true } });
-    // } catch (error) {
-    //   console.error("❌ Error al registrar:", error);
-    //   Swal.fire({ icon: "error", title: "Error", text: "Ocurrió un error al registrar el inmueble" });
-    // }
-  } catch (err) {
-const friendly = err && err.success === false ? err : null;
-const message = friendly?.message || "Ocurrió un error al registrar el inmueble";
-const details = Array.isArray(friendly?.errors) && friendly.errors.length ? friendly.errors.join("\n") : "";
-console.error("❌ Error al registrar:" + details ? `${message}\n${details}` : message);
-Swal.fire({ icon: "error", title: "Error", text: details ? `${message}\n${details}` : message });
-}
+      Swal.fire({ icon: 'success', title: 'Propiedad creada', confirmButtonText: 'Aceptar' });
+      navigate('/home', { state: { refresh: true } });
+    } catch (err) {
+      Swal.fire({ icon: 'error', title: 'Error', text: 'Ocurrió un error al registrar el inmueble' });
+    }
   };
 
   return (
@@ -143,7 +141,7 @@ Swal.fire({ icon: "error", title: "Error", text: details ? `${message}\n${detail
             <TextField name="name" label="Nombre" value={itemProperty.name} onChange={handleChange} required />
             <TextField name="address" label="Dirección" value={itemProperty.address} onChange={handleChange} required />
             <TextField name="price" label="Precio" type="number" value={itemProperty.price} onChange={handleChange} required />
-            <TextField name="codeInternal" label="Código interno" type="number" value={itemProperty.codeInternal} onChange={handleChange} />
+            <TextField name="codeInternal" label="Código interno" type="number" value={itemProperty.codeInternal} onChange={handleChange} required />
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DatePicker
                 label="Año"
@@ -154,7 +152,8 @@ Swal.fire({ icon: "error", title: "Error", text: details ? `${message}\n${detail
                   textField: {
                     fullWidth: true,
                     className: "year-input",
-                    InputLabelProps: { shrink: true }
+                    InputLabelProps: { shrink: true },
+                    required: true,
                   }
                 }}
               />
@@ -171,16 +170,16 @@ Swal.fire({ icon: "error", title: "Error", text: details ? `${message}\n${detail
                 <Typography variant="body1" color="textSecondary">
                   Haz clic o arrastra una imagen
                 </Typography>
-                <input id="propertyFileInput" type="file" accept="image/*" hidden onChange={(e) => handleImageChange(e, "property")} />
+                <input id="propertyFileInput" type="file" accept="image/*" hidden onChange={(e) => handleImageChange(e, "property")} required aria-required="true" />
               </Box>
             ) : (
               <div className="image-preview filled">
                 <img src={itemPropertyImage.imagePreview} alt="Inmueble" className="property-image" />
-                  <div className="add-property-card-buttons">
+                <div className="add-property-card-buttons">
                   <button type="button" className="replace-btn" onClick={() => setPropertyImage(prev => ({ ...prev, imagePreview: "", file: "" }))}>
                     <FiTrash2 />
                   </button>
-                  </div>
+                </div>
               </div>
             )}
           </div>
@@ -190,16 +189,16 @@ Swal.fire({ icon: "error", title: "Error", text: details ? `${message}\n${detail
         <div className="form-section">
           <h2>Propietario</h2>
           <div className="form-grid owner-grid">
-            <TextField name="name" label="Nombre" value={itemOwner.name} onChange={(e) => handleChange(e, "owner")} />
-            <TextField name="address" label="Dirección" value={itemOwner.address} onChange={(e) => handleChange(e, "owner")} />
-            <TextField type="date" name="birthday" label="Fecha de nacimiento" value={itemOwner.birthday} onChange={(e) => handleChange(e, "owner")} InputLabelProps={{ shrink: true }} />
+            <TextField name="name" label="Nombre" value={itemOwner.name} onChange={(e) => handleChange(e, "owner")} required />
+            <TextField name="address" label="Dirección" value={itemOwner.address} onChange={(e) => handleChange(e, "owner")} required />
+            <TextField type="date" name="birthday" label="Fecha de nacimiento" value={itemOwner.birthday} onChange={(e) => handleChange(e, "owner")} InputLabelProps={{ shrink: true }} required />
             <div className="image-upload-container full-width">
               {!itemOwner.ownerPhotoPreview ? (
                 <Box className="dropzone-box" onClick={() => document.getElementById("ownerFileInput").click()}>
                   <Typography variant="body1" color="textSecondary">
-                    Cargar imagen del propietario
+                    Cargar imagen del Propietario
                   </Typography>
-                  <input id="ownerFileInput" type="file" accept="image/*" hidden onChange={(e) => handleImageChange(e, "owner")} />
+                  <input id="ownerFileInput" type="file" accept="image/*" hidden onChange={(e) => handleImageChange(e, "owner")} required aria-required="true" />
                 </Box>
               ) : (
                 <div className="image-preview filled">
@@ -221,10 +220,10 @@ Swal.fire({ icon: "error", title: "Error", text: details ? `${message}\n${detail
           {itemPropertyTrace.map((trace, index) => (
             <div key={index} className="trace-wrapper">
               <div className="trace-grid">
-                <TextField type="date" name="dateSale" label="Fecha" value={trace.dateSale} onChange={(e) => handleChange(e, "traces", index)} InputLabelProps={{ shrink: true }} />
-                <TextField name="name" label="Evento" value={trace.name} onChange={(e) => handleChange(e, "traces", index)} />
-                <TextField type="number" name="value" label="Valor" value={trace.value} onChange={(e) => handleChange(e, "traces", index)} />
-                <TextField type="number" name="tax" label="Impuesto" value={trace.tax} onChange={(e) => handleChange(e, "traces", index)} />
+                <TextField type="date" name="dateSale" label="Fecha" value={trace.dateSale} onChange={(e) => handleChange(e, "traces", index)} InputLabelProps={{ shrink: true }} required />
+                <TextField name="name" label="Evento" value={trace.name} onChange={(e) => handleChange(e, "traces", index)} required />
+                <TextField type="number" name="value" label="Valor" value={trace.value} onChange={(e) => handleChange(e, "traces", index)} required />
+                <TextField type="number" name="tax" label="Impuesto" value={trace.tax} onChange={(e) => handleChange(e, "traces", index)} required />
                 <button type="button" className="trace-delete-btn" onClick={() => handleDeleteTrace(index)}>
                   <FiTrash2 />
                 </button>
@@ -242,4 +241,10 @@ Swal.fire({ icon: "error", title: "Error", text: details ? `${message}\n${detail
 };
 
 export default AddProperty;
+
+
+
+
+
+
 

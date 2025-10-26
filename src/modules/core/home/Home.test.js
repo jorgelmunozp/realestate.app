@@ -83,3 +83,79 @@ describe('Home optimistic update flow', () => {
     await waitFor(() => expect(screen.getByText('Casa Nueva')).toBeInTheDocument());
   });
 });
+
+describe('Home role-based actions and greeting', () => {
+  const { useSelector, useDispatch } = require('react-redux');
+  const tokenSvc = require('../../../services/auth/token');
+
+  beforeEach(() => {
+    // Ensure session userId exists to avoid redirect
+    jest.spyOn(window.sessionStorage.__proto__, 'getItem').mockImplementation((k) => (k === 'userId' ? '1' : null));
+    jest.spyOn(window.sessionStorage.__proto__, 'setItem').mockImplementation(() => {});
+
+    // Mock dispatch as no-op
+    if (useDispatch && jest.isMockFunction(useDispatch)) {
+      useDispatch.mockReturnValue(jest.fn());
+    } else {
+      jest.spyOn(require('react-redux'), 'useDispatch').mockReturnValue(jest.fn());
+    }
+
+    // Default token mocks
+    jest.spyOn(tokenSvc, 'getTokenPayload').mockReturnValue({});
+    jest.spyOn(tokenSvc, 'getUserFromToken').mockReturnValue({});
+  });
+
+  afterEach(() => {
+    jest.restoreAllMocks();
+  });
+
+  const propertyItem = {
+    idProperty: 1,
+    name: 'Depto Test',
+    address: 'Calle 123',
+    price: 1000,
+    image: { file: 'abcd' },
+  };
+
+  const mountWithState = (user) => {
+    const state = {
+      property: { properties: [propertyItem], loading: false, meta: { last_page: 1 } },
+      auth: { user: { logged: true, ...user } },
+    };
+    const rr = require('react-redux');
+    jest.spyOn(rr, 'useSelector').mockImplementation((sel) => sel(state));
+    render(<Home />);
+  };
+
+  it('shows edit and delete for Admin and greeting/role', async () => {
+    mountWithState({ name: 'Jorge Pérez', role: 'admin' });
+
+    // Greeting and role
+    expect(await screen.findByText(/hola\s+Jorge/i)).toBeInTheDocument();
+    expect(screen.getByText(/Admin/i)).toBeInTheDocument();
+
+    // Action buttons
+    expect(screen.getAllByTitle('Editar')[0]).toBeInTheDocument();
+    expect(screen.getAllByTitle('Eliminar')[0]).toBeInTheDocument();
+  });
+
+  it('shows only edit for Editor (no delete)', async () => {
+    mountWithState({ name: 'María', role: 'editor' });
+
+    expect(await screen.findByText(/hola\s+María/i)).toBeInTheDocument();
+    expect(screen.getByText(/Editor/i)).toBeInTheDocument();
+
+    expect(screen.getAllByTitle('Editar')[0]).toBeInTheDocument();
+    expect(screen.queryByTitle('Eliminar')).toBeNull();
+  });
+
+  it('hides edit and delete for regular user', async () => {
+    mountWithState({ name: 'Carlos', role: 'user' });
+
+    expect(await screen.findByText(/hola\s+Carlos/i)).toBeInTheDocument();
+    expect(screen.getByText(/User/i)).toBeInTheDocument();
+
+    expect(screen.queryByTitle('Editar')).toBeNull();
+    expect(screen.queryByTitle('Eliminar')).toBeNull();
+  });
+});

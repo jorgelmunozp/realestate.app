@@ -4,9 +4,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { api } from "../../../services/api/api";
 import { errorWrapper } from "../../../services/api/errorWrapper";
 import { Title } from "../../../components/title/Title";
-import { Input } from "../../../components/input/Input";
 import { Search } from "../../../components/search/Search";
-import { FiPlus, FiSearch, FiEdit2, FiTrash2 } from "react-icons/fi";
+import { FiPlus, FiEdit2, FiTrash2 } from "react-icons/fi";
 import { Pagination } from "../../../components/pagination/Pagination";
 import { fetchProperties } from "../../../services/store/propertySlice";
 import Swal from "sweetalert2";
@@ -27,9 +26,13 @@ export const Home = () => {
 
   const payload = getTokenPayload('token');
   const tokenUser = getUserFromToken(payload) || {};
-  const role = authUser?.role || tokenUser?.role;
-  const canEdit = role === 'Editor' || role === 'Admin';
-  const canDelete = role === 'Admin';
+  const roleRaw = authUser?.role || tokenUser?.role || '';
+  const role = String(roleRaw).toLowerCase();
+  const isAdmin = role === 'admin';
+  const canEdit = role === 'editor' || isAdmin;
+  const canDelete = isAdmin;
+  const firstName = ((authUser?.name || tokenUser?.name || '').split(' ')[0]) || '';
+  const displayRole = role ? role.charAt(0).toUpperCase() + role.slice(1) : '';
 
   // Cargar propiedades desde Redux (incluye imágenes)
   useEffect(() => {
@@ -100,6 +103,14 @@ export const Home = () => {
             <FiPlus />
           </button>
         </div>
+
+        {/* Subcabecera sutil */}
+        {(firstName || displayRole) && (
+          <div className="home-meta">
+            <p className="home-greeting">hola {firstName}</p>
+            <p className="home-role">{displayRole}</p>
+          </div>
+        )}
 
         {/* Buscador */}
         <Search value={queryPropertyName} onChange={setQueryPropertyName} placeholder="Buscar inmueble..." />

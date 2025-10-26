@@ -1,4 +1,4 @@
-import { useState } from 'react';
+﻿import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { api } from '../../../../services/api/api';
 import { Title } from '../../../../components/title/Title';
@@ -72,4 +72,6 @@ export const PasswordRecover = () => {
 };
 
 export default PasswordRecover;
+
+
 

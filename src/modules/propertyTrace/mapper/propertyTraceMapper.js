@@ -1,7 +1,5 @@
-/**
- * Convierte uno o varios PropertyTraceDto del backend (PascalCase)
- * al formato frontend (camelCase)
- */
+// Convierte uno o varios PropertyTraceDto del backend (PascalCase) al formato frontend (camelCase)
+ 
 export const normalizePropertyTrace = (data = []) => {
   const traces = Array.isArray(data) ? data : [data];
   return traces.map(trace => ({
@@ -14,10 +12,8 @@ export const normalizePropertyTrace = (data = []) => {
   }));
 };
 
-/**
- * Convierte un PropertyTrace del frontend (camelCase)
- *    al formato backend (PascalCase)
- */
+// Convierte un PropertyTrace del frontend (camelCase) al formato backend (PascalCase)
+
 export const mapPropertyTraceToDto = (trace = {}) => ({
   IdPropertyTrace: trace?.idPropertyTrace ?? "",
   DateSale: trace?.dateSale ?? "",

@@ -1,6 +1,5 @@
-/**
- * Convierte un PropertyDto del backend (PascalCase) a formato frontend (camelCase)
- */
+// Convierte un PropertyDto del backend (PascalCase) a formato frontend (camelCase)
+ 
 export const normalizeProperty = (data = {}) => ({
   idProperty: data?.IdProperty ?? "",
   name: data?.Name ?? "",
@@ -11,9 +10,8 @@ export const normalizeProperty = (data = {}) => ({
   idOwner: data?.IdOwner ?? ""
 });
 
-/**
- * Convierte un Property del frontend (camelCase) al formato backend (PascalCase)
- */
+// Convierte un Property del frontend (camelCase) al formato backend (PascalCase)
+ 
 export const mapPropertyToDto = (property = {}) => ({
   IdProperty: property?.idProperty ?? "",
   Name: property?.name ?? "",
