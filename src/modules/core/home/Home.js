@@ -5,11 +5,13 @@ import { api } from "../../../services/api/api";
 import { errorWrapper } from "../../../services/api/errorWrapper";
 import { Title } from "../../../components/title/Title";
 import { Input } from "../../../components/input/Input";
+import { Search } from "../../../components/search/Search";
 import { FiPlus, FiSearch, FiEdit2, FiTrash2 } from "react-icons/fi";
 import { Pagination } from "../../../components/pagination/Pagination";
 import { fetchProperties } from "../../../services/store/propertySlice";
 import Swal from "sweetalert2";
 import "./Home.scss";
+import { getTokenPayload, getUserFromToken } from "../../../services/auth/token";
 
 const propertyEndpoint = process.env.REACT_APP_ENDPOINT_PROPERTY;
 
@@ -18,9 +20,16 @@ export const Home = () => {
   const location = useLocation();
   const dispatch = useDispatch();
   const { properties, loading, meta } = useSelector((state) => state.property);
+  const authUser = useSelector((state) => state.auth.user);
   const [queryPropertyName, setQueryPropertyName] = useState("");
   const [pagination, setPagination] = useState({ last_page: 1, limit: 6, page: 1, total: 0 });
       const userId = sessionStorage.getItem("userId");
+
+  const payload = getTokenPayload('token');
+  const tokenUser = getUserFromToken(payload) || {};
+  const role = authUser?.role || tokenUser?.role;
+  const canEdit = role === 'Editor' || role === 'Admin';
+  const canDelete = role === 'Admin';
 
   // Cargar propiedades desde Redux (incluye imágenes)
   useEffect(() => {
@@ -93,15 +102,7 @@ export const Home = () => {
         </div>
 
         {/* Buscador */}
-        <div className="home-search">
-          <Input
-            Icon={FiSearch}
-            type="search"
-            placeholder="Buscar inmueble..."
-            value={queryPropertyName}
-            setState={setQueryPropertyName}
-          />
-        </div>
+        <Search value={queryPropertyName} onChange={setQueryPropertyName} placeholder="Buscar inmueble..." />
 
         {/* Tarjetas de propiedades */}
         <div className="home-grid">
@@ -113,7 +114,10 @@ export const Home = () => {
               <div key={property.idProperty} className="home-property-card">
                 <div
                   className="home-property-card-img-wrapper"
-                  onClick={() => handleEditProperty(property.idProperty)}
+                  onClick={canEdit ? () => handleEditProperty(property.idProperty) : undefined}
+                  style={{ cursor: canEdit ? 'pointer' : 'default' }}
+                  aria-disabled={!canEdit}
+                  title={canEdit ? 'Editar' : undefined}
                 >
                   {property.image ? (
                     <img
@@ -135,26 +139,30 @@ export const Home = () => {
                 </div>
 
                 <div className="home-property-card-buttons">
-                  <button
-                    className="btn-edit"
-                    title="Editar"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleEditProperty(property.idProperty);
-                    }}
-                  >
-                    <FiEdit2 />
-                  </button>
-                  <button
-                    className="btn-delete"
-                    title="Eliminar"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleDeleteProperty(property.idProperty);
-                    }}
-                  >
-                    <FiTrash2 />
-                  </button>
+                  {canEdit && (
+                    <button
+                      className="btn-edit"
+                      title="Editar"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleEditProperty(property.idProperty);
+                      }}
+                    >
+                      <FiEdit2 />
+                    </button>
+                  )}
+                  {canDelete && (
+                    <button
+                      className="btn-delete"
+                      title="Eliminar"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleDeleteProperty(property.idProperty);
+                      }}
+                    >
+                      <FiTrash2 />
+                    </button>
+                  )}
                 </div>
               </div>
             ))}

@@ -3,6 +3,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { Title } from '../../../components/title/Title';
 import { Input } from '../../../components/input/Input';
+import { Search } from '../../../components/search/Search';
 import { FiSearch } from 'react-icons/fi';
 import { Pagination } from '../../../components/pagination/Pagination';
 import { fetchProperties } from '../../../services/store/propertySlice';
@@ -43,15 +44,7 @@ export const Index = () => {
           <Title title="Inmuebles Disponibles" />
         </div>
 
-        <div className="index-search">
-          <Input
-            Icon={FiSearch}
-            type="search"
-            placeholder="Buscar inmueble..."
-            value={queryPropertyName}
-            setState={setQueryPropertyName}
-          />
-        </div>
+        <Search value={queryPropertyName} onChange={setQueryPropertyName} placeholder="Buscar inmueble..." />
 
         <div className="index-grid">
           {properties

@@ -1,55 +1,300 @@
-import React from 'react';
+curl -X PATCH "$BACKEND/api/propertyimage/IMAGE_ID" \
+  -H "Authorization: Bearer $TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{ "enabled": true }'
 
-export const Pagination = ({
-  page = 1,
-  lastPage = 1,
-  onPageChange,
-  className = 'index-pagination',
-  buttonClassName = 'index-page-btn',
-  prevLabel = 'Anterior',
-  nextLabel = 'Siguiente',
-  disabled = false,
-}) => {
-  const prevDisabled = disabled || page <= 1;
-  const nextDisabled = disabled || page >= lastPage;
+# DELETE
+curl -X DELETE "$BACKEND/api/propertyimage/IMAGE_ID" \
+  -H "Authorization: Bearer $TOKEN"
+```
 
-  const handlePrev = () => {
-    if (!prevDisabled && typeof onPageChange === 'function') {
-      onPageChange(page - 1);
-    }
-  };
+Errores comunes:
+- 400: `file` inválido (no base64, vacío).
+- 404: Imagen o Propiedad no encontrada.
+- 413: Tamaño de imagen excede límite.
+- 415: Tipo de contenido no soportado (si el backend lo valida).
 
-  const handleNext = () => {
-    if (!nextDisabled && typeof onPageChange === 'function') {
-      onPageChange(page + 1);
-    }
-  };
+### PropertyTrace
 
-  return (
-    <div className={className}>
-      <button
-        className={buttonClassName}
-        disabled={prevDisabled}
-        onClick={handlePrev}
-        aria-label="Anterior"
-      >
-        <span aria-hidden="true">←</span> <span>{prevLabel}</span>
-      </button>
-      <span>
-        Página {page} de {lastPage}
-      </span>
-      <button
-        className={buttonClassName}
-        disabled={nextDisabled}
-        onClick={handleNext}
-        aria-label="Siguiente"
-      >
-        <span>{nextLabel}</span> <span aria-hidden="true">→</span>
-      </button>
-    </div>
-  );
-};
+- `GET /api/propertytrace?idProperty&refresh=false`
+- `GET /api/propertytrace/{id}`
+- `POST /api/propertytrace` (admite lote)
+- `PUT /api/propertytrace/{id}`
+- `PATCH /api/propertytrace/{id}`
+- `DELETE /api/propertytrace/{id}`
 
-export default Pagination;
+Request (POST lote):
 
+```json
+[
+  {
+    "idProperty": "...",
+    "dateSale": "2024-01-01",
+    "name": "Compra",
+    "value": 200000,
+    "tax": 10000
+  }
+]
+```
 
+Respuesta (201 ejemplo):
+
+```json
+[
+  {
+    "idPropertyTrace": "...",
+    "idProperty": "...",
+    "dateSale": "2024-01-01",
+    "name": "Compra",
+    "value": 200000,
+    "tax": 10000
+  }
+]
+```
+
+GET (lista): `GET /api/propertytrace?idProperty={id}&refresh=false`
+
+GET (detalle): `GET /api/propertytrace/{id}`
+
+PUT (completo):
+
+```json
+{
+  "idProperty": "...",
+  "dateSale": "2024-02-02",
+  "name": "Venta",
+  "value": 300000,
+  "tax": 15000
+}
+```
+
+PATCH (parcial):
+
+```json
+{
+  "tax": 20000
+}
+```
+
+DELETE: `DELETE /api/propertytrace/{id}` → 204 No Content.
+
+Validaciones (FluentValidation sugeridas):
+- idProperty: requerido.
+- dateSale: requerido, fecha válida.
+- name: requerido, 2–100.
+- value: requerido, >= 0.
+- tax: requerido, >= 0.
+
+cURL:
+
+```bash
+BACKEND="http://localhost:5235"; TOKEN="<JWT>"
+
+# Listar por propiedad
+curl "$BACKEND/api/propertytrace?idProperty=PROPERTY_ID&refresh=false" \
+  -H "Authorization: Bearer $TOKEN"
+
+# Detalle
+curl "$BACKEND/api/propertytrace/TRACE_ID" \
+  -H "Authorization: Bearer $TOKEN"
+
+# Crear (lote)
+curl -X POST "$BACKEND/api/propertytrace" \
+  -H "Authorization: Bearer $TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '[{ "idProperty": "PROPERTY_ID", "dateSale": "2024-01-01", "name": "Compra", "value": 200000, "tax": 10000 }]'
+
+# PUT
+curl -X PUT "$BACKEND/api/propertytrace/TRACE_ID" \
+  -H "Authorization: Bearer $TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{ "idProperty": "PROPERTY_ID", "dateSale": "2024-02-02", "name": "Venta", "value": 300000, "tax": 15000 }'
+
+# PATCH
+curl -X PATCH "$BACKEND/api/propertytrace/TRACE_ID" \
+  -H "Authorization: Bearer $TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{ "tax": 20000 }'
+
+# DELETE
+curl -X DELETE "$BACKEND/api/propertytrace/TRACE_ID" \
+  -H "Authorization: Bearer $TOKEN"
+```
+
+Errores comunes:
+- 400: Validación (value/tax negativos, dateSale inválida).
+- 404: Trace o Propiedad no encontrada.
+
+### User
+
+- `GET /api/user?refresh=false` (protegido)
+- `GET /api/user/{email}?refresh=false` (protegido)
+- `POST /api/user`
+- `PUT /api/user/{email}` (protegido)
+- `DELETE /api/user/{email}` (protegido)
+
+Respuesta (200 ejemplo):
+
+```json
+{
+  "email": "user@example.com",
+  "name": "John Doe",
+  "roles": ["admin"]
+}
+```
+
+GET (lista): `GET /api/user?refresh=false` (protegido)
+
+GET (detalle por email): `GET /api/user/{email}?refresh=false` (protegido)
+
+POST (crear):
+
+```json
+{
+  "email": "user@example.com",
+  "name": "John Doe",
+  "roles": ["admin"]
+}
+```
+
+PUT (completo):
+
+```json
+{
+  "name": "John A. Doe",
+  "roles": ["admin", "editor"]
+}
+```
+
+PATCH (parcial):
+
+```json
+{
+  "roles": ["editor"]
+}
+```
+
+DELETE: `DELETE /api/user/{email}` → 204 No Content.
+
+Validaciones (FluentValidation sugeridas):
+- email: requerido, formato válido.
+- name: opcional, 3–100.
+- roles: opcional, array de strings de una lista permitida.
+
+cURL:
+
+```bash
+BACKEND="http://localhost:5235"; TOKEN="<JWT>"
+
+# Listar (protegido)
+curl "$BACKEND/api/user?refresh=false" \
+  -H "Authorization: Bearer $TOKEN"
+
+# Detalle
+curl "$BACKEND/api/user/user@example.com?refresh=false" \
+  -H "Authorization: Bearer $TOKEN"
+
+# Crear
+curl -X POST "$BACKEND/api/user" \
+  -H "Authorization: Bearer $TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{ "email": "user@example.com", "name": "John Doe", "roles": ["admin"] }'
+
+# PUT
+curl -X PUT "$BACKEND/api/user/user@example.com" \
+  -H "Authorization: Bearer $TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{ "name": "John A. Doe", "roles": ["admin", "editor"] }'
+
+# PATCH
+curl -X PATCH "$BACKEND/api/user/user@example.com" \
+  -H "Authorization: Bearer $TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{ "roles": ["editor"] }'
+
+# DELETE
+curl -X DELETE "$BACKEND/api/user/user@example.com" \
+  -H "Authorization: Bearer $TOKEN"
+```
+
+Errores comunes:
+- 400: Validación (email inválido, roles no permitidos).
+- 401/403: Falta token o permisos insuficientes.
+- 404: Usuario no encontrado.
+- 409: Email ya existe (en creación) o conflicto de actualización.
+
+## Estilos y UI
+
+- Base de componentes con Material UI y estilos propios SCSS.
+- Carpeta `src/assets/styles/scss/` con mixins de colores, tipografía y media queries.
+- Componente `Title`, `Input`, `AddButton`, `Header`, `AppMenu` con estilos asociados.
+- Color primario configurable en `src/global.js`.
+
+## Pruebas
+
+- Testing con Jest + React Testing Library.
+- Scripts: `npm test`.
+- Pruebas de ejemplo: `src/modules/core/home/Home.test.js`, `src/utils/optimisticMerge.test.js`.
+
+## Despliegue
+
+- Generar build: `npm run build` (se produce en `build/`).
+- Servir el `build/` desde un hosting estático o detrás de un servidor web.
+- Asegurar que las variables `REACT_APP_*` apunten al backend correcto antes del build.
+- Si usas enrutamiento con `BrowserRouter`, configura reglas de fallback a `index.html` en el servidor (SPA).
+
+## Resolución de problemas
+
+- La app no levanta en el puerto esperado: verifica `PORT` en `.env` o conflictos locales.
+- Los cambios en `.env` no se reflejan: reinicia `npm start` (CRA lee variables al inicio).
+- Errores 401/403: confirma que `sessionStorage` tenga `token` válido o revisa CORS en el backend.
+- 404 en rutas internas tras refresh en producción: configura fallback SPA a `index.html` en tu hosting.
+- Caracteres extraños en textos acentuados: asegúrate de guardar archivos en `UTF-8`.
+
+---
+
+Archivos de soporte:
+- `.env.example` con variables esperadas en desarrollo.
+
+Notas de compatibilidad:
+- Este frontend usa Create React App (CRA) para el entorno de build/arranque. Si tu backend documenta Vite, los objetivos son equivalentes para desarrollo/producción. Una migración a Vite es opcional y no requerida para operar con la API descrita.
+
+## Flujos de UI
+
+- Login: guarda `token` y datos mínimos del usuario en `sessionStorage` (vía acciones `login`), redirige a última ruta (`lastPath`).
+- Listado de inmuebles (`/home`): paginado, carga imágenes por inmueble, actions de editar/eliminar, buscador local por nombre.
+- Alta de inmueble (`/add-property`): crea Owner → Property → PropertyImage → PropertyTrace (lote opcional). Al finalizar, alerta de éxito y refresh del listado.
+- Edición (`/edit-property/:id`): formulario similar al alta, preserva y permite reemplazar imagen.
+- Detalle público (`/property/:id`): muestra imagen principal, propietario y trazas.
+
+## Convenciones de código
+
+- Componentes y hooks en inglés; textos de UI en español (i18n opcional).
+- Componentes en PascalCase, archivos `.js` con extensión explícita en imports internos.
+- Estilos SCSS por componente: mismo nombre de carpeta/archivo (`Component/Component.scss`).
+- Módulos con subcarpetas `dto/`, `mapper/`, `service/` cuando aplique.
+- Redux Toolkit slices en `src/services/store/*Slice.js`.
+
+## Rendimiento y accesibilidad
+
+- Imágenes con `loading="lazy"` y placeholders cuando aplica.
+- Listados paginados para evitar cargas grandes.
+- Minimizar re-render usando `useCallback` en operaciones intensivas.
+- Colores con suficiente contraste y foco visible por defecto (MUI + estilos propios).
+
+## Checklist de producción
+
+- [ ] Definir `REACT_APP_BACKEND_URL` y endpoints exactos en `.env`.
+- [ ] Configurar CORS en backend con dominios permitidos.
+- [ ] Asegurar fallback SPA a `index.html` en hosting.
+- [ ] Revisar que el token JWT se almacene de forma segura (sesión, expiración).
+- [ ] Ejecutar `npm run build` y servir `build/` detrás de TLS (HTTPS).
+
+## FAQ
+
+- ¿Por qué algunas respuestas vienen con wrapper y otras no?
+  - El módulo Property estandariza con wrapper de éxito; `errorWrapper` en frontend abstrae estas diferencias.
+- ¿Dónde se almacena el token?
+  - En `sessionStorage` (clave `token`) para que expire al cerrar el navegador. Puedes migrarlo a cookies httpOnly si el backend lo soporta.
+- ¿Cómo fuerzo datos frescos tras una mutación?
+  - Usa `?refresh=true` en listados o re-fetch desde la UI (ya implementado en `Home`).

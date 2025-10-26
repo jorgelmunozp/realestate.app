@@ -1,33 +1,43 @@
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Title } from '../../../components/title/Title';
+import { Input } from '../../../components/input/Input';
+import { Search as SearchBox } from '../../../components/search/Search';
+import { FiSearch } from 'react-icons/fi';
 import { updateProfile } from '../../../services/store/authSlice';
 import { getTokenPayload, getUserFromToken } from '../../../services/auth/token';
 import { TextField, Button, Box, Paper, MenuItem } from '@mui/material';
 import Swal from 'sweetalert2';
+import api from '../../../services/api/api';
+import { errorWrapper } from '../../../services/api/errorWrapper';
+import { normalizeUser, mapUserToDto } from '../../user/mapper/userMapper';
 import './EditUser.scss';
 
 export const EditUser = () => {
   const dispatch = useDispatch();
-  const user = useSelector((state) => state.auth.user);
+  const authUser = useSelector((state) => state.auth.user);
   const payload = getTokenPayload('token');
   const tokenUser = getUserFromToken(payload) || {};
 
+  const role = (authUser?.role || tokenUser?.role || '').toLowerCase();
+  const isAdmin = role === 'admin';
+
+  // Form for self-edit (non-admin)
   const [form, setForm] = useState({
-    name: user?.name || tokenUser?.name || '',
-    email: user?.email || tokenUser?.email || '',
-    role: user?.role || tokenUser?.role || 'User',
+    name: authUser?.name || tokenUser?.name || '',
+    email: authUser?.email || tokenUser?.email || '',
+    role: authUser?.role || tokenUser?.role || 'user',
   });
 
   useEffect(() => {
     setForm((prev) => ({
       ...prev,
-      name: user?.name || tokenUser?.name || '',
-      email: user?.email || tokenUser?.email || '',
-      role: user?.role || tokenUser?.role || 'User',
+      name: authUser?.name || tokenUser?.name || '',
+      email: authUser?.email || tokenUser?.email || '',
+      role: authUser?.role || tokenUser?.role || 'user',
     }));
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user?.name, user?.email, user?.role]);
+  }, [authUser?.name, authUser?.email, authUser?.role]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -44,6 +54,107 @@ export const EditUser = () => {
     }
   };
 
+  // Admin: load all users and allow role changes
+  const userEndpoint = process.env.REACT_APP_ENDPOINT_USER;
+  const [users, setUsers] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [query, setQuery] = useState('');
+
+  useEffect(() => {
+    const load = async () => {
+      if (!isAdmin) return;
+      setLoading(true);
+      setError('');
+      const { ok, data, error } = await errorWrapper(api.get(userEndpoint));
+      if (ok) {
+        const list = Array.isArray(data)
+          ? data
+          : (Array.isArray(data?.items) ? data.items
+            : (Array.isArray(data?.users) ? data.users : []));
+        setUsers(list.map((u) => normalizeUser(u)));
+      } else {
+        setError(error?.message || 'No se pudieron cargar los usuarios');
+      }
+      setLoading(false);
+    };
+    load();
+  }, [isAdmin, userEndpoint]);
+
+  const saveUserRole = async (user) => {
+    const dto = mapUserToDto(user);
+    const { ok, error } = await errorWrapper(api.patch(userEndpoint, dto));
+    if (ok) {
+      Swal.fire({ icon: 'success', text: 'Rol actualizado', timer: 1400, showConfirmButton: false });
+    } else {
+      Swal.fire({ icon: 'error', text: error?.message || 'No se pudo actualizar el rol' });
+    }
+  };
+
+  const filtered = (users || []).filter((u) => {
+    const q = query.trim().toLowerCase();
+    if (!q) return true;
+    return (
+      (u.name || '').toLowerCase().includes(q) ||
+      (u.email || '').toLowerCase().includes(q) ||
+      (u.role || '').toLowerCase().includes(q)
+    );
+  });
+
+  if (isAdmin) {
+    return (
+      <div className="edituser-container">
+        <div className="edituser-users">
+          <Title title="Administrar usuarios" />
+          {loading && (
+            <div className="loader-overlay">
+              <div className="loader-spinner"></div>
+              <p className="loader-text">Cargando usuarios...</p>
+            </div>
+          )}
+          {error && (
+            <p style={{ color: '#b91c1c', margin: '0.5rem 0' }}>{error}</p>
+          )}
+          <Paper elevation={3} className="edituser-card">
+            <SearchBox value={query} onChange={setQuery} placeholder="Buscar usuario..." />
+            <div className="edituser-table">
+              <div className="edituser-head">
+                <div>Nombre</div>
+                <div>Correo</div>
+                <div>Rol</div>
+                <div>Acción</div>
+              </div>
+              {filtered.map((u, idx) => (
+                <div key={`${u.email}-${idx}`} className="edituser-row">
+                  <TextField name="name" label="Nombre" value={u.name || ''} fullWidth disabled />
+                  <TextField name="email" label="Correo" type="email" value={u.email || ''} fullWidth disabled />
+                  <TextField
+                    name="role"
+                    label="Rol"
+                    value={u.role || 'user'}
+                    onChange={(e) => {
+                      const newRole = e.target.value;
+                      setUsers((prev) => prev.map((it) => ((it.id && u.id && it.id === u.id) || it.email === u.email) ? { ...it, role: newRole } : it));
+                    }}
+                    select
+                    fullWidth
+                  >
+                    <MenuItem value="admin">Admin</MenuItem>
+                    <MenuItem value="editor">Editor</MenuItem>
+                    <MenuItem value="user">User</MenuItem>
+                  </TextField>
+                  <Button variant="contained" color="primary" onClick={() => saveUserRole(u)}>
+                    Guardar
+                  </Button>
+                </div>
+              ))}
+            </div>
+          </Paper>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="edituser-container">
       <Paper elevation={3} className="edituser-card">
@@ -52,8 +163,9 @@ export const EditUser = () => {
           <TextField name="name" label="Nombre" value={form.name} onChange={handleChange} fullWidth />
           <TextField name="email" label="Correo" type="email" value={form.email} onChange={handleChange} fullWidth />
           <TextField name="role" label="Rol" value={form.role} onChange={handleChange} select fullWidth>
-            <MenuItem value="Admin">Admin</MenuItem>
-            <MenuItem value="User">User</MenuItem>
+            <MenuItem value="admin">Admin</MenuItem>
+            <MenuItem value="editor">Editor</MenuItem>
+            <MenuItem value="user">User</MenuItem>
           </TextField>
           <Button type="submit" variant="contained" color="primary" className="edituser-btn">Guardar</Button>
         </Box>

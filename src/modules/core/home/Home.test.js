@@ -20,8 +20,8 @@ import { api } from '../../../services/api/api';
 import { Home } from './Home';
 
 describe('Home optimistic update flow', () => {
-  const propertyEndpoint = process.env.REACT_APP_ENDPOINT_PROPERTY || '/property';
-  const imageEndpoint = process.env.REACT_APP_ENDPOINT_PROPERTYIMAGE || '/property-image';
+  const propertyEndpoint = process.env.REACT_APP_ENDPOINT_PROPERTY;
+  const imageEndpoint = process.env.REACT_APP_ENDPOINT_PROPERTYIMAGE;
 
   beforeEach(() => {
     // userId present to avoid redirect

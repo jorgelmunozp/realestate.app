@@ -7,7 +7,7 @@ import { Box, Paper, TextField, Button, InputAdornment } from '@mui/material';
 import { FiLock } from 'react-icons/fi';
 import './PasswordReset.scss';
 
-const resetEndpoint = process.env.REACT_APP_ENDPOINT_PASSWORD_RESET || '/password/update';
+const resetEndpoint = `${process.env.REACT_APP_ENDPOINT_PASSWORD}/update`;
 
 export const PasswordReset = () => {
   const navigate = useNavigate();
@@ -19,8 +19,7 @@ export const PasswordReset = () => {
       const response = await api.patch(`${resetEndpoint}`, { token, newPassword: password });
       if (response.status >= 200 && response.status < 300) {
         Swal.fire({
-          title: '✅ ¡Contraseña actualizada!',
-          text: response.data.message || 'Tu nueva contraseña se ha establecido correctamente.',
+          title: 'Contraseña actualizada',
           icon: 'success',
           confirmButtonColor: '#107ACC',
         });

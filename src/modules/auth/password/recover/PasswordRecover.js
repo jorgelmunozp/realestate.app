@@ -7,31 +7,31 @@ import { Box, Paper, TextField, Button, InputAdornment, Typography } from '@mui/
 import { FiAtSign } from 'react-icons/fi';
 import './PasswordRecover.scss';
 
-const recoverEndpoint = process.env.REACT_APP_ENDPOINT_PASSWORD_RECOVER || '/password/recover';
+const recoverEndpoint = `${process.env.REACT_APP_ENDPOINT_PASSWORD}/recover`;
 
 export const PasswordRecover = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
+  const [sending, setSending] = useState(false);
 
   const handleRecover = async () => {
+    if (!email) return;
+    setSending(true);
     try {
-      const response = await api.post(`${recoverEndpoint}`, { email });
-      if (response.status >= 200 && response.status < 300) {
-        Swal.fire({
-          title: '✅ ¡Correo enviado!',
-          text: response.data.message || 'Revisa tu bandeja de entrada para continuar.',
-          icon: 'success',
-          confirmButtonColor: '#107ACC',
-        });
+      const { errorWrapper } = await import('../../../../services/api/errorWrapper');
+      const { ok, data, error } = await errorWrapper(api.post(`${recoverEndpoint}`, { email }), { unwrap: false });
+      if (ok) {
+        const msg = data?.message || 'Revisa tu bandeja de entrada para continuar.';
+        Swal.fire({ title: 'Correo enviado', text: msg, icon: 'success', confirmButtonColor: '#107ACC' });
         navigate('/index');
+      } else {
+        const msg = error?.message || 'No se pudo enviar el correo.';
+        Swal.fire({ title: 'Error', text: msg, icon: 'error', confirmButtonColor: '#C00F0C' });
       }
-    } catch (error) {
-      Swal.fire({
-        title: 'Error',
-        text: error.response?.data?.error?.message || 'No se pudo enviar el correo.',
-        icon: 'error',
-        confirmButtonColor: '#C00F0C',
-      });
+    } catch (err) {
+      Swal.fire({ title: 'Error', text: 'No se pudo enviar el correo.', icon: 'error', confirmButtonColor: '#C00F0C' });
+    } finally {
+      setSending(false);
     }
   };
 
@@ -54,7 +54,7 @@ export const PasswordRecover = () => {
             }}
           />
 
-          <Button variant="contained" color="primary" onClick={handleRecover} sx={{ borderRadius: 2, textTransform: 'none', py: 1.2 }}>
+          <Button variant="contained" color="primary" onClick={handleRecover} disabled={sending} sx={{ borderRadius: 2, textTransform: 'none', py: 1.2 }}>
             Enviar enlace
           </Button>
 

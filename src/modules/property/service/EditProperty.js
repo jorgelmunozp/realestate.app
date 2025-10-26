@@ -12,6 +12,9 @@ import Alert from "@mui/material/Alert";
 import dayjs from "dayjs";
 import Swal from "sweetalert2";
 import { Box, Typography } from "@mui/material";
+import { mapOwnerToDto } from "../../owner/mapper/OwnerMapper";
+import { mapPropertyToDto } from "../mapper/propertyMapper";
+import { mapPropertyImageToDto } from "../../propertyImage/mapper/propertyImageMapper";
 import "./EditProperty.scss";
 
 export const EditProperty = () => {
@@ -137,15 +140,22 @@ export const EditProperty = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      // Actualizar propietario
-      await errorWrapper( api.patch(`${endpoints.owner}/${itemOwner.idOwner}`, itemOwner) );
+      // Actualizar propietario (DTO PascalCase)
+      const ownerDto = mapOwnerToDto(itemOwner);
+      await errorWrapper( api.patch(`${endpoints.owner}/${itemOwner.idOwner}`, ownerDto) );
 
-      // Actualizar propiedad
-      await errorWrapper( api.patch(`${endpoints.property}/${propertyId}`, itemProperty) );
+      // Actualizar propiedad (DTO PascalCase)
+      const propertyDto = mapPropertyToDto({ ...itemProperty, idProperty: propertyId });
+      await errorWrapper( api.patch(`${endpoints.property}/${propertyId}`, propertyDto) );
 
-      // Actualizar imagen (si existe archivo)
-      if (itemPropertyImage?.file && itemPropertyImage?.idPropertyImage) {
-        await errorWrapper( api.patch(`${endpoints.image}/${itemPropertyImage.idPropertyImage}`, itemPropertyImage) );
+      // Actualizar o crear imagen de propiedad
+      if (itemPropertyImage?.file) {
+        const imageDto = mapPropertyImageToDto({ ...itemPropertyImage, idProperty: propertyId });
+        if (itemPropertyImage?.idPropertyImage) {
+          await errorWrapper( api.patch(`${endpoints.image}/${itemPropertyImage.idPropertyImage}`, imageDto) );
+        } else {
+          await errorWrapper( api.post(endpoints.image, imageDto) );
+        }
       }
 
       // Actualizar o crear trazas

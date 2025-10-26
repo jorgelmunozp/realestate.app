@@ -56,25 +56,7 @@
   }
 }
 
-.index-search {
-  margin-bottom: 2rem;
-  text-align: center;
-
-  input {
-    width: 100%;
-    padding: 0.8rem 1rem;
-    border: 1px solid #d1d5db;
-    border-radius: 12px;
-    font-size: 1rem;
-    transition: 0.3s ease;
-
-    &:focus {
-      outline: none;
-      border-color: $blue-color;
-      box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
-    }
-  }
-}
+// Search styles are centralized in components/search/Search.scss
 
 .index-grid {
   display: grid;
@@ -197,7 +179,5 @@
     font-size: 1.8rem;
   }
 
-  .index-search input {
-    width: 100%;
-  }
+  // Search styles centralized; no overrides here
 }

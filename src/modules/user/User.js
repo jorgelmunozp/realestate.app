@@ -11,14 +11,14 @@ export const User = () => {
   const tokenUser = getUserFromToken(payload) || {};
   const name = tokenUser.name || 'Usuario';
   const email = tokenUser.email || 'correo@dominio.com';
-  const role = tokenUser.role || 'User';
+  const role = tokenUser.role || 'user';
   const userId = tokenUser.id || '-';
 
   return (
     <div className="user-profile">
       <div className="user-header">
         <Title title="Mi perfil" />
-        {role === 'Admin' && (
+        {role === 'admin' && (
           <Link to="/profile/edit" className="user-edit-btn">Editar</Link>
         )}
       </div>

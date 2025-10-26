@@ -32,3 +32,64 @@
   }
 }
 
+// Admin users grid
+.edituser-users {
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.edituser-users-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1rem;
+}
+
+.edituser-users .edituser-card {
+  max-width: 100%;
+}
+
+// Search styles are centralized in components/search/Search.scss
+
+.edituser-table {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  max-height: 60vh;
+  overflow-y: auto;
+}
+
+.edituser-head {
+  display: grid;
+  grid-template-columns: 1fr 1fr 220px 140px;
+  gap: 0.75rem;
+  align-items: center;
+  font-family: $primary-font;
+  font-weight: 600;
+  color: $blue-color;
+  font-size: 1.1rem;
+  background: #ffffff;
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  padding: 0.5rem 0.25rem 0.5rem 0.25rem;
+  box-shadow: 0 1px 0 0 #e5e7eb;
+}
+
+.edituser-head > div:first-child {
+  border-left: 4px solid $blue-color;
+  padding-left: 0.5rem;
+}
+
+.edituser-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 220px 140px;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+@include screen-md {
+  .edituser-row {
+    grid-template-columns: 1fr;
+  }
+}

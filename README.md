@@ -98,6 +98,7 @@ REACT_APP_ENDPOINT_PROPERTY=/api/property
 REACT_APP_ENDPOINT_OWNER=/api/owner
 REACT_APP_ENDPOINT_PROPERTYIMAGE=/api/propertyImage
 REACT_APP_ENDPOINT_PROPERTYTRACE=/api/propertyTrace
+REACT_APP_ENDPOINT_PASSWORD=/password
 ```
 
 Notas:
@@ -197,7 +198,7 @@ Comportamiento de seguridad:
   - `useFetchGet(apiUrl)` para lecturas simples (maneja `loading`/`error`).
   - `useFetchPost()`, `useFetchPatch()`, `useFetchDelete()` para mutaciones (devuelven funciones `postData`, `patchData`, etc.).
 - Endpoints configurables por `.env`:
-  - `REACT_APP_ENDPOINT_PROPERTY`, `REACT_APP_ENDPOINT_OWNER`, `REACT_APP_ENDPOINT_PROPERTYIMAGE`, `REACT_APP_ENDPOINT_PROPERTYTRACE`, `REACT_APP_ENDPOINT_LOGIN`, `REACT_APP_ENDPOINT_REGISTER`.
+  - `REACT_APP_ENDPOINT_PROPERTY`, `REACT_APP_ENDPOINT_OWNER`, `REACT_APP_ENDPOINT_PROPERTYIMAGE`, `REACT_APP_ENDPOINT_PROPERTYTRACE`, `REACT_APP_ENDPOINT_LOGIN`, `REACT_APP_ENDPOINT_REGISTER`, `REACT_APP_ENDPOINT_PASSWORD` (base para recover/update).
 
 ## Integración con backend (alineado)
 
@@ -257,6 +258,74 @@ Respuesta (200 ejemplo):
   }
 }
 ```
+
+### Password (Recover/Reset)
+
+- Base configurada por entorno: `REACT_APP_ENDPOINT_PASSWORD` (por ejemplo, `/api/password`).
+- Endpoints derivados en el frontend:
+  - Recover: `${REACT_APP_ENDPOINT_PASSWORD}/recover` (POST)
+  - Reset: `${REACT_APP_ENDPOINT_PASSWORD}/update` (PATCH)
+
+Recover (enviar enlace) — Request:
+
+```json
+{
+  "email": "user@example.com"
+}
+```
+
+Recover — Respuesta esperada (ejemplo):
+
+```json
+{
+  "success": true,
+  "statusCode": 200,
+  "message": "Se envió un enlace de recuperación al correo",
+  "data": null,
+  "errors": []
+}
+```
+
+Reset (actualizar contraseña) — Request:
+
+```json
+{
+  "token": "<token-de-recuperacion>",
+  "newPassword": "NuevaContraseña#2024"
+}
+```
+
+Reset — Respuesta (ejemplo):
+
+```json
+{
+  "success": true,
+  "statusCode": 200,
+  "message": "Contraseña actualizada",
+  "data": null,
+  "errors": []
+}
+```
+
+cURL de ejemplo:
+
+```bash
+BACKEND="http://localhost:5235"; EMAIL="user@example.com"; TOKEN="<token>"
+
+# Recover
+curl -X POST "$BACKEND/api/password/recover" \
+  -H "Content-Type: application/json" \
+  -d "{ \"email\": \"$EMAIL\" }"
+
+# Reset
+curl -X PATCH "$BACKEND/api/password/update" \
+  -H "Content-Type: application/json" \
+  -d "{ \"token\": \"$TOKEN\", \"newPassword\": \"NuevaContraseña#2024\" }"
+```
+
+Notas:
+- El frontend usa `errorWrapper` para normalizar respuestas y mostrar los mensajes de `message` cuando existan.
+- Asegúrate de definir `REACT_APP_ENDPOINT_PASSWORD` en `.env` para que ambas pantallas funcionen.
 
 Wrapper de error (401/400):
 

@@ -35,7 +35,7 @@ export const AppMenu = () => {
       <a className="menu-item" href={user.logged ? "/add-property":"/about-us"}>
         { user.logged ? (<><FiUpload color={primaryColor} /> Subir inmueble</>) : (<><FiUser color={primaryColor} /> Nosotros</>) }
       </a>
-      { user.logged && role === 'Admin' && (
+      { user.logged && role === 'admin' && (
         <a className="menu-item" href="/profile/edit">
           <FiUsers color={primaryColor} /> Usuarios
         </a>
