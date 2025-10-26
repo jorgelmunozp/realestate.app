@@ -3,23 +3,27 @@ import { api } from '../../services/api/api';
 import { errorWrapper } from '../../services/api/errorWrapper';
 
 // ===========================================================
-// 🔹 Obtener propiedades (ya con imagen incluida desde el backend)
+// 🔹 Endpoint desde variables de entorno (.env)
+// ===========================================================
+const ENDPOINT = process.env.REACT_APP_ENDPOINT_PROPERTY;
+
+// ===========================================================
+// 🔹 Obtener propiedades (con imagen incluida desde el backend)
 // ===========================================================
 export const fetchProperties = createAsyncThunk(
   'property/fetchAll',
   async ({ page = 1, limit = 6, refresh = false } = {}) => {
-    const propertyEndpoint = process.env.REACT_APP_ENDPOINT_PROPERTY;
-    if (!propertyEndpoint) throw new Error('Falta configuración: REACT_APP_ENDPOINT_PROPERTY');
+    if (!ENDPOINT) throw new Error('Falta configuración: REACT_APP_ENDPOINT_PROPERTY');
 
-    const url = `${propertyEndpoint}?page=${page}&limit=${limit}${refresh ? '&refresh=true' : ''}`;
+    const url = `${ENDPOINT}?page=${page}&limit=${limit}${refresh ? '&refresh=true' : ''}`;
     const res = await errorWrapper(api.get(url, { __skipAuth: true }), { unwrap: false });
     if (!res.ok) throw res.error;
 
     const body = res.data || {};
     let items = [];
-    let meta = undefined;
+    let meta;
 
-    // 🔹 Adaptamos según el formato devuelto por el backend
+    // 🔹 Adaptar según formato del backend
     if (Array.isArray(body)) {
       items = body;
     } else if (Array.isArray(body.data)) {
@@ -35,7 +39,7 @@ export const fetchProperties = createAsyncThunk(
 
     const finalMeta = meta || body.meta || { page, limit, total: items.length, last_page: 1 };
 
-    // 🔹 Normalización ligera (solo para asegurar nombres consistentes)
+    // 🔹 Normalización ligera
     const normalized = items.map((p) => ({
       idProperty: p.idProperty ?? p.IdProperty ?? p.id ?? p.Id ?? '',
       name: p.name ?? p.Name ?? '',
@@ -44,7 +48,7 @@ export const fetchProperties = createAsyncThunk(
       year: p.year ?? p.Year ?? 0,
       codeInternal: p.codeInternal ?? p.CodeInternal ?? 0,
       idOwner: p.idOwner ?? p.IdOwner ?? '',
-      image: p.image ?? null,
+      image: p.image ?? p.Image ?? null,
     }));
 
     return { items: normalized, meta: finalMeta };
@@ -54,10 +58,15 @@ export const fetchProperties = createAsyncThunk(
 // ===========================================================
 // 🔹 Crear propiedad
 // ===========================================================
-export const createProperty = createAsyncThunk('property/create', async (propertyData) => {
-  const res = await api.post('/property', propertyData);
-  return res.data;
-});
+export const createProperty = createAsyncThunk(
+  'property/create',
+  async (propertyData) => {
+    if (!ENDPOINT) throw new Error('Falta configuración: REACT_APP_ENDPOINT_PROPERTY');
+
+    const res = await api.post(ENDPOINT, propertyData);
+    return res.data;
+  }
+);
 
 // ===========================================================
 // 🔹 Slice principal
