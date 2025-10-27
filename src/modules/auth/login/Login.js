@@ -1,10 +1,10 @@
 ﻿import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { api } from '../../../services/api/api';
 import { useDispatch } from 'react-redux';
+import { api } from '../../../services/api/api';
 import { Title } from '../../../components/title/Title';
-import { login } from '../../../services/store/authSlice.js';
-import { saveToken, getTokenPayload, getUserFromToken } from '../../../services/auth/token';
+import { login } from '../../../services/store/authSlice';
+import { saveToken } from '../../../services/auth/token';
 import { TextField, Button, InputAdornment, Box, Paper } from '@mui/material';
 import { PiUserCircleFill } from 'react-icons/pi';
 import { FiLock } from 'react-icons/fi';
@@ -16,63 +16,66 @@ const loginEndpoint = process.env.REACT_APP_ENDPOINT_LOGIN;
 export const Login = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [form, setForm] = useState({ email: '', password: '' });
+  const [loading, setLoading] = useState(false);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setForm((prev) => ({ ...prev, [name]: value }));
+  };
 
   const handleLogin = async () => {
+    const { email, password } = form;
+    if (!email || !password) {
+      Swal.fire({ text: 'Por favor, completa todos los campos', icon: 'warning' });
+      return;
+    }
+
     try {
-      const response = await api.post(loginEndpoint, { email, password });      
-      if (response.status >= 200 && response.status < 300) {
-        const tokenFromHeader = (response.headers?.authorization || '').replace(/^Bearer\s+/i, '');           // Persist token (from body or header) for downstream auth + role decoding
-        const token = response.data?.token || response.data?.accessToken || tokenFromHeader;
-        if (token) {
-          try { saveToken(token); } catch (_) {}
-        }
+      setLoading(true);
+      const response = await api.post(loginEndpoint, { email, password });
 
-        // Decode token for reliable name/role fallback
-        let tokenUser = {};
-        try {
-          const payload = getTokenPayload('token');
-          tokenUser = getUserFromToken(payload) || {};
-        } catch (_) {}
+      const { data } = response;
+      const user = data?.data?.user || {};
+      const accessToken = data?.data?.accessToken || '';
+      const refreshToken = data?.data?.refreshToken || '';
 
-        // Choose role from response if present, else from token (string or array supported)
-        const roleFromResponse = (response.data?.role ?? response.data?.roles);
-        const role = roleFromResponse !== undefined ? roleFromResponse : tokenUser.role;
-
-        // Prefer explicit name fields, else token name, else email local-part
-        const resolvedName = response.data?.name || response.data?.fullName || response.data?.username || tokenUser.name || (email?.split('@')[0] || '');
-
-        sessionStorage.setItem('userId', response.data.id);
-        dispatch(login({
-          email,
-          id: response.data.id,
-          name: resolvedName,
-          role,
-        }));
-
-        navigate('/home', { replace: true });
+      if (!accessToken || !user?.id) {
+        Swal.fire({ text: 'Respuesta inválida del servidor', icon: 'error' });
+        return;
       }
+
+      saveToken(accessToken);
+      if (refreshToken) saveToken(refreshToken, 'refreshToken');
+      sessionStorage.setItem('userId', user.id);
+
+      dispatch(login({ id: user.id, name: user.name, email: user.email, role: user.role, token: accessToken }));
+
+      navigate('/home', { replace: true });
     } catch (error) {
-      console.error('Error user login: ', error.response?.data || error.message);
+      console.error('❌ Error en login:', error.response?.data || error.message);
       Swal.fire({
-        text: error.response?.data?.error?.message || 'Credenciales inválidas',
+        text: error.response?.data?.message || 'Credenciales inválidas o servidor no disponible',
         icon: 'error',
       });
+    } finally {
+      setLoading(false);
     }
   };
 
-  const handleGoRegister = () => navigate('/register');
-  const handleForgotPassword = () => navigate('/password-recover');
-
-  console.log("LOGIN")
   return (
-    <Box className="login-container" display="flex" justifyContent="center" alignItems="center" minHeight="100vh" sx={{ background: '#f6f8fb', padding: 2 }}>
+    <Box className="login-container" display="flex" justifyContent="center" alignItems="center" minHeight="100vh" sx={{ background: '#f6f8fb', p: 2 }}>
       <Paper elevation={3} className="login-card" sx={{ borderRadius: 4, width: '100%', maxWidth: 420, p: 4, textAlign: 'center' }}>
         <Title title="Iniciar sesión" />
-
         <Box display="flex" flexDirection="column" gap={2} mt={3}>
-          <TextField label="Correo electrónico" type="email" variant="outlined" value={email} onChange={(e) => setEmail(e.target.value)} fullWidth
+          <TextField
+            label="Correo electrónico"
+            name="email"
+            type="email"
+            variant="outlined"
+            value={form.email}
+            onChange={handleChange}
+            fullWidth
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
@@ -81,8 +84,14 @@ export const Login = () => {
               ),
             }}
           />
-
-          <TextField label="Contraseña" type="password" variant="outlined" value={password} onChange={(e) => setPassword(e.target.value)} fullWidth
+          <TextField
+            label="Contraseña"
+            name="password"
+            type="password"
+            variant="outlined"
+            value={form.password}
+            onChange={handleChange}
+            fullWidth
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
@@ -91,16 +100,24 @@ export const Login = () => {
               ),
             }}
           />
-
-          <Button variant="contained" color="primary" onClick={handleLogin} sx={{ borderRadius: 2, textTransform: 'none', py: 1.2 }}>
-            Ingresar
+          <Button variant="contained" color="primary" onClick={handleLogin} disabled={loading} sx={{ borderRadius: 2, textTransform: 'none', py: 1.2 }}>
+            {loading ? 'Ingresando...' : 'Ingresar'}
           </Button>
-
-          <Button variant="outlined" color="secondary" onClick={handleGoRegister} sx={{ borderRadius: 2, textTransform: 'none', py: 1.2 }}>
+          <Button variant="outlined" color="secondary" onClick={() => navigate('/register')} sx={{ borderRadius: 2, textTransform: 'none', py: 1.2 }}>
             Crear cuenta
           </Button>
-
-          <Button variant="text" onClick={handleForgotPassword} sx={{ color: '#107ACC', textTransform: 'none', fontWeight: 500, fontSize: '0.95rem', mt: 1, '&:hover': { color: '#000' } }}>
+          <Button
+            variant="text"
+            onClick={() => navigate('/password-recover')}
+            sx={{
+              color: '#107ACC',
+              textTransform: 'none',
+              fontWeight: 500,
+              fontSize: '0.95rem',
+              mt: 1,
+              '&:hover': { color: '#000' },
+            }}
+          >
             ¿Olvidaste tu contraseña?
           </Button>
         </Box>
@@ -110,9 +127,3 @@ export const Login = () => {
 };
 
 export default Login;
-
-
-
-
-
-

@@ -1,51 +1,124 @@
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '../../services/store/authSlice.js';
-import { slide as Menu } from "react-burger-menu";
+import { slide as Menu } from 'react-burger-menu';
 import { Header } from '../header/Header.js';
-import { FiHome, FiUser, FiUsers, FiPhone, FiLogOut, FiUpload } from "react-icons/fi";
+import { FiHome, FiUser, FiUsers, FiPhone, FiLogOut, FiUpload } from 'react-icons/fi';
 import { primaryColor } from '../../global.js';
-import { getTokenPayload, getUserFromToken } from '../../services/auth/token';
-import { hasAnyRole } from '../../services/auth/roles';
-import "./AppMenu.scss";
+import { getToken, getTokenPayload, getUserFromToken, isTokenExpired } from '../../services/auth/token';
+import './AppMenu.scss';
 
 export const AppMenu = () => {
-    const dispatch = useDispatch();
-    const user = useSelector((state) => state.auth.user);
-    const payload = getTokenPayload('token');
-    const tokenUser = getUserFromToken(payload) || {};
-    const role = user?.role || tokenUser?.role;
-    const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const user = useSelector((state) => state.auth.user);
+  const [logged, setLogged] = useState(false);
+  const [role, setRole] = useState('');
 
-    const handleLogout = () => {
-        dispatch(logout());
-        try {
-          sessionStorage.removeItem('token');
-          sessionStorage.removeItem('userId');
-        } catch (_) {}
-        navigate("/", { replace: true });
+  // ===========================================================
+  // 🔹 Leer token y determinar rol real del usuario logueado
+  // ===========================================================
+  useEffect(() => {
+    // 1️⃣ Buscar token en localStorage o sessionStorage
+    const token =
+      localStorage.getItem('token') ||
+      sessionStorage.getItem('token') ||
+      '';
+
+    if (!token) {
+      setLogged(false);
+      setRole('');
+      return;
     }
 
-    return (
+    // 2️⃣ Decodificar token
+    const payload = getTokenPayload(token);
+    const tokenUser = getUserFromToken(payload) || {};
+
+    // 3️⃣ Determinar rol actual
+    const currentRole = (user?.role || tokenUser?.role || '').toLowerCase();
+    const valid = !isTokenExpired(payload);
+
+    setLogged(valid);
+    setRole(currentRole);
+  }, [user]);
+
+  // ===========================================================
+  // 🔹 Cerrar sesión
+  // ===========================================================
+  const handleLogout = () => {
+    dispatch(logout());
+    try {
+      localStorage.removeItem('token');
+      sessionStorage.removeItem('token');
+      sessionStorage.removeItem('userId');
+      sessionStorage.removeItem('refreshToken');
+    } catch (_) {}
+    navigate('/', { replace: true });
+  };
+
+  // ===========================================================
+  // 🔹 Renderizado
+  // ===========================================================
+  return (
     <Menu left>
       <Header />
-      <hr className='bm-hr' />
-      <a className="menu-item" href={user.logged ? "/home":"/index"}>
+      <hr className="bm-hr" />
+
+      {/* 🏠 Inmuebles */}
+      <a className="menu-item" href={logged ? '/home' : '/index'}>
         <FiHome color={primaryColor} /> Inmuebles
       </a>
-      <a className="menu-item" href={user.logged ? "/add-property":"/about-us"}>
-        { user.logged ? (<><FiUpload color={primaryColor} /> Subir inmueble</>) : (<><FiUser color={primaryColor} /> Nosotros</>) }
+
+      {/* 🏗️ Subir inmueble / Nosotros */}
+      <a className="menu-item" href={logged ? '/add-property' : '/about-us'}>
+        {logged ? (
+          <>
+            <FiUpload color={primaryColor} /> Subir inmueble
+          </>
+        ) : (
+          <>
+            <FiUser color={primaryColor} /> Nosotros
+          </>
+        )}
       </a>
-      { user.logged && hasAnyRole(role, ['admin', 'editor']) && (
-        <a className="menu-item" href="/profile/edit">
+
+      {/* 👥 Solo visible para admin */}
+      {logged && role === 'admin' && (
+        <a className="menu-item" href="/users">
           <FiUsers color={primaryColor} /> Usuarios
         </a>
       )}
-      <a className="menu-item" href={user.logged ? "/profile":"/contact"}>
-        { user.logged ? (<><FiUser color={primaryColor} /> Perfil</>) : (<><FiPhone color={primaryColor} /> Contacto</>) }
+
+      {/* 👤 Perfil / Contacto */}
+      <a className="menu-item" href={logged ? '/profile' : '/contact'}>
+        {logged ? (
+          <>
+            <FiUser color={primaryColor} /> Perfil
+          </>
+        ) : (
+          <>
+            <FiPhone color={primaryColor} /> Contacto
+          </>
+        )}
       </a>
-      <a className="menu-item" href={user.logged ? "/index":"/login"} onClick={handleLogout}>
-        { user.logged ? (<><FiLogOut color={primaryColor} /> Cerrar sesión</>) : (<><FiLogOut color={primaryColor} /> Ingresar</>) }
+
+      {/* 🚪 Cerrar sesión / Ingresar */}
+      <a
+        className="menu-item"
+        href={logged ? '/index' : '/login'}
+        onClick={logged ? handleLogout : undefined}
+      >
+        {logged ? (
+          <>
+            <FiLogOut color={primaryColor} /> Cerrar sesión
+          </>
+        ) : (
+          <>
+            <FiLogOut color={primaryColor} /> Ingresar
+          </>
+        )}
       </a>
     </Menu>
   );

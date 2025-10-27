@@ -1,40 +1,42 @@
-﻿import { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { Title } from '../../../components/title/Title';
-import { Search as SearchBox } from '../../../components/search/Search';
-import { updateProfile } from '../../../services/store/authSlice';
-import { getTokenPayload, getUserFromToken } from '../../../services/auth/token';
-import { TextField, Button, Box, Paper, MenuItem } from '@mui/material';
-import Swal from 'sweetalert2';
-import api from '../../../services/api/api';
-import { errorWrapper } from '../../../services/api/errorWrapper';
-import { normalizeUser, mapUserToDto } from '../../user/mapper/userMapper';
-import './EditUser.scss';
+﻿import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Title } from "../../../components/title/Title";
+import { updateProfile } from "../../../services/store/authSlice";
+import { getTokenPayload, getUserFromToken } from "../../../services/auth/token";
+import { TextField, Button, Box, Paper, MenuItem } from "@mui/material";
+import Swal from "sweetalert2";
+import { api } from "../../../services/api/api";
+import { errorWrapper } from "../../../services/api/errorWrapper";
+import { mapUserToDto } from "../../user/mapper/userMapper";
+import "./EditUser.scss";
 
 export const EditUser = () => {
   const dispatch = useDispatch();
   const authUser = useSelector((state) => state.auth.user);
-  const payload = getTokenPayload('token');
+
+  // ✅ Leer token real del navegador
+  const token = localStorage.getItem("token") || sessionStorage.getItem("token") || "";
+  const payload = getTokenPayload(token);
   const tokenUser = getUserFromToken(payload) || {};
 
-  const role = (authUser?.role || tokenUser?.role || '').toLowerCase();
-  const isAdmin = role === 'admin';
+  const role = (authUser?.role || tokenUser?.role || "user").toLowerCase();
+  const isAdmin = role === "admin";
 
-  // Form for self-edit (non-admin)
+  // ===========================================================
+  // Formulario usuario (solo perfil propio)
+  // ===========================================================
   const [form, setForm] = useState({
-    name: authUser?.name || tokenUser?.name || '',
-    email: authUser?.email || tokenUser?.email || '',
-    role: authUser?.role || tokenUser?.role || 'user',
+    name: authUser?.name || tokenUser?.name || "",
+    email: authUser?.email || tokenUser?.email || "",
+    role: authUser?.role || tokenUser?.role || "user",
   });
 
   useEffect(() => {
-    setForm((prev) => ({
-      ...prev,
-      name: authUser?.name || tokenUser?.name || '',
-      email: authUser?.email || tokenUser?.email || '',
-      role: authUser?.role || tokenUser?.role || 'user',
-    }));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    setForm({
+      name: authUser?.name || tokenUser?.name || "",
+      email: authUser?.email || tokenUser?.email || "",
+      role: authUser?.role || tokenUser?.role || "user",
+    });
   }, [authUser?.name, authUser?.email, authUser?.role]);
 
   const handleChange = (e) => {
@@ -42,146 +44,96 @@ export const EditUser = () => {
     setForm((prev) => ({ ...prev, [name]: value }));
   };
 
+  // ===========================================================
+  // Guardar perfil propio
+  // ===========================================================
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      dispatch(updateProfile({ name: form.name, email: form.email, role: form.role }));
-      Swal.fire({ icon: 'success', text: 'Perfil actualizado', timer: 1500, showConfirmButton: false });
+      const userDto = mapUserToDto(form);
+
+      // Solo enviar campos modificados
+      const changedFields = {};
+      if (authUser?.name !== userDto.Name && userDto.Name.trim() !== "")
+        changedFields.name = userDto.Name.trim();
+
+      if (Object.keys(changedFields).length === 0) {
+        Swal.fire({
+          icon: "info",
+          text: "No hay cambios para guardar.",
+          timer: 1500,
+          showConfirmButton: false,
+        });
+        return;
+      }
+
+      const res = await errorWrapper(
+        api.patch(`${process.env.REACT_APP_ENDPOINT_USER}/${form.email}`, changedFields)
+      );
+
+      if (res.ok) {
+        dispatch(updateProfile({ ...authUser, ...changedFields }));
+        Swal.fire({
+          icon: "success",
+          title: "Perfil actualizado",
+          timer: 1500,
+          showConfirmButton: false,
+        });
+      } else {
+        Swal.fire({
+          icon: "error",
+          text: res.error?.message || "Error al actualizar el perfil",
+        });
+      }
     } catch (err) {
-      Swal.fire({ icon: 'error', text: 'No se pudo actualizar' });
+      console.error("❌ Error al actualizar perfil:", err);
+      Swal.fire({ icon: "error", text: "No se pudo actualizar el perfil" });
     }
   };
 
-  // Admin: load all users and allow role changes
-  const userEndpoint = process.env.REACT_APP_ENDPOINT_USER;
-  const [users, setUsers] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
-  const [query, setQuery] = useState('');
-
-  useEffect(() => {
-    const load = async () => {
-      if (!isAdmin) return;
-      setLoading(true);
-      setError('');
-      const { ok, data, error } = await errorWrapper(api.get(userEndpoint));
-      if (ok) {
-        const list = Array.isArray(data)
-          ? data
-          : (Array.isArray(data?.items) ? data.items
-            : (Array.isArray(data?.users) ? data.users : []));
-        setUsers(list.map((u) => normalizeUser(u)));
-      } else {
-        setError(error?.message || 'No se pudieron cargar los usuarios');
-      }
-      setLoading(false);
-    };
-    load();
-  }, [isAdmin, userEndpoint]);
-
-  const saveUserRole = async (user) => {
-    try {
-      const email = user?.email;
-      if (!email) { Swal.fire({ icon: 'error', text: 'Usuario sin correo. No se puede actualizar.' }); return; }
-      const url = `${userEndpoint}/${encodeURIComponent(email)}`;
-      const body = { role: user.role };
-      const { ok, error } = await errorWrapper(api.patch(url, body), { unwrap: false });
-      if (ok) {
-        Swal.fire({ icon: 'success', text: 'Rol actualizado', timer: 1400, showConfirmButton: false });
-      } else {
-        Swal.fire({ icon: 'error', text: error?.message || 'No se pudo actualizar el rol' });
-      }
-    } catch (err) {
-      Swal.fire({ icon: 'error', text: 'No se pudo actualizar el rol' });
-    }
-  };
-
-  const filtered = (users || []).filter((u) => {
-    const q = query.trim().toLowerCase();
-    if (!q) return true;
-    return (
-      (u.name || '').toLowerCase().includes(q) ||
-      (u.email || '').toLowerCase().includes(q) ||
-      (u.role || '').toLowerCase().includes(q)
-    );
-  });
-
-  if (isAdmin) {
-    return (
-      <div className="edituser-container">
-        <div className="edituser-users">
-          <Title title="Administrar usuarios" />
-          {loading && (
-            <div className="loader-overlay">
-              <div className="loader-spinner"></div>
-              <p className="loader-text">Cargando usuarios...</p>
-            </div>
-          )}
-          {error && (
-            <p style={{ color: '#b91c1c', margin: '0.5rem 0' }}>{error}</p>
-          )}
-          <Paper elevation={3} className="edituser-card">
-            <SearchBox value={query} onChange={setQuery} placeholder="Buscar usuario..." />
-            <div className="edituser-table">
-              <div className="edituser-head">
-                <div>Nombre</div>
-                <div>Correo</div>
-                <div>Rol</div>
-                <div>Acción</div>
-              </div>
-              {filtered.map((u, idx) => (
-                <div key={`${u.email}-${idx}`} className="edituser-row">
-                  <TextField name="name" label="Nombre" value={u.name || ''} fullWidth disabled />
-                  <TextField name="email" label="Correo" type="email" value={u.email || ''} fullWidth disabled />
-                  <TextField
-                    name="role"
-                    label="Rol"
-                    value={u.role || 'user'}
-                    onChange={(e) => {
-                      const newRole = e.target.value;
-                      setUsers((prev) => prev.map((it) => ((it.id && u.id && it.id === u.id) || it.email === u.email) ? { ...it, role: newRole } : it));
-                    }}
-                    select
-                    fullWidth
-                  >
-                    <MenuItem value="admin">Admin</MenuItem>
-                    <MenuItem value="editor">Editor</MenuItem>
-                    <MenuItem value="user">User</MenuItem>
-                  </TextField>
-                  <Button variant="contained" color="primary" onClick={() => saveUserRole(u)}>
-                    Guardar
-                  </Button>
-                </div>
-              ))}
-            </div>
-          </Paper>
-        </div>
-      </div>
-    );
-  }
-
+  // ===========================================================
+  // Render perfil personal
+  // ===========================================================
   return (
     <div className="edituser-container">
       <Paper elevation={3} className="edituser-card">
-        <Title title="Editar usuario" />
+        <Title title="Editar perfil" />
         <Box component="form" className="edituser-form" onSubmit={handleSubmit}>
-          <TextField name="name" label="Nombre" value={form.name} onChange={handleChange} fullWidth />
-          <TextField name="email" label="Correo" type="email" value={form.email} onChange={handleChange} fullWidth />
-          <TextField name="role" label="Rol" value={form.role} onChange={handleChange} select fullWidth>
+          <TextField
+            name="name"
+            label="Nombre"
+            value={form.name}
+            onChange={handleChange}
+            fullWidth
+            required
+          />
+          <TextField
+            name="email"
+            label="Correo"
+            type="email"
+            value={form.email}
+            fullWidth
+            disabled // 🔒 Email no editable
+          />
+          <TextField
+            name="role"
+            label="Rol"
+            value={form.role}
+            select
+            fullWidth
+            disabled // 🔒 Solo visualización
+          >
             <MenuItem value="admin">Admin</MenuItem>
             <MenuItem value="editor">Editor</MenuItem>
             <MenuItem value="user">User</MenuItem>
           </TextField>
-          <Button type="submit" variant="contained" color="primary" className="edituser-btn">Guardar</Button>
+          <Button type="submit" variant="contained" color="primary">
+            Guardar
+          </Button>
         </Box>
       </Paper>
     </div>
   );
 };
 
-
-
-
-
-
-
+export default EditUser;

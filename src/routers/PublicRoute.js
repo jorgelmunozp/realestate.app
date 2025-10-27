@@ -2,9 +2,10 @@ import { useSelector } from 'react-redux';
 import { DashboardRoutes } from "./DashboardRoutes.js";
 
 export const PublicRoute = ({ children }) => {
-    const user = useSelector((state) => state.auth.user);
+  const { logged } = useSelector((state) => state.auth);
+  
+  return logged ? <DashboardRoutes /> : children;
+};
 
-    return user?.logged ? <DashboardRoutes /> : children
-}
 
 export default PublicRoute;

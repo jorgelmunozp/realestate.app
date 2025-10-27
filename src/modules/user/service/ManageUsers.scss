@@ -1,0 +1,44 @@
+@import '../../../assets/styles/scss/mixins/colors';
+@import '../../../assets/styles/scss/mixins/fonts';
+@import '../../../assets/styles/scss/mixins/screen';
+
+.manageusers-container {
+  padding: 2rem;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.manageusers-card {
+  padding: 1.5rem 2rem;
+  border-radius: 20px;
+  background: #fff;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+}
+
+.manageusers-table {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  margin-top: 1.5rem;
+
+  .manageusers-head {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    font-weight: 600;
+    color: #444;
+    margin-bottom: 0.5rem;
+  }
+
+  .manageusers-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.8rem;
+    align-items: center;
+  }
+}
+
+.error-text {
+  color: #b91c1c;
+  margin-top: 0.5rem;
+  text-align: center;
+}

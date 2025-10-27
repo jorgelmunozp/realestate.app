@@ -1,36 +1,49 @@
-import axios from 'axios';
-import { installAuthInterceptors } from '../auth/session';
-import { getBaseURL } from './config';
+import axios from "axios";
+import { installAuthInterceptors } from "../auth/session";
+import { getBaseURL } from "./config";
+import { store } from "../store/store";
 
 // ===========================================================
-// 🔹 Instancia global de Axios
+// Instancia global de Axios
 // ===========================================================
 export const api = axios.create({
-  baseURL: getBaseURL(), // Se toma del .env automáticamente
+  baseURL: getBaseURL(), // Toma automáticamente REACT_APP_API_BASE_URL del .env
   timeout: 20000,
-  headers: { 'Content-Type': 'application/json' },
+  headers: { "Content-Type": "application/json" },
 });
 
 // ===========================================================
-// 🔹 Interceptores de autenticación
+// Interceptores de autenticación
 // ===========================================================
 
-// 1️⃣ Instalar lógica de auto-refresh de token (si la tienes implementada)
+// 1️⃣ Instalar lógica de auto-refresh (si está implementada)
 installAuthInterceptors(api);
 
-// 2️⃣ Interceptor global: agrega token de sesión si existe
+// 2️⃣ Interceptor global: agrega token JWT desde Redux o sessionStorage
 api.interceptors.request.use(
   (config) => {
     try {
-      if (config.__skipAuth) return config; // permite omitir auth en ciertas llamadas
-      const token = sessionStorage.getItem('token');
+      if (config.__skipAuth) return config; // omitir auth si se pasa flag
+
+      // Intentar obtener token desde el store persistido
+      const state = store.getState();
+      const tokenFromStore = state?.auth?.token;
+
+      // Fallback: token desde sessionStorage
+      const tokenFromSession = sessionStorage.getItem("persist:auth")
+        ? JSON.parse(JSON.parse(sessionStorage.getItem("persist:auth"))?.token || "null")
+        : null;
+
+      const token = tokenFromStore || tokenFromSession;
+
       if (token) {
         config.headers = config.headers || {};
         config.headers.Authorization = `Bearer ${token}`;
       }
     } catch {
-      // Silencia errores si sessionStorage no está disponible
+      // Evita errores si Redux aún no está cargado o storage inaccesible
     }
+
     return config;
   },
   (error) => Promise.reject(error)

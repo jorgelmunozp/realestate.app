@@ -1,28 +1,27 @@
 import { useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Title } from "../../components/title/Title.js";
-import { useFetchGet } from "../../services/fetch/useFetchGet.js";
+import { useFetch } from "../../services/fetch/useFetch.js";
 import "./Property.scss";
 
 const propertyEndpoint = process.env.REACT_APP_ENDPOINT_PROPERTY;
-const ownerEndpoint = process.env.REACT_APP_ENDPOINT_OWNER;
-const propertImageEndpoint = process.env.REACT_APP_ENDPOINT_PROPERTYIMAGE;
-const propertTraceEndpoint = process.env.REACT_APP_ENDPOINT_PROPERTYTRACE;
 
 export const Property = () => {
-  useEffect(() => { window.scrollTo(0, 0); }, []);      // Scroll al inicio al cargar
-
   const navigate = useNavigate();
   const { propertyId } = useParams();
-  const { data: property, loading: loadingProperty, error } = useFetchGet(`${propertyEndpoint}/${propertyId}`);
-  const { data: owner, loading: loadingOwner } = useFetchGet(property ? `${ownerEndpoint}/${property.idOwner}` : null);
-  const { data: propertyImage, loading: loadingPropertyImage } = useFetchGet(propertyId ? `${propertImageEndpoint}?idProperty=${propertyId}` : null);
-  const { data: propertyTrace, loading: loadingPropertyTrace } = useFetchGet(propertyId ? `${propertTraceEndpoint}?idProperty=${propertyId}` : null);
+  const { data: property, loading, error } = useFetch(`${propertyEndpoint}/${propertyId}`);
 
-  const goToIndex = () => navigate("/index");
+  // 🔹 Scroll al inicio al montar
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
-  // Loader general de propiedad
-  if (loadingProperty) {
+  const goBack = () => navigate(-1);
+
+  // ===========================================================
+  // 🔹 Loader
+  // ===========================================================
+  if (loading) {
     return (
       <div className="container-loader full-screen">
         <div className="spinner"></div>
@@ -31,94 +30,96 @@ export const Property = () => {
     );
   }
 
-  if (error) {
-    return <p style={{ textAlign: "center" }}>❌ Error al cargar el inmueble</p>;
+  // ===========================================================
+  // 🔹 Error o sin datos
+  // ===========================================================
+  if (error || !property) {
+    return (
+      <div className="property-error">
+        ❌ Error al cargar el inmueble o no existe.
+      </div>
+    );
   }
 
+  // ===========================================================
+  // 🔹 Extracción de datos
+  // ===========================================================
+  const { name, address, price, year, idProperty, codeInternal, image, owner, traces = [] } = property;
+
+  // ===========================================================
+  // 🔹 Render principal
+  // ===========================================================
   return (
     <div className="property-container">
       <div className="property-card">
 
         {/* 🖼️ Imagen principal */}
-        {loadingPropertyImage ? (
-          <div className="container-loader inline">
-            <div className="spinner"></div>
-            <p>Cargando imagen...</p>
+        {image?.file ? (
+          <div className="property-image-wrapper">
+            <img
+              src={`data:image/jpeg;base64,${image.file}`}
+              alt={name}
+              className="property-main-image"
+              loading="lazy"
+            />
           </div>
         ) : (
-          propertyImage?.length > 0 && (
-            <div className="property-image-wrapper">
-              <img
-                src={`data:image/jpg;base64,${propertyImage[0].file}`}
-                alt={property.name}
-                className="property-main-image"
-                loading="lazy"
-              />
-            </div>
-          )
+          <div className="no-image">Sin imagen disponible</div>
         )}
 
-        {/* Información general */}
+        {/* 📋 Información general */}
         <div className="property-info">
-          <Title title={property.name} />
-          <p className="property-address">📍 {property.address}</p>
-
+          <Title title={name} />
+          <p className="property-address">📍 {address || "Sin dirección"}</p>
           <div className="property-price">
-            💰 $ {property.price?.toLocaleString("es-CO")} COP
+            💰 {price ? `$${Number(price).toLocaleString("es-CO")} COP` : "Sin precio"}
           </div>
 
           <div className="property-details">
-            <p><strong>ID Propiedad:</strong> {property.idProperty}</p>
-            <p><strong>Código interno:</strong> {property.codeInternal}</p>
-            <p><strong>Año construcción:</strong> {property.year}</p>
+            <p><strong>ID Propiedad:</strong> {idProperty}</p>
+            <p><strong>Código interno:</strong> {codeInternal || "N/A"}</p>
+            <p><strong>Año construcción:</strong> {year || "N/A"}</p>
           </div>
 
           {/* 👤 Propietario */}
-          <div className="property-owner">
-            <h3>👤 Propietario</h3>
-            {loadingOwner ? (
-              <div className="owner-image-loader">
-                <div className="spinner"></div>
-                <p>Cargando propietario...</p>
-              </div>
-            ) : (
-              owner?.photo && (
+          {owner && (
+            <div className="property-owner">
+              <h3>👤 Propietario</h3>
+              {owner.photo ? (
                 <img
-                  src={`data:image/jpg;base64,${owner.photo}`}
-                  alt="owner"
+                  src={`data:image/jpeg;base64,${owner.photo}`}
+                  alt={owner.name}
                   className="owner-photo"
                   loading="lazy"
                 />
-              )
-            )}
-            <p className="owner-name">{owner?.name}</p>
-            <p>{owner?.address}</p>
-            <p>🎂 {owner?.birthday}</p>
-          </div>
+              ) : (
+                <div className="no-image">Sin foto</div>
+              )}
+              <p className="owner-name">{owner.name || "Nombre no disponible"}</p>
+              <p>{owner.address || "Sin dirección"}</p>
+              <p>🎂 {owner.birthday || "Sin fecha de nacimiento"}</p>
+            </div>
+          )}
 
           {/* 📄 Historial */}
           <div className="property-traces">
             <h3>📄 Historial de transacciones</h3>
-            {loadingPropertyTrace ? (
-              <div className="container-loader inline">
-                <div className="spinner"></div>
-                <p>Cargando historial...</p>
-              </div>
-            ) : propertyTrace?.length > 0 ? (
-              propertyTrace.map((trace, index) => (
+            {traces.length > 0 ? (
+              traces.map((trace, index) => (
                 <div key={index} className="trace-card">
-                  <p><strong>Fecha:</strong> {trace.dateSale}</p>
-                  <p><strong>Nombre:</strong> {trace.name}</p>
-                  <p><strong>Valor:</strong> $ {trace.value?.toLocaleString("es-CO")} COP</p>
-                  <p><strong>Impuesto:</strong> $ {trace.tax?.toLocaleString("es-CO")} COP</p>
+                  <p><strong>Fecha:</strong> {trace.dateSale || "N/A"}</p>
+                  <p><strong>Nombre:</strong> {trace.name || "N/A"}</p>
+                  <p><strong>Valor:</strong> ${Number(trace.value || 0).toLocaleString("es-CO")} COP</p>
+                  <p><strong>Impuesto:</strong> ${Number(trace.tax || 0).toLocaleString("es-CO")} COP</p>
                 </div>
               ))
             ) : (
-              <p>No hay historial de transacciones.</p>
+              <p className="no-traces">No hay historial de transacciones.</p>
             )}
           </div>
 
-          <button className="property-button" onClick={goToIndex}>
+          {/* 🔙 Botón volver */}
+          <button className="property-button" onClick={goBack}>
             ← Regresar
           </button>
         </div>
@@ -128,4 +129,3 @@ export const Property = () => {
 };
 
 export default Property;
-

@@ -1,5 +1,4 @@
 // Convierte un OwnerDto del backend (PascalCase) a formato frontend (camelCase)
- 
 export const normalizeOwner = (data = {}) => ({
   name: data?.Name ?? "",
   address: data?.Address ?? "",
@@ -8,7 +7,6 @@ export const normalizeOwner = (data = {}) => ({
 });
 
 // Convierte un Owner del frontend (camelCase) al formato backend (PascalCase)
- 
 export const mapOwnerToDto = (owner = {}) => ({
   Name: owner?.name ?? "",
   Address: owner?.address ?? "",

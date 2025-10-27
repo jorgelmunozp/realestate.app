@@ -15,25 +15,19 @@ import propertyDto from "../dto/PropertyDto.json";
 import ownerDto from "../../owner/dto/OwnerDto.json";
 import propertyImageDto from "../../propertyImage/dto/PropertyImageDto.json";
 import propertyTraceDto from "../../propertyTrace/dto/PropertyTraceDto.json";
-import { normalizeProperty, mapPropertyToDto } from "../mapper/propertyMapper";
-import { normalizeOwner, mapOwnerToDto } from "../../owner/mapper/OwnerMapper";
-import { normalizePropertyImage, mapPropertyImageToDto } from "../../propertyImage/mapper/propertyImageMapper";
-import { normalizePropertyTrace, mapPropertyTraceToDto } from "../../propertyTrace/mapper/propertyTraceMapper";
+import { mapPropertyToDto } from "../mapper/propertyMapper";
 import "./AddProperty.scss";
 
 export const AddProperty = () => {
   const navigate = useNavigate();
   const endpoints = {
     property: process.env.REACT_APP_ENDPOINT_PROPERTY,
-    owner: process.env.REACT_APP_ENDPOINT_OWNER,
-    image: process.env.REACT_APP_ENDPOINT_PROPERTYIMAGE, // mantenemos por compatibilidad
-    trace: process.env.REACT_APP_ENDPOINT_PROPERTYTRACE,
   };
 
-  const [itemProperty, setProperty] = useState(normalizeProperty(propertyDto));
-  const [itemOwner, setOwner] = useState(normalizeOwner(ownerDto));
-  const [itemPropertyImage, setPropertyImage] = useState(normalizePropertyImage(propertyImageDto));
-  const [itemPropertyTrace, setPropertyTrace] = useState(normalizePropertyTrace(propertyTraceDto));
+  const [itemProperty, setProperty] = useState(propertyDto);
+  const [itemOwner, setOwner] = useState(ownerDto);
+  const [itemPropertyImage, setPropertyImage] = useState(propertyImageDto);
+  const [itemPropertyTrace, setPropertyTrace] = useState([propertyTraceDto]);
 
   const toBase64 = useCallback(
     (file) =>
@@ -46,7 +40,7 @@ export const AddProperty = () => {
     []
   );
 
-  const clampNonNegative = (v) => {
+  const clamp = (v) => {
     const n = Number(v);
     return Number.isFinite(n) ? Math.max(0, n) : 0;
   };
@@ -54,13 +48,13 @@ export const AddProperty = () => {
   const handleChange = (e, section = "property", index = null) => {
     const { name, value } = e.target;
     if (section === "traces") {
-      const newVal = name === "value" || name === "tax" ? clampNonNegative(value) : value;
-      setPropertyTrace((prev) => prev.map((t, i) => (i === index ? { ...t, [name]: newVal } : t)));
+      const val = name === "value" || name === "tax" ? clamp(value) : value;
+      setPropertyTrace((prev) => prev.map((t, i) => (i === index ? { ...t, [name]: val } : t)));
     } else if (section === "owner") {
       setOwner((prev) => ({ ...prev, [name]: value }));
     } else {
-      const newVal = name === "price" || name === "codeInternal" ? clampNonNegative(value) : value;
-      setProperty((prev) => ({ ...prev, [name]: newVal }));
+      const val = name === "price" || name === "codeInternal" ? clamp(value) : value;
+      setProperty((prev) => ({ ...prev, [name]: val }));
     }
   };
 
@@ -69,7 +63,6 @@ export const AddProperty = () => {
     const file = e.target.files[0];
     const base64 = await toBase64(file);
     const preview = URL.createObjectURL(file);
-
     if (type === "owner") {
       setOwner((prev) => ({ ...prev, photo: base64, ownerPhotoPreview: preview }));
     } else {
@@ -78,89 +71,56 @@ export const AddProperty = () => {
   };
 
   const handleAddTrace = () => {
-    setPropertyTrace((prev) => [
-      ...prev,
-      { name: "", value: 0, tax: 0, dateSale: "", idProperty: "" },
-    ]);
+    setPropertyTrace((prev) => [...prev, { name: "", value: 0, tax: 0, dateSale: "", idProperty: "" }]);
   };
 
   const handleDeleteTrace = (index) => {
     setPropertyTrace((prev) => prev.filter((_, i) => i !== index));
   };
 
+  // ===========================================================
+  // 🔹 Guardar nueva propiedad (POST con wrapper adaptado)
+  // ===========================================================
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Validaciones simples
+    if (!itemProperty.name || !itemProperty.address)
+      return Swal.fire("Faltan datos", "Completa los datos de la propiedad.", "warning");
+
+    if (!itemPropertyImage?.file)
+      return Swal.fire("Imagen requerida", "Debes cargar la imagen del inmueble.", "warning");
+
+    if (!itemOwner.name || !itemOwner.address || !itemOwner.photo || !itemOwner.birthday)
+      return Swal.fire("Datos del propietario", "Completa todos los datos del propietario.", "warning");
+
+    const traceValid = itemPropertyTrace.every((t) => t.name && t.dateSale && t.value > 0);
+    if (!traceValid)
+      return Swal.fire("Historial", "Completa los datos de las trazas.", "warning");
+
     try {
-      // Validaciones requeridas
-      if (!itemPropertyImage?.file) {
-        Swal.fire({
-          icon: "warning",
-          title: "Imagen requerida",
-          text: "Debes cargar la imagen de la propiedad.",
-        });
-        return;
-      }
-      if (!itemOwner?.ownerPhotoPreview && !itemOwner?.photo) {
-        Swal.fire({
-          icon: "warning",
-          title: "Foto requerida",
-          text: "Debes cargar la imagen del propietario.",
-        });
-        return;
-      }
-
-      // 🔹 1. Crear Propietario
-      const ownerDtoPayload = mapOwnerToDto(itemOwner);
-      const resOwner = await errorWrapper(api.post(endpoints.owner, ownerDtoPayload));
-      const ownerId =
-        resOwner?.data?.idOwner ??
-        resOwner?.data?.IdOwner ??
-        resOwner?.data?.id ??
-        "";
-
-      // 🔹 2. Crear Propiedad con imagen incluida
-      const propertyPayload = mapPropertyToDto({
+      // Construcción definitiva del payload compatible con backend
+      const payload = mapPropertyToDto({
         ...itemProperty,
-        idOwner: ownerId,
-        price: Number(itemProperty.price),
-        codeInternal: Number(itemProperty.codeInternal),
-        image: {
-          file: itemPropertyImage.file,
-          enabled: true,
-        },
+        owner: itemOwner,
+        image: itemPropertyImage,
+        traces: itemPropertyTrace,
       });
 
-      const resProperty = await errorWrapper(api.post(endpoints.property, propertyPayload));
-      const propertyId =
-        resProperty?.data?.idProperty ??
-        resProperty?.data?.IdProperty ??
-        resProperty?.data?.id ??
-        "";
+      console.log("📤 propertyPayload", payload);
 
-      // 🔹 3. Crear trazas (si existen)
-      const traces = (itemPropertyTrace || []).filter(
-        (t) => t && (t.name || t.dateSale)
-      );
-      if (traces.length) {
-        const dto = traces.map((t) =>
-          mapPropertyTraceToDto({ ...t, idProperty: propertyId })
-        );
-        await errorWrapper(api.post(endpoints.trace, dto));
+      const res = await errorWrapper(api.post(endpoints.property, payload));
+      const { success, message } = res;
+
+      if (success) {
+        Swal.fire("Inmueble registrado", "success");
+        navigate("/home", { state: { refresh: true } });
+      } else {
+        Swal.fire("Error", message || "Ocurrió un error al registrar el inmueble.", "error");
       }
-
-      Swal.fire({
-        icon: "success",
-        title: "Propiedad creada",
-        confirmButtonText: "Aceptar",
-      });
-      navigate("/home", { state: { refresh: true } });
     } catch (err) {
       console.error("Error al crear propiedad:", err);
-      Swal.fire({
-        icon: "error",
-        title: "Error",
-        text: "Ocurrió un error al registrar el inmueble",
-      });
+      Swal.fire("Error", "Ocurrió un error al registrar el inmueble.", "error");
     }
   };
 
@@ -173,58 +133,17 @@ export const AddProperty = () => {
         <div className="form-section">
           <h2>Datos generales</h2>
           <div className="form-grid">
-            <TextField
-              name="name"
-              label="Nombre"
-              value={itemProperty.name}
-              onChange={handleChange}
-              required
-            />
-            <TextField
-              name="address"
-              label="Dirección"
-              value={itemProperty.address}
-              onChange={handleChange}
-              required
-            />
-            <TextField
-              name="price"
-              label="Precio"
-              type="number"
-              value={itemProperty.price}
-              onChange={handleChange}
-              required
-            />
-            <TextField
-              name="codeInternal"
-              label="Código interno"
-              type="number"
-              value={itemProperty.codeInternal}
-              onChange={handleChange}
-              required
-            />
+            <TextField name="name" label="Nombre" value={itemProperty.name} onChange={handleChange} required />
+            <TextField name="address" label="Dirección" value={itemProperty.address} onChange={handleChange} required />
+            <TextField name="price" label="Precio" type="number" value={itemProperty.price} onChange={handleChange} required />
+            <TextField name="codeInternal" label="Código interno" type="number" value={itemProperty.codeInternal} onChange={handleChange} required />
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DatePicker
                 label="Año"
                 views={["year"]}
-                value={
-                  itemProperty.year
-                    ? dayjs(String(itemProperty.year), "YYYY")
-                    : null
-                }
-                onChange={(v) =>
-                  handleChange({
-                    target: { name: "year", value: v ? v.year() : "" },
-                  })
-                }
-                slotProps={{
-                  textField: {
-                    fullWidth: true,
-                    className: "year-input",
-                    InputLabelProps: { shrink: true },
-                    required: true,
-                  },
-                }}
+                value={itemProperty.year ? dayjs(String(itemProperty.year), "YYYY") : null}
+                onChange={(v) => handleChange({ target: { name: "year", value: v ? v.year() : "" } })}
+                slotProps={{ textField: { fullWidth: true, required: true } }}
               />
             </LocalizationProvider>
           </div>
@@ -235,44 +154,17 @@ export const AddProperty = () => {
           <h2>Imagen del inmueble</h2>
           <div className="image-upload-container">
             {!itemPropertyImage.imagePreview ? (
-              <Box
-                className="dropzone-box"
-                onClick={() =>
-                  document.getElementById("propertyFileInput").click()
-                }
-              >
+              <Box className="dropzone-box" onClick={() => document.getElementById("propertyFileInput").click()}>
                 <Typography variant="body1" color="textSecondary">
                   Haz clic o arrastra una imagen
                 </Typography>
-                <input
-                  id="propertyFileInput"
-                  type="file"
-                  accept="image/*"
-                  hidden
-                  onChange={(e) => handleImageChange(e, "property")}
-                  required
-                  aria-required="true"
-                />
+                <input id="propertyFileInput" type="file" accept="image/*" hidden onChange={(e) => handleImageChange(e, "property")} required />
               </Box>
             ) : (
               <div className="image-preview filled">
-                <img
-                  src={itemPropertyImage.imagePreview}
-                  alt="Inmueble"
-                  className="property-image"
-                />
+                <img src={itemPropertyImage.imagePreview} alt="Inmueble" className="property-image" />
                 <div className="add-property-card-buttons">
-                  <button
-                    type="button"
-                    className="replace-btn"
-                    onClick={() =>
-                      setPropertyImage((prev) => ({
-                        ...prev,
-                        imagePreview: "",
-                        file: "",
-                      }))
-                    }
-                  >
+                  <button type="button" className="replace-btn" onClick={() => setPropertyImage({ imagePreview: "", file: "" })}>
                     <FiTrash2 />
                   </button>
                 </div>
@@ -285,69 +177,20 @@ export const AddProperty = () => {
         <div className="form-section">
           <h2>Propietario</h2>
           <div className="form-grid owner-grid">
-            <TextField
-              name="name"
-              label="Nombre"
-              value={itemOwner.name}
-              onChange={(e) => handleChange(e, "owner")}
-              required
-            />
-            <TextField
-              name="address"
-              label="Dirección"
-              value={itemOwner.address}
-              onChange={(e) => handleChange(e, "owner")}
-              required
-            />
-            <TextField
-              type="date"
-              name="birthday"
-              label="Fecha de nacimiento"
-              value={itemOwner.birthday}
-              onChange={(e) => handleChange(e, "owner")}
-              InputLabelProps={{ shrink: true }}
-              required
-            />
+            <TextField name="name" label="Nombre" value={itemOwner.name} onChange={(e) => handleChange(e, "owner")} required />
+            <TextField name="address" label="Dirección" value={itemOwner.address} onChange={(e) => handleChange(e, "owner")} required />
+            <TextField type="date" name="birthday" label="Fecha de nacimiento" value={itemOwner.birthday} onChange={(e) => handleChange(e, "owner")} InputLabelProps={{ shrink: true }} required />
             <div className="image-upload-container full-width">
               {!itemOwner.ownerPhotoPreview ? (
-                <Box
-                  className="dropzone-box"
-                  onClick={() =>
-                    document.getElementById("ownerFileInput").click()
-                  }
-                >
-                  <Typography variant="body1" color="textSecondary">
-                    Cargar imagen del propietario
-                  </Typography>
-                  <input
-                    id="ownerFileInput"
-                    type="file"
-                    accept="image/*"
-                    hidden
-                    onChange={(e) => handleImageChange(e, "owner")}
-                    required
-                    aria-required="true"
-                  />
+                <Box className="dropzone-box" onClick={() => document.getElementById("ownerFileInput").click()}>
+                  <Typography variant="body1" color="textSecondary">Cargar imagen del propietario</Typography>
+                  <input id="ownerFileInput" type="file" accept="image/*" hidden onChange={(e) => handleImageChange(e, "owner")} required />
                 </Box>
               ) : (
                 <div className="image-preview filled">
-                  <img
-                    src={itemOwner.ownerPhotoPreview}
-                    alt="Propietario"
-                    className="owner-photo"
-                  />
+                  <img src={itemOwner.ownerPhotoPreview} alt="Propietario" className="owner-photo" />
                   <div className="add-property-card-buttons">
-                    <button
-                      type="button"
-                      className="replace-btn"
-                      onClick={() =>
-                        setOwner((prev) => ({
-                          ...prev,
-                          photo: "",
-                          ownerPhotoPreview: "",
-                        }))
-                      }
-                    >
+                    <button type="button" className="replace-btn" onClick={() => setOwner({ ...itemOwner, photo: "", ownerPhotoPreview: "" })}>
                       <FiTrash2 />
                     </button>
                   </div>
@@ -360,46 +203,14 @@ export const AddProperty = () => {
         {/* --- Historial --- */}
         <div className="form-section">
           <h2>Historial</h2>
-          {itemPropertyTrace.map((trace, index) => (
-            <div key={index} className="trace-wrapper">
+          {itemPropertyTrace.map((trace, i) => (
+            <div key={i} className="trace-wrapper">
               <div className="trace-grid">
-                <TextField
-                  type="date"
-                  name="dateSale"
-                  label="Fecha"
-                  value={trace.dateSale}
-                  onChange={(e) => handleChange(e, "traces", index)}
-                  InputLabelProps={{ shrink: true }}
-                  required
-                />
-                <TextField
-                  name="name"
-                  label="Evento"
-                  value={trace.name}
-                  onChange={(e) => handleChange(e, "traces", index)}
-                  required
-                />
-                <TextField
-                  type="number"
-                  name="value"
-                  label="Valor"
-                  value={trace.value}
-                  onChange={(e) => handleChange(e, "traces", index)}
-                  required
-                />
-                <TextField
-                  type="number"
-                  name="tax"
-                  label="Impuesto"
-                  value={trace.tax}
-                  onChange={(e) => handleChange(e, "traces", index)}
-                  required
-                />
-                <button
-                  type="button"
-                  className="trace-delete-btn"
-                  onClick={() => handleDeleteTrace(index)}
-                >
+                <TextField type="date" name="dateSale" label="Fecha" value={trace.dateSale} onChange={(e) => handleChange(e, "traces", i)} InputLabelProps={{ shrink: true }} required />
+                <TextField name="name" label="Evento" value={trace.name} onChange={(e) => handleChange(e, "traces", i)} required />
+                <TextField type="number" name="value" label="Valor" value={trace.value} onChange={(e) => handleChange(e, "traces", i)} required />
+                <TextField type="number" name="tax" label="Impuesto" value={trace.tax} onChange={(e) => handleChange(e, "traces", i)} required />
+                <button type="button" className="trace-delete-btn" onClick={() => handleDeleteTrace(i)}>
                   <FiTrash2 />
                 </button>
               </div>
@@ -408,16 +219,8 @@ export const AddProperty = () => {
           <AddButton label="Añadir evento" handleChange={handleAddTrace} />
         </div>
 
-        <button type="submit" className="addproperty-btn primary">
-          Crear Propiedad
-        </button>
-        <button
-          type="button"
-          className="addproperty-btn secondary"
-          onClick={() => navigate("/home")}
-        >
-          Cancelar
-        </button>
+        <button type="submit" className="addproperty-btn primary">Crear Propiedad</button>
+        <button type="button" className="addproperty-btn secondary" onClick={() => navigate("/home")}>Cancelar</button>
       </form>
     </div>
   );

@@ -2,7 +2,7 @@ import { Navigate, useLocation } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { getTokenPayload, getUserFromToken } from '../services/auth/token';
 
-export const RoleRoute = ({ children, allowed = [], redirectTo = '/home' }) => {
+export const RoleRoute = ({ element, allowed = [], redirectTo = '/home' }) => {
   const user = useSelector((state) => state.auth.user);
   const { pathname, search } = useLocation();
 
@@ -23,7 +23,7 @@ export const RoleRoute = ({ children, allowed = [], redirectTo = '/home' }) => {
     ? true
     : allowedKeys.some((r) => userKeys.includes(r));
 
-  return isAllowed ? children : <Navigate to={redirectTo} replace />;
+  return isAllowed ? element : <Navigate to={redirectTo} replace />;
 };
 
 export default RoleRoute;

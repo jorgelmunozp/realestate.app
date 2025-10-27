@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { Title } from '../../../components/title/Title';
@@ -24,11 +24,23 @@ export const Index = () => {
     if (needsRefresh) {
       navigate(location.pathname, { replace: true, state: {} });
     }
-  }, [location.pathname, pagination.page, pagination.limit, dispatch, navigate]);
+  }, [location.pathname, location.state, pagination.page, pagination.limit, dispatch, navigate]);
 
   const handleOpenProperty = (propertyId) => navigate(`/property/${propertyId}`);
   const handleChangePage = (newPage) => setPagination((prev) => ({ ...prev, page: newPage }));
 
+  // ===========================================================
+  // Filtro optimizado con useMemo
+  // ===========================================================
+  const filteredProperties = useMemo(() => {
+    const q = queryPropertyName.trim().toLowerCase();
+    if (!q) return properties;
+    return properties.filter((p) => p.name?.toLowerCase().includes(q));
+  }, [properties, queryPropertyName]);
+
+  // ===========================================================
+  // Renderizado condicional de carga
+  // ===========================================================
   if (loading) {
     return (
       <div className="container-loader full-screen">
@@ -38,6 +50,9 @@ export const Index = () => {
     );
   }
 
+  // ===========================================================
+  // Render principal
+  // ===========================================================
   return (
     <div className="index-container">
       <div className="index-content">
@@ -52,9 +67,8 @@ export const Index = () => {
         />
 
         <div className="index-grid">
-          {properties
-            .filter((p) => p.name?.toLowerCase().includes(queryPropertyName.toLowerCase()))
-            .map((p) => (
+          {filteredProperties.length > 0 ? (
+            filteredProperties.map((p) => (
               <div
                 key={p.idProperty}
                 className="index-property-card"
@@ -74,10 +88,13 @@ export const Index = () => {
                 <div className="index-property-card-info">
                   <h3>{p.name}</h3>
                   <p>{p.address}</p>
-                  <p className="price">${p.price.toLocaleString()}</p>
+                  <p className="price">${Number(p.price || 0).toLocaleString()}</p>
                 </div>
               </div>
-            ))}
+            ))
+          ) : (
+            <p className="no-results">No se encontraron inmuebles</p>
+          )}
         </div>
 
         <Pagination

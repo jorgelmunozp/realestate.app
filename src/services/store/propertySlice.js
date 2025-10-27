@@ -3,12 +3,12 @@ import { api } from '../../services/api/api';
 import { errorWrapper } from '../../services/api/errorWrapper';
 
 // ===========================================================
-// 🔹 Endpoint desde variables de entorno (.env)
+// Endpoint desde variables de entorno (.env)
 // ===========================================================
 const ENDPOINT = process.env.REACT_APP_ENDPOINT_PROPERTY;
 
 // ===========================================================
-// 🔹 Obtener propiedades (con imagen incluida desde el backend)
+// Obtener propiedades (con imagen incluida desde el backend)
 // ===========================================================
 export const fetchProperties = createAsyncThunk(
   'property/fetchAll',
@@ -21,34 +21,34 @@ export const fetchProperties = createAsyncThunk(
 
     const body = res.data || {};
     let items = [];
-    let meta;
+    let meta = {};
 
-    // 🔹 Adaptar según formato del backend
-    if (Array.isArray(body)) {
-      items = body;
-    } else if (Array.isArray(body.data)) {
+    // ✅ Adaptación al wrapper actual del backend
+    if (body?.data?.data && Array.isArray(body.data.data)) {
+      items = body.data.data;
+      meta = body.data.meta || {};
+    } else if (Array.isArray(body?.data)) {
       items = body.data;
-      meta = body.meta;
-    } else if (Array.isArray(body.items)) {
-      items = body.items;
-      meta = body.meta;
-    } else if (body.data && typeof body.data === 'object' && Array.isArray(body.data.items)) {
-      items = body.data.items;
-      meta = body.data.meta || body.meta;
+      meta = body.meta || {};
+    } else if (Array.isArray(body)) {
+      items = body;
+      meta = {};
     }
 
-    const finalMeta = meta || body.meta || { page, limit, total: items.length, last_page: 1 };
+    const finalMeta = meta || { page, limit, total: items.length, last_page: 1 };
 
-    // 🔹 Normalización ligera
+    // ✅ Normalización (con campos camelCase y fallback seguro)
     const normalized = items.map((p) => ({
-      idProperty: p.idProperty ?? p.IdProperty ?? p.id ?? p.Id ?? '',
+      idProperty: p.idProperty ?? p.IdProperty ?? p.id ?? '',
       name: p.name ?? p.Name ?? '',
       address: p.address ?? p.Address ?? '',
-      price: p.price ?? p.Price ?? 0,
-      year: p.year ?? p.Year ?? 0,
-      codeInternal: p.codeInternal ?? p.CodeInternal ?? 0,
+      price: Number(p.price ?? p.Price ?? 0),
+      year: Number(p.year ?? p.Year ?? 0),
+      codeInternal: Number(p.codeInternal ?? p.CodeInternal ?? 0),
       idOwner: p.idOwner ?? p.IdOwner ?? '',
       image: p.image ?? p.Image ?? null,
+      owner: p.owner ?? null,
+      traces: p.traces ?? [],
     }));
 
     return { items: normalized, meta: finalMeta };
@@ -56,20 +56,19 @@ export const fetchProperties = createAsyncThunk(
 );
 
 // ===========================================================
-// 🔹 Crear propiedad
+// Crear propiedad
 // ===========================================================
 export const createProperty = createAsyncThunk(
   'property/create',
   async (propertyData) => {
     if (!ENDPOINT) throw new Error('Falta configuración: REACT_APP_ENDPOINT_PROPERTY');
-
-    const res = await api.post(ENDPOINT, propertyData);
-    return res.data;
+    const res = await errorWrapper(api.post(ENDPOINT, propertyData));
+    return res.data?.data ?? res.data;
   }
 );
 
 // ===========================================================
-// 🔹 Slice principal
+// Slice principal
 // ===========================================================
 const propertySlice = createSlice({
   name: 'property',
@@ -96,7 +95,7 @@ const propertySlice = createSlice({
         state.error = action.error.message;
       })
       .addCase(createProperty.fulfilled, (state, action) => {
-        state.properties.push(action.payload);
+        if (action.payload) state.properties.push(action.payload);
       });
   },
 });

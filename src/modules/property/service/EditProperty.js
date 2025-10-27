@@ -13,20 +13,15 @@ import dayjs from "dayjs";
 import Swal from "sweetalert2";
 import { Box, Typography } from "@mui/material";
 import { mapOwnerToDto } from "../../owner/mapper/OwnerMapper";
-import { mapPropertyToDto } from "../mapper/propertyMapper";
 import { mapPropertyImageToDto } from "../../propertyImage/mapper/propertyImageMapper";
+import { mapPropertyTraceToDto } from "../../propertyTrace/mapper/propertyTraceMapper";
 import "./EditProperty.scss";
 
 export const EditProperty = () => {
   const navigate = useNavigate();
   const { propertyId } = useParams();
   const location = useLocation();
-  const endpoints = {
-    property: process.env.REACT_APP_ENDPOINT_PROPERTY,
-    owner: process.env.REACT_APP_ENDPOINT_OWNER,
-    image: process.env.REACT_APP_ENDPOINT_PROPERTYIMAGE,
-    trace: process.env.REACT_APP_ENDPOINT_PROPERTYTRACE,
-  };
+  const endpoint = process.env.REACT_APP_ENDPOINT_PROPERTY;
 
   const [itemProperty, setProperty] = useState(null);
   const [itemOwner, setOwner] = useState({});
@@ -35,59 +30,52 @@ export const EditProperty = () => {
   const [loading, setLoading] = useState(true);
   const [traceAlert, setTraceAlert] = useState({ message: "", severity: "success" });
 
-  const toBase64 = useCallback((file) => new Promise((res, rej) => {
-    const reader = new FileReader();
-    reader.onload = () => res(reader.result.split(",")[1]);
-    reader.onerror = (e) => rej(e);
-    reader.readAsDataURL(file);
-  }), []);
+  const toBase64 = useCallback(
+    (file) =>
+      new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result.split(",")[1]);
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+      }),
+    []
+  );
 
   // ===========================================================
-  // 🔹 Cargar datos de propiedad (ya con imagen incluida)
+  // 🔹 Cargar datos completos de la propiedad
   // ===========================================================
   useEffect(() => {
-    const loadAll = async () => {
+    const loadProperty = async () => {
       try {
         const needsRefresh = location.state?.refresh === true;
-        const resProperty = await errorWrapper(
-          api.get(`${endpoints.property}/${propertyId}${needsRefresh ? `?refresh=true` : ``}`)
-        );
-        const property = resProperty.data;
-        setProperty(property);
+        const res = await errorWrapper(api.get(`${endpoint}/${propertyId}${needsRefresh ? "?refresh=true" : ""}`));
+        const property = res?.data?.data ?? res?.data ?? res?.data?.data;
+        if (!property) throw new Error("No se encontró la propiedad");
 
-        // Imagen embebida en property.image
-        if (property.image) {
+        setProperty(property);
+        if (property.image)
           setPropertyImage({
             ...property.image,
-            imagePreview: property.image.file
-              ? `data:image/jpeg;base64,${property.image.file}`
-              : "",
+            imagePreview: property.image.file ? `data:image/jpeg;base64,${property.image.file}` : "",
           });
-        }
-
-        // Propietario
-        const resOwner = await errorWrapper(
-          api.get(`${endpoints.owner}/${property.idOwner}${needsRefresh ? `?refresh=true` : ``}`)
-        );
-        setOwner(resOwner.data);
-
-        // Trazas
-        const resTraces = await errorWrapper(
-          api.get(`${endpoints.trace}?idProperty=${propertyId}${needsRefresh ? `&refresh=true` : ``}`)
-        );
-        setPropertyTrace(resTraces.data || []);
+        if (property.owner)
+          setOwner({
+            ...property.owner,
+            ownerPhotoPreview: property.owner.photo ? `data:image/jpeg;base64,${property.owner.photo}` : "",
+          });
+        if (property.traces?.length) setPropertyTrace(property.traces);
       } catch (err) {
-        console.error("Error al cargar datos:", err);
-        Swal.fire({ icon: "error", title: "Error", text: "No se pudieron cargar los datos" });
+        console.error("Error al cargar propiedad:", err);
+        Swal.fire({ icon: "error", title: "Error", text: "No se pudieron cargar los datos de la propiedad" });
       } finally {
         setLoading(false);
       }
     };
-    loadAll();
-  }, [propertyId, location.state, endpoints.property, endpoints.owner, endpoints.trace]);
+    loadProperty();
+  }, [propertyId, location.state, endpoint]);
 
   // ===========================================================
-  // 🔹 Handlers generales
+  // 🔹 Handlers
   // ===========================================================
   const clampNonNegative = (v) => {
     const n = Number(v);
@@ -99,10 +87,10 @@ export const EditProperty = () => {
     if (section === "owner") {
       setOwner((prev) => ({ ...prev, [name]: value }));
     } else if (section === "traces") {
-      const newVal = (name === "value" || name === "tax") ? clampNonNegative(value) : value;
+      const newVal = name === "value" || name === "tax" ? clampNonNegative(value) : value;
       setPropertyTrace((prev) => prev.map((t, i) => (i === index ? { ...t, [name]: newVal } : t)));
     } else {
-      const newVal = (name === "price" || name === "codeInternal") ? clampNonNegative(value) : value;
+      const newVal = name === "price" || name === "codeInternal" ? clampNonNegative(value) : value;
       setProperty((prev) => ({ ...prev, [name]: newVal }));
     }
   };
@@ -112,105 +100,92 @@ export const EditProperty = () => {
     const file = e.target.files[0];
     const base64 = await toBase64(file);
     const preview = URL.createObjectURL(file);
-
     if (type === "owner") {
       setOwner((prev) => ({ ...prev, photo: base64, ownerPhotoPreview: preview }));
     } else {
-      setPropertyImage((prev) => ({
-        ...prev,
-        file: base64,
-        enabled: true,
-        imagePreview: preview,
-      }));
+      setPropertyImage((prev) => ({ ...prev, file: base64, enabled: true, imagePreview: preview }));
     }
   };
 
-  const handleAddTrace = () => {
-    setPropertyTrace((prev) => [
-      ...prev,
-      { name: "", value: 0, tax: 0, dateSale: "", idProperty: propertyId },
-    ]);
-  };
-
-  const handleDeleteTrace = async (index) => {
-    const trace = itemPropertyTrace[index];
-    try {
-      if (trace?.idPropertyTrace) {
-        await errorWrapper(api.delete(`${endpoints.trace}/${trace.idPropertyTrace}`));
-      }
-      setPropertyTrace((prev) => prev.filter((_, i) => i !== index));
-      setTraceAlert({ message: "Traza eliminada correctamente", severity: "success" });
-    } catch (err) {
-      console.error("Error al eliminar traza:", err);
-      setTraceAlert({ message: "No se pudo eliminar la traza", severity: "error" });
-    }
+  const handleAddTrace = () => setPropertyTrace((prev) => [...prev, { name: "", value: 0, tax: 0, dateSale: "" }]);
+  const handleDeleteTrace = (index) => {
+    setPropertyTrace((prev) => prev.filter((_, i) => i !== index));
+    setTraceAlert({ message: "Traza eliminada localmente (se guardará al actualizar)", severity: "info" });
   };
 
   // ===========================================================
-  // 🔹 Guardar cambios
+  // 🔹 Guardar cambios (PATCH con wrapper adaptado)
   // ===========================================================
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      if (!itemPropertyImage?.imagePreview && !itemPropertyImage?.file) {
-        Swal.fire({ icon: "warning", title: "Imagen requerida", text: "Debes cargar la imagen de la propiedad." });
-        return;
-      }
-      if (!itemOwner?.ownerPhotoPreview && !itemOwner?.photo) {
-        Swal.fire({ icon: "warning", title: "Foto requerida", text: "Debes cargar la imagen del propietario." });
+      if (!itemProperty) {
+        Swal.fire({ icon: "error", title: "Error", text: "No se encontró la propiedad." });
         return;
       }
 
-      // Actualizar propietario
-      const ownerDto = mapOwnerToDto(itemOwner);
-      await errorWrapper(api.patch(`${endpoints.owner}/${itemOwner.idOwner}`, ownerDto));
+      const cleanedImage =
+        itemPropertyImage?.file && itemPropertyImage.file.trim() !== ""
+          ? mapPropertyImageToDto(itemPropertyImage)
+          : null;
 
-      // Actualizar propiedad
-      const propertyDto = mapPropertyToDto({ ...itemProperty, idProperty: propertyId });
-      await errorWrapper(api.patch(`${endpoints.property}/${propertyId}`, propertyDto));
+      const cleanedOwner =
+        itemOwner?.name?.trim() &&
+        itemOwner?.address?.trim() &&
+        (itemOwner?.photo?.trim() || itemOwner?.ownerPhotoPreview?.trim()) &&
+        itemOwner?.birthday?.trim()
+          ? mapOwnerToDto(itemOwner)
+          : null;
 
-      // Crear o actualizar imagen (solo si cambió)
-      if (itemPropertyImage?.file) {
-        const imgId = itemPropertyImage?.idPropertyImage || itemPropertyImage?.IdPropertyImage;
-        const imageDto = mapPropertyImageToDto({
-          ...itemPropertyImage,
-          idProperty: propertyId,
-          idPropertyImage: imgId,
+      const cleanedTraces =
+        Array.isArray(itemPropertyTrace) && itemPropertyTrace.length > 0
+          ? itemPropertyTrace
+              .filter((t) => t.name?.trim() && t.dateSale?.trim() && Number(t.value) > 0)
+              .map(mapPropertyTraceToDto)
+          : [];
+
+      const patchPayload = {
+        name: itemProperty.name,
+        address: itemProperty.address,
+        price: Number(itemProperty.price),
+        codeInternal: Number(itemProperty.codeInternal),
+        year: itemProperty.year,
+        image: cleanedImage,
+        owner: cleanedOwner,
+        traces: cleanedTraces,
+      };
+
+      console.log("📦 PATCH limpio →", patchPayload);
+
+      const resUpdate = await errorWrapper(api.patch(`${endpoint}/${propertyId}`, patchPayload));
+      const { success, message } = resUpdate;
+
+      if (success) {
+        Swal.fire({
+          icon: "success",
+          title: "Propiedad actualizada",
+          confirmButtonText: "Aceptar",
         });
-        if (imgId) {
-          await errorWrapper(api.patch(`${endpoints.image}/${imgId}`, imageDto), { unwrap: false });
-        } else {
-          await errorWrapper(api.post(endpoints.image, imageDto), { unwrap: false });
-        }
+        navigate("/home", { state: { refresh: true } });
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: message || "Ocurrió un error al actualizar la propiedad",
+        });
       }
-
-      // Actualizar trazas
-      for (const trace of itemPropertyTrace) {
-        if (trace.idPropertyTrace) {
-          await errorWrapper(api.patch(`${endpoints.trace}/${trace.idPropertyTrace}`, trace));
-        } else if (trace.name || trace.dateSale) {
-          await errorWrapper(api.post(endpoints.trace, [trace]));
-        }
-      }
-
-      Swal.fire({
-        title: "Propiedad actualizada",
-        icon: "success",
-        confirmButtonText: "Aceptar",
-      });
-      navigate("/home", { state: { refresh: true } });
     } catch (error) {
-      console.error("Error al actualizar:", error);
+      console.error("Error al actualizar propiedad:", error);
       Swal.fire({
         icon: "error",
         title: "Error",
-        text: "Ocurrió un error al actualizar la propiedad",
+        text: error?.response?.data?.message || "Ocurrió un error al actualizar la propiedad",
       });
     }
   };
 
   // ===========================================================
-  // 🔹 Renderizado condicional
+  // 🔹 Renderizado
   // ===========================================================
   if (loading)
     return (
@@ -223,9 +198,6 @@ export const EditProperty = () => {
   if (!itemProperty)
     return <p style={{ textAlign: "center", color: "red" }}>Propiedad no encontrada</p>;
 
-  // ===========================================================
-  // 🔹 Render principal
-  // ===========================================================
   return (
     <div className="addproperty-container">
       <form className="addproperty-card" onSubmit={handleSubmit}>
@@ -264,9 +236,7 @@ export const EditProperty = () => {
           <div className="image-upload-container">
             {!itemPropertyImage.imagePreview ? (
               <Box className="dropzone-box" onClick={() => document.getElementById("propertyFileInput").click()}>
-                <Typography variant="body1" color="textSecondary">
-                  Haz clic o arrastra una imagen
-                </Typography>
+                <Typography variant="body1" color="textSecondary">Haz clic o arrastra una imagen</Typography>
                 <input id="propertyFileInput" type="file" accept="image/*" hidden onChange={(e) => handleImageChange(e, "property")} required aria-required="true" />
               </Box>
             ) : (
@@ -327,10 +297,7 @@ export const EditProperty = () => {
           ))}
           {traceAlert.message && (
             <Box className="trace-alert" sx={{ mb: 2 }}>
-              <Alert
-                severity={traceAlert.severity}
-                onClose={() => setTraceAlert({ message: "", severity: "success" })}
-              >
+              <Alert severity={traceAlert.severity} onClose={() => setTraceAlert({ message: "", severity: "success" })}>
                 {traceAlert.message}
               </Alert>
             </Box>

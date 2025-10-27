@@ -11,33 +11,45 @@ const registerEndpoint = process.env.REACT_APP_ENDPOINT_REGISTER;
 
 export const Register = () => {
   const navigate = useNavigate();
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [form, setForm] = useState({ name: '', email: '', password: '' });
+  const [loading, setLoading] = useState(false);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setForm((prev) => ({ ...prev, [name]: value }));
+  };
 
   const handleRegister = async () => {
+    const { name, email, password } = form;
+
+    if (!name || !email || !password) {
+      Swal.fire({ text: 'Por favor, completa todos los campos', icon: 'warning' });
+      return;
+    }
+
     try {
-      const response = await api.post(`${registerEndpoint}`, { name, email, password });
+      setLoading(true);
+      const response = await api.post(registerEndpoint, { name, email, password });
 
       if (response.status >= 200 && response.status < 300) {
         Swal.fire({
-          text: 'Registro exitoso',
+          text: 'Registro exitoso. Ahora puedes iniciar sesión.',
           icon: 'success',
           timer: 1500,
           showConfirmButton: false,
         });
-        navigate('/login');
+        navigate('/login', { replace: true });
       }
     } catch (error) {
-      console.error('Error: ', error.response?.data?.errors);
+      console.error('❌ Error en registro:', error.response?.data || error.message);
 
       const errors = error.response?.data?.errors;
       let errorHtml = '';
 
-      if (errors) {
-        errorHtml = '<ul style="padding-left: 20px; text-align: justify; margin: 0;">';
+      if (errors && typeof errors === 'object') {
+        errorHtml = '<ul style="padding-left: 20px; text-align: left; margin: 0;">';
         for (const key in errors) {
-          if (errors[key] && errors[key].length > 0) {
+          if (Array.isArray(errors[key])) {
             for (const msg of errors[key]) {
               errorHtml += `<li style="margin-bottom: 6px; color: #d33;">${msg}</li>`;
             }
@@ -45,35 +57,86 @@ export const Register = () => {
         }
         errorHtml += '</ul>';
       } else {
-        errorHtml = '<span style="color: #d33;">Ocurrió un error inesperado</span>';
+        errorHtml = '<span style="color: #d33;">Ocurrió un error inesperado. Intenta nuevamente.</span>';
       }
 
       Swal.fire({
         html: errorHtml,
         icon: 'error',
         confirmButtonText: 'Aceptar',
-        customClass: { popup: 'home-swal-popup', title: 'swal-title', content: 'swal-content', confirmButton: 'swal-confirm-btn' },
+        customClass: {
+          popup: 'home-swal-popup',
+          confirmButton: 'home-accept-btn',
+        },
       });
+    } finally {
+      setLoading(false);
     }
   };
 
-  const handleCancel = () => navigate('/login');
-
   return (
-    <Box className="register-container" display="flex" justifyContent="center" alignItems="center" minHeight="100vh" sx={{ background: '#f6f8fb', padding: 2 }}>
+    <Box className="register-container" display="flex" justifyContent="center" alignItems="center" minHeight="100vh" sx={{ background: '#f6f8fb', p: 2 }}>
       <Paper elevation={3} className="register-card" sx={{ borderRadius: 4, width: '100%', maxWidth: 420, p: 4, textAlign: 'center' }}>
         <Title title="Crear cuenta" />
 
         <Box display="flex" flexDirection="column" gap={2} mt={3}>
-          <TextField label="Nombre" variant="outlined" value={name} onChange={(e) => setName(e.target.value)} fullWidth InputProps={{ startAdornment: (<InputAdornment position="start"><FiUser color="#666" /></InputAdornment>) }} />
+          <TextField
+            label="Nombre"
+            name="name"
+            variant="outlined"
+            value={form.name}
+            onChange={handleChange}
+            fullWidth
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <FiUser color="#107ACC" />
+                </InputAdornment>
+              ),
+            }}
+          />
 
-          <TextField label="Correo electrónico" type="email" variant="outlined" value={email} onChange={(e) => setEmail(e.target.value)} fullWidth InputProps={{ startAdornment: (<InputAdornment position="start"><FiAtSign color="#666" /></InputAdornment>) }} />
+          <TextField
+            label="Correo electrónico"
+            name="email"
+            type="email"
+            variant="outlined"
+            value={form.email}
+            onChange={handleChange}
+            fullWidth
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <FiAtSign color="#107ACC" />
+                </InputAdornment>
+              ),
+            }}
+          />
 
-          <TextField label="Contraseña" type="password" variant="outlined" value={password} onChange={(e) => setPassword(e.target.value)} fullWidth InputProps={{ startAdornment: (<InputAdornment position="start"><FiLock color="#666" /></InputAdornment>) }} />
+          <TextField
+            label="Contraseña"
+            name="password"
+            type="password"
+            variant="outlined"
+            value={form.password}
+            onChange={handleChange}
+            fullWidth
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <FiLock color="#107ACC" />
+                </InputAdornment>
+              ),
+            }}
+          />
 
-          <Button variant="contained" color="primary" onClick={handleRegister} sx={{ borderRadius: 2, textTransform: 'none', py: 1.2 }}>Crear cuenta</Button>
+          <Button variant="contained" color="primary" onClick={handleRegister} disabled={loading} sx={{ borderRadius: 2, textTransform: 'none', py: 1.2 }}>
+            {loading ? 'Registrando...' : 'Crear cuenta'}
+          </Button>
 
-          <Button variant="outlined" color="secondary" onClick={handleCancel} sx={{ borderRadius: 2, textTransform: 'none', py: 1.2 }}>Cancelar</Button>
+          <Button variant="outlined" color="secondary" onClick={() => navigate('/login')} sx={{ borderRadius: 2, textTransform: 'none', py: 1.2 }}>
+            Cancelar
+          </Button>
         </Box>
       </Paper>
     </Box>
@@ -81,4 +144,3 @@ export const Register = () => {
 };
 
 export default Register;
-

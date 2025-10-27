@@ -2,25 +2,29 @@ import { useSelector } from 'react-redux';
 import { Title } from '../../components/title/Title';
 import { Link } from 'react-router-dom';
 import { PiUserCircleFill } from 'react-icons/pi';
-import { getTokenPayload, getUserFromToken } from '../../services/auth/token';
-import { hasAnyRole } from '../../services/auth/roles';
+import { getTokenPayload, getUserFromToken, getToken, isTokenExpired } from '../../services/auth/token';
 import './User.scss';
 
 export const User = () => {
   const authUser = useSelector((state) => state.auth.user);
+  const token = getToken('token');
   const payload = getTokenPayload('token');
   const tokenUser = getUserFromToken(payload) || {};
+
   const name = authUser?.name || tokenUser?.name || 'Usuario';
   const email = authUser?.email || tokenUser?.email || 'correo@dominio.com';
-  const role = authUser?.role || tokenUser?.role || 'user';
+  const role = (authUser?.role || tokenUser?.role || 'user').toLowerCase();
   const userId = authUser?.id || tokenUser?.id || '-';
+  const isLogged = !!token && !isTokenExpired(payload);
 
   return (
     <div className="user-profile">
       <div className="user-header">
         <Title title="Mi perfil" />
-        {hasAnyRole(role, ['admin', 'editor']) && (
-          <Link to="/profile/edit" className="user-edit-btn">Editar</Link>
+        {isLogged && (
+          <Link to="/profile/edit" className="user-edit-btn">
+            Editar
+          </Link>
         )}
       </div>
 
@@ -47,8 +51,8 @@ export const User = () => {
             </div>
             <div className="meta-item">
               <span className="meta-label">Estado</span>
-              <span className={`meta-badge ${authUser?.logged ? 'ok' : 'off'}`}>
-                {authUser?.logged ? 'Activo' : 'Inactivo'}
+              <span className={`meta-badge ${isLogged ? 'ok' : 'off'}`}>
+                {isLogged ? 'Activo' : 'Inactivo'}
               </span>
             </div>
           </div>
@@ -57,3 +61,5 @@ export const User = () => {
     </div>
   );
 };
+
+export default User;

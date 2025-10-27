@@ -131,7 +131,7 @@ src/
   routers/                     # AppRouter, rutas privadas/públicas, DashboardRoutes
   services/
     api/                       # Axios instance + errorWrapper
-    fetch/                     # Hooks useFetchGet/Post/Patch/Delete
+    fetch/                     # Hooks useFetch/Post/Patch/Delete
     store/                     # Redux Toolkit store + slices + persist
   utils/                       # Utilidades (p.ej. optimisticMerge)
   App.js / index.js            # Bootstrap de la aplicación
@@ -195,7 +195,7 @@ Comportamiento de seguridad:
 - Interceptor de request agrega `Authorization` si encuentra `token` en `sessionStorage`.
 - `errorWrapper` normaliza respuestas de error y éxito, permitiendo trabajar con `{ ok, data, error }`.
 - Hooks de datos:
-  - `useFetchGet(apiUrl)` para lecturas simples (maneja `loading`/`error`).
+  - `useFetch(apiUrl)` para lecturas simples (maneja `loading`/`error`).
   - `useFetchPost()`, `useFetchPatch()`, `useFetchDelete()` para mutaciones (devuelven funciones `postData`, `patchData`, etc.).
 - Endpoints configurables por `.env`:
   - `REACT_APP_ENDPOINT_PROPERTY`, `REACT_APP_ENDPOINT_OWNER`, `REACT_APP_ENDPOINT_PROPERTYIMAGE`, `REACT_APP_ENDPOINT_PROPERTYTRACE`, `REACT_APP_ENDPOINT_LOGIN`, `REACT_APP_ENDPOINT_REGISTER`, `REACT_APP_ENDPOINT_PASSWORD` (base para recover/update).

@@ -1,15 +1,11 @@
 // ===========================================================
-// 🔹 Normaliza imagen del backend (PascalCase → camelCase)
+// Normaliza imagen del backend (PascalCase → camelCase)
 // ===========================================================
 export const normalizePropertyImage = (data = {}) => ({
-  idPropertyImage:
-    data?.IdPropertyImage ?? data?.idPropertyImage ?? data?.id ?? "",
+  idPropertyImage: data?.IdPropertyImage ?? data?.idPropertyImage ?? data?.id ?? "",
+  idProperty: data?.IdProperty ?? data?.idProperty ?? "",
   file: data?.File ?? data?.file ?? "",
-  enabled:
-    data?.Enabled ?? data?.enabled ?? true,
-  idProperty:
-    data?.IdProperty ?? data?.idProperty ?? "",
-  url: data?.Url ?? data?.url ?? "",
+  enabled: data?.Enabled ?? data?.enabled ?? true,
   imagePreview: data?.imagePreview
     ? data.imagePreview
     : data?.File
@@ -18,15 +14,11 @@ export const normalizePropertyImage = (data = {}) => ({
 });
 
 // ===========================================================
-// 🔹 Mapea imagen del frontend (camelCase → PascalCase)
+// Mapea imagen del frontend (camelCase → PascalCase)
 // ===========================================================
 export const mapPropertyImageToDto = (image = {}) => ({
-  IdPropertyImage:
-    image?.idPropertyImage ??
-    image?.IdPropertyImage ??
-    image?.id ??
-    undefined,
+  IdPropertyImage: image?.idPropertyImage ?? image?.IdPropertyImage ?? image?.id ?? "",
+  IdProperty: image?.idProperty ?? image?.IdProperty ?? "",
   File: image?.file ?? "",
   Enabled: image?.enabled ?? true,
-  IdProperty: image?.idProperty ?? "",
 });
