@@ -1,13 +1,13 @@
 {
   "files": {
     "main.css": "/RealEstate.App/static/css/main.fbdffb9b.css",
-    "main.js": "/RealEstate.App/static/js/main.c62bf226.js",
+    "main.js": "/RealEstate.App/static/js/main.ccfa72c5.js",
     "index.html": "/RealEstate.App/index.html",
     "main.fbdffb9b.css.map": "/RealEstate.App/static/css/main.fbdffb9b.css.map",
-    "main.c62bf226.js.map": "/RealEstate.App/static/js/main.c62bf226.js.map"
+    "main.ccfa72c5.js.map": "/RealEstate.App/static/js/main.ccfa72c5.js.map"
   },
   "entrypoints": [
     "static/css/main.fbdffb9b.css",
-    "static/js/main.c62bf226.js"
+    "static/js/main.ccfa72c5.js"
   ]
 }
