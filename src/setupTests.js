@@ -14,7 +14,20 @@ if (!window.sessionStorage) {
   Object.defineProperty(window, 'sessionStorage', { value: mem });
 }
 
-// ---- Mock axios global que ya tienes ----
+// window.location.replace “read only”
+const originalLocation = window.location;
+beforeAll(() => {
+  Object.defineProperty(window, "location", {
+    value: { ...originalLocation, replace: jest.fn() },
+    writable: true
+  });
+});
+afterAll(() => {
+  Object.defineProperty(window, "location", { value: originalLocation });
+});
+
+
+// ---- Mock axios globa ----
 jest.mock('axios', () => {
   const handlers = { get:jest.fn(), post:jest.fn(), put:jest.fn(), patch:jest.fn(), delete:jest.fn(), request:jest.fn(), head:jest.fn(), options:jest.fn() };
   const interceptors = { request:{ use:jest.fn(), eject:jest.fn() }, response:{ use:jest.fn(), eject:jest.fn() } };

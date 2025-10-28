@@ -26,7 +26,6 @@ describe("session.js (auth interceptors & refresh flow)", () => {
   beforeEach(() => {
     jest.clearAllMocks();
     delete process.env.REACT_APP_ENDPOINT_TOKEN_REFRESH;
-    window.location.replace = jest.fn();
     sessionStorage.clear();
   });
 
