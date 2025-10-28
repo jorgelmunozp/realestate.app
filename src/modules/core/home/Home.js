@@ -14,9 +14,11 @@ import { FaUserSecret, FaUserTie, FaUser } from "react-icons/fa6";
 import { FiPlus, FiEdit2, FiTrash2 } from "react-icons/fi";
 import "./Home.scss";
 
+const urlBaseFrontend = process.env.REACT_APP_URL_BASE_FRONTEND;
 const propertyEndpoint = process.env.REACT_APP_ENDPOINT_PROPERTY;
 
 export const Home = () => {
+
   const navigate = useNavigate();
   const location = useLocation();
   const dispatch = useDispatch();
@@ -45,7 +47,7 @@ export const Home = () => {
   // ===========================================================
   useEffect(() => {
     if (!userId) {
-      navigate("/index");
+      navigate('/index');
       return;
     }
 
@@ -61,7 +63,7 @@ export const Home = () => {
   // Handlers
   // ===========================================================
   const handleEditProperty = (propertyId) => navigate(`/edit-property/${propertyId}`);
-  const handleAddProperty = () => navigate("/add-property");
+  const handleAddProperty = () => navigate('/add-property');
 
   const handleDeleteProperty = async (propertyId) => {
     const result = await Swal.fire({

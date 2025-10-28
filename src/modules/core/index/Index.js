@@ -7,6 +7,8 @@ import { Pagination } from '../../../components/pagination/Pagination';
 import { fetchProperties } from '../../../services/store/propertySlice';
 import './Index.scss';
 
+const urlBaseFrontend = process.env.REACT_APP_URL_BASE_FRONTEND;
+
 export const Index = () => {
   const navigate = useNavigate();
   const location = useLocation();

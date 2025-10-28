@@ -1,21 +1,9 @@
+// src/modules/core/Home.test.jsx (ajusta la ruta si es distinta)
 import { render, screen, act } from '@testing-library/react';
+import { MemoryRouter, Routes, Route } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 import { Home } from './Home';
 import { api } from '../../../services/api/api';
-import { useSelector } from 'react-redux';
-
-// --- Estado mutable para el mock de useLocation ---
-let mockLocationState = null;
-
-// --- Mock router: expone los hooks y componentes mínimos ---
-jest.mock('react-router-dom', () => ({
-  BrowserRouter: ({ children }) => <div>{children}</div>,
-  MemoryRouter: ({ children }) => <div>{children}</div>,
-  Routes: ({ children }) => <div>{children}</div>,
-  Route: ({ children }) => <div>{children}</div>,
-  Link: ({ to, children }) => <a href={to}>{children}</a>,
-  useNavigate: () => jest.fn(),
-  useLocation: () => ({ pathname: '/home', state: mockLocationState }),
-}));
 
 // --- Mock react-redux: solo hooks (sin Providers) ---
 jest.mock('react-redux', () => ({
@@ -29,10 +17,19 @@ jest.mock('../../../services/api/api', () => {
   return { api: { get }, default: { get } };
 });
 
+// --- util para montar Home con estado de ruta (state) ---
+const renderHome = (initialState) =>
+  render(
+    <MemoryRouter initialEntries={[{ pathname: '/home', state: initialState }]}>
+      <Routes>
+        <Route path="/home" element={<Home />} />
+      </Routes>
+    </MemoryRouter>
+  );
+
 describe('Home optimistic update flow', () => {
   beforeEach(() => {
     jest.clearAllMocks();
-    mockLocationState = null;
 
     // Estado redux por defecto
     useSelector.mockImplementation((sel) =>
@@ -50,7 +47,7 @@ describe('Home optimistic update flow', () => {
 
   afterEach(() => jest.restoreAllMocks());
 
-  it('muestra el item optimista y lo mantiene tras fetch vacío; luego reconcilia', async () => {
+  it('muestra el item optimista, se mantiene con fetch vacío y reconcilia tras focus', async () => {
     const optimistic = {
       action: 'created',
       property: { idProperty: 999, name: 'Casa Nueva', address: 'Calle 1', price: 1234 },
@@ -60,22 +57,24 @@ describe('Home optimistic update flow', () => {
     // Primer fetch: servidor vacío
     api.get.mockImplementation((url) => {
       if (/propertyimage/i.test(url)) return Promise.resolve({ data: [] });
-      if (/property/i.test(url)) return Promise.resolve({ data: { data: [], meta: { last_page: 1, page: 1, total: 0 } } });
+      if (/property\b(?!image)/i.test(url))
+        return Promise.resolve({ data: { data: [], meta: { last_page: 1, page: 1, total: 0 } } });
       return Promise.resolve({ data: {} });
     });
 
-    mockLocationState = { refetch: Date.now(), optimistic };
-    render(<Home />);
+    renderHome({ refetch: Date.now(), optimistic });
 
-    // Aparece de inmediato
+    // Aparece de inmediato y se mantiene tras fetch vacío
     expect(await screen.findByText('Casa Nueva')).toBeInTheDocument();
-    // Se mantiene tras la respuesta vacía
     expect(await screen.findByText('Casa Nueva')).toBeInTheDocument();
 
-    // Segundo fetch (por focus): ahora el server sí trae el item
+    // Segundo fetch (por focus): ahora el server trae el item
     api.get.mockImplementation((url) => {
       if (/propertyimage/i.test(url)) return Promise.resolve({ data: [] });
-      if (/property/i.test(url)) return Promise.resolve({ data: { data: [optimistic.property], meta: { last_page: 1, page: 1, total: 1 } } });
+      if (/property\b(?!image)/i.test(url))
+        return Promise.resolve({
+          data: { data: [optimistic.property], meta: { last_page: 1, page: 1, total: 1 } },
+        });
       return Promise.resolve({ data: {} });
     });
 
@@ -102,17 +101,19 @@ describe('Home role-based actions and greeting', () => {
       sel({
         auth: { user: { logged: true, ...user } },
         property: {
-          properties: [{ idProperty: 1, name: 'Depto Test', address: 'Calle 123', price: 1000, image: { file: 'abcd' } }],
+          properties: [
+            { idProperty: 1, name: 'Depto Test', address: 'Calle 123', price: 1000, image: { file: 'abcd' } },
+          ],
           loading: false,
           meta: { last_page: 1 },
           error: null,
         },
       })
     );
-    render(<Home />);
+    return renderHome(null);
   };
 
-  it('Admin: muestra saludo, rol, Editar y Eliminar', async () => {
+  it('Admin: saludo, rol, Editar y Eliminar', async () => {
     mountWithUser({ name: 'Jorge Pérez', role: 'admin' });
     expect(await screen.findByText(/hola\s+Jorge/i)).toBeInTheDocument();
     expect(screen.getByText(/Admin/i)).toBeInTheDocument();

@@ -166,7 +166,7 @@ export const EditProperty = () => {
           title: "Propiedad actualizada",
           confirmButtonText: "Aceptar",
         });
-        navigate("/home", { state: { refresh: true } });
+        navigate('/home', { state: { refresh: true } });
       } else {
         Swal.fire({
           icon: "error",
@@ -306,7 +306,7 @@ export const EditProperty = () => {
         </div>
 
         <button type="submit" className="addproperty-btn primary">Actualizar Propiedad</button>
-        <button type="button" className="addproperty-btn secondary" onClick={() => navigate("/home")}>Cancelar</button>
+        <button type="button" className="addproperty-btn secondary" onClick={() => navigate('/home')}>Cancelar</button>
       </form>
     </div>
   );

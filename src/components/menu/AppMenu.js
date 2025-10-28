@@ -9,6 +9,8 @@ import { primaryColor } from '../../global.js';
 import { getToken, getTokenPayload, getUserFromToken, isTokenExpired } from '../../services/auth/token';
 import './AppMenu.scss';
 
+const urlBaseFrontend = process.env.REACT_APP_URL_BASE_FRONTEND;
+
 export const AppMenu = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -67,12 +69,12 @@ export const AppMenu = () => {
       <hr className="bm-hr" />
 
       {/* 🏠 Inmuebles */}
-      <a className="menu-item" href={logged ? '/home' : '/index'}>
+      <a className="menu-item" href={logged ? `${urlBaseFrontend}/home` : `${urlBaseFrontend}/index`}>
         <FiHome color={primaryColor} /> Inmuebles
       </a>
 
       {/* 🏗️ Subir inmueble / Nosotros */}
-      <a className="menu-item" href={logged ? '/add-property' : '/about-us'}>
+      <a className="menu-item" href={logged ? `${urlBaseFrontend}/add-property` : `${urlBaseFrontend}/about-us`}>
         {logged ? (
           <>
             <FiUpload color={primaryColor} /> Subir inmueble
@@ -86,13 +88,13 @@ export const AppMenu = () => {
 
       {/* 👥 Solo visible para admin */}
       {logged && role === 'admin' && (
-        <a className="menu-item" href="/users">
+        <a className="menu-item" href={`${urlBaseFrontend}/users`}>
           <FiUsers color={primaryColor} /> Usuarios
         </a>
       )}
 
       {/* 👤 Perfil / Contacto */}
-      <a className="menu-item" href={logged ? '/profile' : '/contact'}>
+      <a className="menu-item" href={logged ? `${urlBaseFrontend}/profile` : `${urlBaseFrontend}/contact`}>
         {logged ? (
           <>
             <FiUser color={primaryColor} /> Perfil
@@ -107,7 +109,7 @@ export const AppMenu = () => {
       {/* 🚪 Cerrar sesión / Ingresar */}
       <a
         className="menu-item"
-        href={logged ? '/index' : '/login'}
+        href={logged ? `${urlBaseFrontend}/index` : `${urlBaseFrontend}/login`}
         onClick={logged ? handleLogout : undefined}
       >
         {logged ? (

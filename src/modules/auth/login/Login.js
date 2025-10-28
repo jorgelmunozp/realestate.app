@@ -11,6 +11,7 @@ import { FiLock } from 'react-icons/fi';
 import Swal from 'sweetalert2';
 import './Login.scss';
 
+const urlBaseFrontend = process.env.REACT_APP_URL_BASE_FRONTEND;
 const loginEndpoint = process.env.REACT_APP_ENDPOINT_LOGIN;
 
 export const Login = () => {

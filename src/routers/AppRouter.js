@@ -1,40 +1,38 @@
-import { Routes, Route, BrowserRouter as Router } from "react-router-dom";
-import { AppMenu } from '../components/menu/AppMenu.js';
-import { Header } from "../components/header/Header.js";
-import { PublicRoute } from "./PublicRoute.js";
-import { PrivateRoute } from "./PrivateRoute.js";
-import { DashboardRoutes } from "./DashboardRoutes.js";
-import { Index } from "../modules/core/index/Index.js";
-import { Property } from "../modules/property/Property.js";
-import { Login } from '../modules/auth/login/Login.js';
-import { Register } from '../modules/auth/register/Register.js';
-import { PasswordRecover } from '../modules/password/recover/PasswordRecover.js';
-import { PasswordReset } from '../modules/password/reset/PasswordReset.js';
-import { AboutUs } from '../modules/core/aboutus/AboutUs.js';
-import { Contact } from '../modules/core/contact/Contact.js';
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { AppMenu } from "../components/menu/AppMenu";
+import { Header } from "../components/header/Header";
+import { PublicRoute } from "./PublicRoute";
+import { PrivateRoute } from "./PrivateRoute";
+import { DashboardRoutes } from "./DashboardRoutes";
+import { Index } from "../modules/core/index/Index";
+import { Property } from "../modules/property/Property";
+import { Login } from "../modules/auth/login/Login";
+import { Register } from "../modules/auth/register/Register";
+import { PasswordRecover } from "../modules/password/recover/PasswordRecover";
+import { PasswordReset } from "../modules/password/reset/PasswordReset";
+import { AboutUs } from "../modules/core/aboutus/AboutUs";
+import { Contact } from "../modules/core/contact/Contact";
 
-export const AppRouter = () => {
-  return (
-    <Router>
-      <AppMenu />
-      <Header />
-      <Routes>
-        {/* Rutas públicas */}
-        <Route path="*" element={<PublicRoute><Index /></PublicRoute>} />
-        <Route path="/index/*" element={<PublicRoute><Index /></PublicRoute>} />
-        <Route path="/property/:propertyId/*" element={<PublicRoute><Property /></PublicRoute>} />
-        <Route path="/login/*" element={<PublicRoute><Login /></PublicRoute>} />
-        <Route path="/register" element={<PublicRoute><Register /></PublicRoute>} />
-        <Route path="/password-recover" element={<PublicRoute><PasswordRecover /></PublicRoute>} />
-        <Route path="/password-reset/:token" element={<PublicRoute><PasswordReset /></PublicRoute>} />
-        <Route path="/about-us/*" element={<PublicRoute><AboutUs /></PublicRoute>} />
-        <Route path="/contact" element={<PublicRoute><Contact /></PublicRoute>} />
+const basename = process.env.REACT_APP_URL_BASE_FRONTEND || "/";
 
-        {/* Rutas privadas */}
-        <Route path="/*" element={ <PrivateRoute><DashboardRoutes /></PrivateRoute> } />
-      </Routes>
-    </Router>
-  )
-}
+export const AppRouter = () => (
+  <BrowserRouter basename={basename}>
+    <AppMenu />
+    <Header />
+    <Routes>
+      <Route path="/" element={<PublicRoute><Index/></PublicRoute>} />
+      <Route path="/index" element={<PublicRoute><Index/></PublicRoute>} />
+      <Route path="/property/:propertyId" element={<PublicRoute><Property/></PublicRoute>} />
+      <Route path="/login" element={<PublicRoute><Login/></PublicRoute>} />
+      <Route path="/register" element={<PublicRoute><Register/></PublicRoute>} />
+      <Route path="/password-recover" element={<PublicRoute><PasswordRecover/></PublicRoute>} />
+      <Route path="/password-reset/:token" element={<PublicRoute><PasswordReset/></PublicRoute>} />
+      <Route path="/about-us" element={<PublicRoute><AboutUs/></PublicRoute>} />
+      <Route path="/contact" element={<PublicRoute><Contact/></PublicRoute>} />
+      <Route path="/*" element={<PrivateRoute><DashboardRoutes/></PrivateRoute>} />
+      <Route path="*" element={<PublicRoute><Index/></PublicRoute>} />
+    </Routes>
+  </BrowserRouter>
+);
 
 export default AppRouter;

@@ -114,7 +114,7 @@ export const AddProperty = () => {
 
       if (success) {
         Swal.fire("Inmueble registrado", "success");
-        navigate("/home", { state: { refresh: true } });
+        navigate('/home', { state: { refresh: true } });
       } else {
         Swal.fire("Error", message || "Ocurrió un error al registrar el inmueble.", "error");
       }
@@ -220,7 +220,7 @@ export const AddProperty = () => {
         </div>
 
         <button type="submit" className="addproperty-btn primary">Crear Propiedad</button>
-        <button type="button" className="addproperty-btn secondary" onClick={() => navigate("/home")}>Cancelar</button>
+        <button type="button" className="addproperty-btn secondary" onClick={()=>navigate('/home')}>Cancelar</button>
       </form>
     </div>
   );
