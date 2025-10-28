@@ -14,7 +14,7 @@ export const EditUser = () => {
   const dispatch = useDispatch();
   const authUser = useSelector((state) => state.auth.user);
 
-  // ✅ Leer token real del navegador
+  // Leer token real del navegador
   const token = localStorage.getItem("token") || sessionStorage.getItem("token") || "";
   const payload = getTokenPayload(token);
   const tokenUser = getUserFromToken(payload) || {};
@@ -86,7 +86,7 @@ export const EditUser = () => {
         });
       }
     } catch (err) {
-      console.error("❌ Error al actualizar perfil:", err);
+      console.error(" Error al actualizar perfil:", err);
       Swal.fire({ icon: "error", text: "No se pudo actualizar el perfil" });
     }
   };

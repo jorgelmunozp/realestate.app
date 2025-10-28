@@ -41,7 +41,7 @@ export const Home = () => {
   const displayRole = role ? role.charAt(0).toUpperCase() + role.slice(1) : "";
 
   // ===========================================================
-  // 🔹 Cargar propiedades al montar y al cambiar paginación
+  // Cargar propiedades al montar y al cambiar paginación
   // ===========================================================
   useEffect(() => {
     if (!userId) {
@@ -58,7 +58,7 @@ export const Home = () => {
   }, [dispatch, location.pathname, location.state, pagination.page, pagination.limit, navigate, userId]);
 
   // ===========================================================
-  // 🔹 Handlers
+  // Handlers
   // ===========================================================
   const handleEditProperty = (propertyId) => navigate(`/edit-property/${propertyId}`);
   const handleAddProperty = () => navigate("/add-property");
@@ -95,7 +95,7 @@ export const Home = () => {
   const handleChangePage = (newPage) => setPagination((prev) => ({ ...prev, page: newPage }));
 
   // ===========================================================
-  // 🔹 Render: Loading
+  // Render: Loading
   // ===========================================================
   if (loading) {
     return (
@@ -107,7 +107,7 @@ export const Home = () => {
   }
 
   // ===========================================================
-  // 🔹 Render principal
+  // Render principal
   // ===========================================================
   return (
     <div className="home-container">

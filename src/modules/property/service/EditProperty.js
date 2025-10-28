@@ -42,7 +42,7 @@ export const EditProperty = () => {
   );
 
   // ===========================================================
-  // 🔹 Cargar datos completos de la propiedad
+  // Cargar datos completos de la propiedad
   // ===========================================================
   useEffect(() => {
     const loadProperty = async () => {
@@ -75,7 +75,7 @@ export const EditProperty = () => {
   }, [propertyId, location.state, endpoint]);
 
   // ===========================================================
-  // 🔹 Handlers
+  // Handlers
   // ===========================================================
   const clampNonNegative = (v) => {
     const n = Number(v);
@@ -114,7 +114,7 @@ export const EditProperty = () => {
   };
 
   // ===========================================================
-  // 🔹 Guardar cambios (PATCH con wrapper adaptado)
+  // Guardar cambios (PATCH con wrapper adaptado)
   // ===========================================================
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -185,7 +185,7 @@ export const EditProperty = () => {
   };
 
   // ===========================================================
-  // 🔹 Renderizado
+  // Renderizado
   // ===========================================================
   if (loading)
     return (

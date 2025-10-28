@@ -53,7 +53,7 @@ export const Login = () => {
 
       navigate('/home', { replace: true });
     } catch (error) {
-      console.error('❌ Error en login:', error.response?.data || error.message);
+      console.error(' Error en login:', error.response?.data || error.message);
       Swal.fire({
         text: error.response?.data?.message || 'Credenciales inválidas o servidor no disponible',
         icon: 'error',

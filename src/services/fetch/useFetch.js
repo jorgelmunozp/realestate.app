@@ -22,7 +22,7 @@ export const useFetch = (apiUrl) => {
           setData(data);
           setMessage(message || "Datos cargados correctamente");
         } else {
-          console.warn("❌ Error lógico en useFetch:", message, errObj);
+          console.warn(" Error lógico en useFetch:", message, errObj);
           setError(errObj || { message: message || "Error desconocido" });
           setData(null);
         }

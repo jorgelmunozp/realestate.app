@@ -1,5 +1,5 @@
 /* ===========================================================
-   🔹 Convierte un UserDto del backend (PascalCase) a formato frontend (camelCase)
+   Convierte un UserDto del backend (PascalCase) a formato frontend (camelCase)
    Basado en el DTO: src/modules/user/dto/User.json
    =========================================================== */
 export const normalizeUser = (data = {}) => {
@@ -26,7 +26,7 @@ export const normalizeUser = (data = {}) => {
 };
 
 /* ===========================================================
-   🔹 Convierte un User del frontend (camelCase) al formato backend (PascalCase)
+   Convierte un User del frontend (camelCase) al formato backend (PascalCase)
    =========================================================== */
 export const mapUserToDto = (user = {}) => {
   if (typeof user !== "object" || user === null) return {};

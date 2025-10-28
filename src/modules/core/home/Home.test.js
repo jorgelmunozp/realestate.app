@@ -1,160 +1,137 @@
-import React from 'react';
-import { render, screen, waitFor, act } from '@testing-library/react';
+import { render, screen, act } from '@testing-library/react';
+import { Home } from './Home';
+import { api } from '../../../services/api/api';
+import { useSelector } from 'react-redux';
 
-// Provide a mutable location state for the mock
+// --- Estado mutable para el mock de useLocation ---
 let mockLocationState = null;
 
-// Mock react-router-dom hooks used by Home
+// --- Mock router: expone los hooks y componentes mínimos ---
 jest.mock('react-router-dom', () => ({
+  BrowserRouter: ({ children }) => <div>{children}</div>,
+  MemoryRouter: ({ children }) => <div>{children}</div>,
+  Routes: ({ children }) => <div>{children}</div>,
+  Route: ({ children }) => <div>{children}</div>,
+  Link: ({ to, children }) => <a href={to}>{children}</a>,
   useNavigate: () => jest.fn(),
   useLocation: () => ({ pathname: '/home', state: mockLocationState }),
-}), { virtual: true });
+}));
 
-// Mock API instance
+// --- Mock react-redux: solo hooks (sin Providers) ---
+jest.mock('react-redux', () => ({
+  useDispatch: jest.fn(() => jest.fn()),
+  useSelector: jest.fn(),
+}));
+
+// --- Mock API: evita axios real/ESM y controla respuestas ---
 jest.mock('../../../services/api/api', () => {
   const get = jest.fn();
   return { api: { get }, default: { get } };
 });
-import { api } from '../../../services/api/api';
-
-import { Home } from './Home';
 
 describe('Home optimistic update flow', () => {
-  const propertyEndpoint = process.env.REACT_APP_ENDPOINT_PROPERTY;
-  const imageEndpoint = process.env.REACT_APP_ENDPOINT_PROPERTYIMAGE;
-
   beforeEach(() => {
-    // userId present to avoid redirect
-    jest.spyOn(window.sessionStorage.__proto__, 'getItem').mockImplementation((k) => (k === 'userId' ? '1' : null));
+    jest.clearAllMocks();
+    mockLocationState = null;
+
+    // Estado redux por defecto
+    useSelector.mockImplementation((sel) =>
+      sel({
+        auth: { user: { logged: true, name: 'Tester', role: 'admin' } },
+        property: { properties: [], loading: false, meta: { last_page: 1 }, error: null },
+      })
+    );
+
+    // userId en sesión para evitar redirects
+    jest.spyOn(window.sessionStorage.__proto__, 'getItem')
+      .mockImplementation((k) => (k === 'userId' ? '1' : null));
     jest.spyOn(window.sessionStorage.__proto__, 'setItem').mockImplementation(() => {});
-    jest.spyOn(window, 'addEventListener').mockImplementation((type, cb) => {});
-    jest.spyOn(window, 'removeEventListener').mockImplementation((type, cb) => {});
-    api.get.mockReset();
   });
 
-  afterEach(() => {
-    jest.restoreAllMocks();
-  });
+  afterEach(() => jest.restoreAllMocks());
 
-  it('shows optimistic item immediately and keeps it on server fetch without it', async () => {
+  it('muestra el item optimista y lo mantiene tras fetch vacío; luego reconcilia', async () => {
     const optimistic = {
       action: 'created',
       property: { idProperty: 999, name: 'Casa Nueva', address: 'Calle 1', price: 1234 },
       image: { file: 'base64' },
     };
 
-    // First fetch: server returns empty list
+    // Primer fetch: servidor vacío
     api.get.mockImplementation((url) => {
-      if (url.startsWith(`${propertyEndpoint}`)) {
-        return Promise.resolve({ data: { data: [], meta: { last_page: 1, page: 1, total: 0 } } });
-      }
-      if (url.startsWith(`${imageEndpoint}`)) {
-        return Promise.resolve({ data: [] });
-      }
+      if (/propertyimage/i.test(url)) return Promise.resolve({ data: [] });
+      if (/property/i.test(url)) return Promise.resolve({ data: { data: [], meta: { last_page: 1, page: 1, total: 0 } } });
       return Promise.resolve({ data: {} });
     });
 
     mockLocationState = { refetch: Date.now(), optimistic };
     render(<Home />);
 
-    // Optimistic card should appear immediately
+    // Aparece de inmediato
+    expect(await screen.findByText('Casa Nueva')).toBeInTheDocument();
+    // Se mantiene tras la respuesta vacía
     expect(await screen.findByText('Casa Nueva')).toBeInTheDocument();
 
-    // After server fetch returns empty, the optimistic item should still be present
-    await waitFor(() => expect(screen.getByText('Casa Nueva')).toBeInTheDocument());
-
-    // Now simulate a focus-triggered refetch where server includes the item
+    // Segundo fetch (por focus): ahora el server sí trae el item
     api.get.mockImplementation((url) => {
-      if (url.startsWith(`${propertyEndpoint}`)) {
-        return Promise.resolve({ data: { data: [optimistic.property], meta: { last_page: 1, page: 1, total: 1 } } });
-      }
-      if (url.startsWith(`${imageEndpoint}`)) {
-        return Promise.resolve({ data: [] });
-      }
+      if (/propertyimage/i.test(url)) return Promise.resolve({ data: [] });
+      if (/property/i.test(url)) return Promise.resolve({ data: { data: [optimistic.property], meta: { last_page: 1, page: 1, total: 1 } } });
       return Promise.resolve({ data: {} });
     });
 
-    // Trigger focus event to refetch silently
     await act(async () => {
       window.dispatchEvent(new Event('focus'));
     });
 
-    // Item remains visible after reconcile
-    await waitFor(() => expect(screen.getByText('Casa Nueva')).toBeInTheDocument());
+    expect(await screen.findByText('Casa Nueva')).toBeInTheDocument();
   });
 });
 
 describe('Home role-based actions and greeting', () => {
-  const { useSelector, useDispatch } = require('react-redux');
-  const tokenSvc = require('../../../services/auth/token');
-
   beforeEach(() => {
-    // Ensure session userId exists to avoid redirect
-    jest.spyOn(window.sessionStorage.__proto__, 'getItem').mockImplementation((k) => (k === 'userId' ? '1' : null));
+    jest.clearAllMocks();
+    jest.spyOn(window.sessionStorage.__proto__, 'getItem')
+      .mockImplementation((k) => (k === 'userId' ? '1' : null));
     jest.spyOn(window.sessionStorage.__proto__, 'setItem').mockImplementation(() => {});
-
-    // Mock dispatch as no-op
-    if (useDispatch && jest.isMockFunction(useDispatch)) {
-      useDispatch.mockReturnValue(jest.fn());
-    } else {
-      jest.spyOn(require('react-redux'), 'useDispatch').mockReturnValue(jest.fn());
-    }
-
-    // Default token mocks
-    jest.spyOn(tokenSvc, 'getTokenPayload').mockReturnValue({});
-    jest.spyOn(tokenSvc, 'getUserFromToken').mockReturnValue({});
   });
 
-  afterEach(() => {
-    jest.restoreAllMocks();
-  });
+  afterEach(() => jest.restoreAllMocks());
 
-  const propertyItem = {
-    idProperty: 1,
-    name: 'Depto Test',
-    address: 'Calle 123',
-    price: 1000,
-    image: { file: 'abcd' },
-  };
-
-  const mountWithState = (user) => {
-    const state = {
-      property: { properties: [propertyItem], loading: false, meta: { last_page: 1 } },
-      auth: { user: { logged: true, ...user } },
-    };
-    const rr = require('react-redux');
-    jest.spyOn(rr, 'useSelector').mockImplementation((sel) => sel(state));
+  const mountWithUser = (user) => {
+    useSelector.mockImplementation((sel) =>
+      sel({
+        auth: { user: { logged: true, ...user } },
+        property: {
+          properties: [{ idProperty: 1, name: 'Depto Test', address: 'Calle 123', price: 1000, image: { file: 'abcd' } }],
+          loading: false,
+          meta: { last_page: 1 },
+          error: null,
+        },
+      })
+    );
     render(<Home />);
   };
 
-  it('shows edit and delete for Admin and greeting/role', async () => {
-    mountWithState({ name: 'Jorge Pérez', role: 'admin' });
-
-    // Greeting and role
+  it('Admin: muestra saludo, rol, Editar y Eliminar', async () => {
+    mountWithUser({ name: 'Jorge Pérez', role: 'admin' });
     expect(await screen.findByText(/hola\s+Jorge/i)).toBeInTheDocument();
     expect(screen.getByText(/Admin/i)).toBeInTheDocument();
-
-    // Action buttons
     expect(screen.getAllByTitle('Editar')[0]).toBeInTheDocument();
     expect(screen.getAllByTitle('Eliminar')[0]).toBeInTheDocument();
   });
 
-  it('shows only edit for Editor (no delete)', async () => {
-    mountWithState({ name: 'María', role: 'editor' });
-
+  it('Editor: saludo y Editar, sin Eliminar', async () => {
+    mountWithUser({ name: 'María', role: 'editor' });
     expect(await screen.findByText(/hola\s+María/i)).toBeInTheDocument();
     expect(screen.getByText(/Editor/i)).toBeInTheDocument();
-
     expect(screen.getAllByTitle('Editar')[0]).toBeInTheDocument();
     expect(screen.queryByTitle('Eliminar')).toBeNull();
   });
 
-  it('hides edit and delete for regular user', async () => {
-    mountWithState({ name: 'Carlos', role: 'user' });
-
+  it('User: saludo y sin acciones', async () => {
+    mountWithUser({ name: 'Carlos', role: 'user' });
     expect(await screen.findByText(/hola\s+Carlos/i)).toBeInTheDocument();
     expect(screen.getByText(/User/i)).toBeInTheDocument();
-
     expect(screen.queryByTitle('Editar')).toBeNull();
     expect(screen.queryByTitle('Eliminar')).toBeNull();
   });

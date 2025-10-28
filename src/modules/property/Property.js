@@ -11,7 +11,7 @@ export const Property = () => {
   const { propertyId } = useParams();
   const { data: property, loading, error } = useFetch(`${propertyEndpoint}/${propertyId}`);
 
-  // 🔹 Scroll al inicio al montar
+  // Scroll al inicio al montar
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
@@ -19,7 +19,7 @@ export const Property = () => {
   const goBack = () => navigate(-1);
 
   // ===========================================================
-  // 🔹 Loader
+  // Loader
   // ===========================================================
   if (loading) {
     return (
@@ -31,23 +31,23 @@ export const Property = () => {
   }
 
   // ===========================================================
-  // 🔹 Error o sin datos
+  // Error o sin datos
   // ===========================================================
   if (error || !property) {
     return (
       <div className="property-error">
-        ❌ Error al cargar el inmueble o no existe.
+         Error al cargar el inmueble o no existe.
       </div>
     );
   }
 
   // ===========================================================
-  // 🔹 Extracción de datos
+  // Extracción de datos
   // ===========================================================
-  const { name, address, price, year, idProperty, codeInternal, image, owner, traces = [] } = property;
+  const { name, address, price, year, idProperty, codeInternal, image, owner, traces = [] } = property.data;
 
   // ===========================================================
-  // 🔹 Render principal
+  // Render principal
   // ===========================================================
   return (
     <div className="property-container">

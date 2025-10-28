@@ -1,5 +1,5 @@
 // ===========================================================
-// 🔹 Convierte diferentes formatos de errores en un arreglo plano
+// Convierte diferentes formatos de errores en un arreglo plano
 // ===========================================================
 export function flattenErrors(e) {
   if (!e) return [];
@@ -16,7 +16,7 @@ export function flattenErrors(e) {
 }
 
 // ===========================================================
-// 🔹 Normaliza los errores (FluentValidation / ASP.NET / Custom Wrapper)
+// Normaliza los errores (FluentValidation / ASP.NET / Custom Wrapper)
 // ===========================================================
 export function normalizeError(error) {
   const res = error?.response;
@@ -63,7 +63,7 @@ export function normalizeError(error) {
 }
 
 // ===========================================================
-// 🔹 Wrapper universal de errores para Axios
+// Wrapper universal de errores para Axios
 // ===========================================================
 export async function errorWrapper(promise, { unwrap = false } = {}) {
   try {

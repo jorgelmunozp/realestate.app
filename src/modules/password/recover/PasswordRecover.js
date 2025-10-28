@@ -22,7 +22,7 @@ export const PasswordRecover = () => {
       const { ok, data, error } = await errorWrapper(api.post(`${recoverEndpoint}`, { email }), { unwrap: false });
       if (ok) {
         const msg = data?.message || 'Revisa tu bandeja de entrada para continuar.';
-        Swal.fire({ title: 'Correo enviado', text: msg, icon: 'success', confirmButtonColor: '#107ACC' });
+        Swal.fire({ title: 'Correo enviado', icon: 'success', confirmButtonColor: '#107ACC' });
         navigate('/index');
       } else {
         const msg = error?.message || 'No se pudo enviar el correo.';

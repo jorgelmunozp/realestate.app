@@ -22,7 +22,7 @@ const authSlice = createSlice({
     login: (state, { payload }) => {
       if (!payload) return;
 
-      // ✅ Estructura esperada desde Login.js → { id, name, email, role, token }
+      // Estructura esperada desde Login.js → { id, name, email, role, token }
       const { id, name, email, role, token } =
         payload.user ? { ...payload.user, token: payload.token } : payload;
 

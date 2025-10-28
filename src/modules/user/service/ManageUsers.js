@@ -18,7 +18,7 @@ export const ManageUsers = () => {
   const userEndpoint = process.env.REACT_APP_ENDPOINT_USER;
 
   // ===========================================================
-  // 🔹 Cargar usuarios
+  // Cargar usuarios
   // ===========================================================
   useEffect(() => {
     const load = async () => {
@@ -48,7 +48,7 @@ export const ManageUsers = () => {
   }, [userEndpoint]);
 
   // ===========================================================
-  // 🔹 Guardar cambios de rol
+  // Guardar cambios de rol
   // ===========================================================
   const handleRoleChange = async (user, newRole) => {
     try {
@@ -82,7 +82,7 @@ export const ManageUsers = () => {
   };
 
   // ===========================================================
-  // 🔹 Eliminar usuario
+  // Eliminar usuario
   // ===========================================================
   const handleDelete = async (email) => {
     const confirm = await Swal.fire({
@@ -118,7 +118,7 @@ export const ManageUsers = () => {
   };
 
   // ===========================================================
-  // 🔹 Filtro
+  // Filtro
   // ===========================================================
   const filtered = (users || []).filter((u) => {
     const q = query.trim().toLowerCase();
@@ -131,7 +131,7 @@ export const ManageUsers = () => {
   });
 
   // ===========================================================
-  // 🔹 Render
+  // Render
   // ===========================================================
   return (
     <div className="manageusers-container">

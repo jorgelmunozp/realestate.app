@@ -5,24 +5,19 @@ import { logout, login } from "../store/authSlice";
 import { getToken, getTokenPayload, isTokenNearExpiry, saveToken, clearToken } from "./token";
 
 let refreshPromise = null;
+const interceptorMap = new WeakMap();
 
-// ===========================================================
-// Utilidades base
-// ===========================================================
 const getRefreshEndpoint = () => process.env.REACT_APP_ENDPOINT_TOKEN_REFRESH;
 const redirectToLogin = () => {
   try {
-    const here = window.location?.pathname + window.location?.search;
+    const here = (window.location?.pathname || "") + (window.location?.search || "");
     if (here && !here.startsWith("/login")) sessionStorage.setItem("lastPath", here);
-    try { store.dispatch(logout()); } catch {}
-    clearToken();
-    window.location.replace("/login");
   } catch {}
+  try { store.dispatch(logout()); } catch {}
+  clearToken();
+  try { window.location.replace("/login"); } catch {}
 };
 
-// ===========================================================
-// Lógica de renovación de token (refresh flow)
-// ===========================================================
 export const refreshToken = async () => {
   if (refreshPromise) return refreshPromise;
 
@@ -32,19 +27,13 @@ export const refreshToken = async () => {
   if (!endpoint || !currentToken) return null;
 
   const client = axios.create({ baseURL, timeout: 15000 });
-  refreshPromise = client
-    .post(endpoint, {}, { headers: { Authorization: `Bearer ${currentToken}` } })
-    .then((res) => {
-      const newToken =
-        res?.data?.token ||
-        res?.data?.accessToken ||
-        res?.data?.data?.accessToken ||
-        null;
 
+  refreshPromise = client.post(endpoint, {}, { headers: { Authorization: `Bearer ${currentToken}` } })
+    .then((res) => {
+      const newToken = res?.data?.token ?? res?.data?.accessToken ?? res?.data?.data?.accessToken ?? null;
       if (newToken) {
         saveToken(newToken);
-        const state = store.getState();
-        const user = state?.auth?.user || {};
+        const user = store.getState()?.auth?.user || {};
         store.dispatch(login({ ...user, token: newToken }));
       }
       return newToken;
@@ -55,35 +44,26 @@ export const refreshToken = async () => {
       redirectToLogin();
       throw err;
     })
-    .finally(() => {
-      refreshPromise = null;
-    });
+    .finally(() => { refreshPromise = null; });
 
   return refreshPromise;
 };
 
-// ===========================================================
-// Verifica si el token está por expirar
-// ===========================================================
 export const ensureFreshToken = async (skewSeconds = 60) => {
   const payload = getTokenPayload("token");
   if (!payload) return null;
   if (isTokenNearExpiry(payload, skewSeconds)) {
-    try {
-      return await refreshToken();
-    } catch {
-      return null;
-    }
+    try { return await refreshToken(); } catch { return null; }
   }
   return getToken("token");
 };
 
-// ===========================================================
-// Instalar interceptores en Axios (usado por api.js)
-// ===========================================================
 export const installAuthInterceptors = (api) => {
-  // 🟢 1️⃣ Antes de enviar peticiones: refresca si está por expirar
-  api.interceptors.request.use(async (config) => {
+  if (!api) return null;
+  const existing = interceptorMap.get(api);
+  if (existing) return existing;
+
+  const reqId = api.interceptors.request.use(async (config) => {
     if (config.__skipAuth) return config;
     try {
       await ensureFreshToken();
@@ -96,8 +76,7 @@ export const installAuthInterceptors = (api) => {
     return config;
   });
 
-  // 🔴 2️⃣ Maneja errores 401 (token vencido o inválido)
-  api.interceptors.response.use(
+  const resId = api.interceptors.response.use(
     (resp) => resp,
     async (error) => {
       const original = error?.config || {};
@@ -110,9 +89,7 @@ export const installAuthInterceptors = (api) => {
             original.headers.Authorization = `Bearer ${newToken}`;
             return api(original);
           }
-        } catch {
-          // Si falla el refresh, caerá al siguiente bloque
-        }
+        } catch {}
       }
       if (error?.response?.status === 401) {
         try { store.dispatch(logout()); } catch {}
@@ -121,4 +98,22 @@ export const installAuthInterceptors = (api) => {
       return Promise.reject(error);
     }
   );
+
+  const ids = { reqId, resId };
+  interceptorMap.set(api, ids);
+  return ids;
+};
+
+export const uninstallAuthInterceptors = (api) => {
+  const ids = interceptorMap.get(api);
+  if (!ids || !api) return;
+  try { api.interceptors.request.eject(ids.reqId); } catch {}
+  try { api.interceptors.response.eject(ids.resId); } catch {}
+  interceptorMap.delete(api);
+};
+
+// Opcional para tests
+export const __testing = {
+  _resetRefresh: () => { refreshPromise = null; },
+  _installed: (api) => interceptorMap.get(api)
 };

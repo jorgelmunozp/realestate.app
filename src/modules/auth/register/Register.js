@@ -41,7 +41,7 @@ export const Register = () => {
         navigate('/login', { replace: true });
       }
     } catch (error) {
-      console.error('❌ Error en registro:', error.response?.data || error.message);
+      console.error(' Error en registro:', error.response?.data || error.message);
 
       const errors = error.response?.data?.errors;
       let errorHtml = '';

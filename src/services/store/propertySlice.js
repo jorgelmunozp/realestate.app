@@ -18,12 +18,11 @@ export const fetchProperties = createAsyncThunk(
     const url = `${ENDPOINT}?page=${page}&limit=${limit}${refresh ? '&refresh=true' : ''}`;
     const res = await errorWrapper(api.get(url, { __skipAuth: true }), { unwrap: false });
     if (!res.ok) throw res.error;
-
     const body = res.data || {};
     let items = [];
     let meta = {};
 
-    // ✅ Adaptación al wrapper actual del backend
+    // Adaptación al wrapper actual del backend
     if (body?.data?.data && Array.isArray(body.data.data)) {
       items = body.data.data;
       meta = body.data.meta || {};
@@ -37,7 +36,7 @@ export const fetchProperties = createAsyncThunk(
 
     const finalMeta = meta || { page, limit, total: items.length, last_page: 1 };
 
-    // ✅ Normalización (con campos camelCase y fallback seguro)
+    // Normalización (con campos camelCase y fallback seguro)
     const normalized = items.map((p) => ({
       idProperty: p.idProperty ?? p.IdProperty ?? p.id ?? '',
       name: p.name ?? p.Name ?? '',

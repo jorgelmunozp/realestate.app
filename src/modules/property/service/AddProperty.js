@@ -79,7 +79,7 @@ export const AddProperty = () => {
   };
 
   // ===========================================================
-  // 🔹 Guardar nueva propiedad (POST con wrapper adaptado)
+  // Guardar nueva propiedad (POST con wrapper adaptado)
   // ===========================================================
   const handleSubmit = async (e) => {
     e.preventDefault();

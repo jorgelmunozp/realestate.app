@@ -17,7 +17,7 @@ export const AppMenu = () => {
   const [role, setRole] = useState('');
 
   // ===========================================================
-  // 🔹 Leer token y determinar rol real del usuario logueado
+  // Leer token y determinar rol real del usuario logueado
   // ===========================================================
   useEffect(() => {
     // 1️⃣ Buscar token en localStorage o sessionStorage
@@ -45,7 +45,7 @@ export const AppMenu = () => {
   }, [user]);
 
   // ===========================================================
-  // 🔹 Cerrar sesión
+  // Cerrar sesión
   // ===========================================================
   const handleLogout = () => {
     dispatch(logout());
@@ -59,7 +59,7 @@ export const AppMenu = () => {
   };
 
   // ===========================================================
-  // 🔹 Renderizado
+  // Renderizado
   // ===========================================================
   return (
     <Menu left>
