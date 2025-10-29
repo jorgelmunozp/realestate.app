@@ -7,8 +7,6 @@ import { Pagination } from '../../../components/pagination/Pagination';
 import { fetchProperties } from '../../../services/store/propertySlice';
 import './Index.scss';
 
-const urlBaseFrontend = process.env.REACT_APP_URL_BASE_FRONTEND;
-
 export const Index = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -31,18 +29,14 @@ export const Index = () => {
   const handleOpenProperty = (propertyId) => navigate(`/property/${propertyId}`);
   const handleChangePage = (newPage) => setPagination((prev) => ({ ...prev, page: newPage }));
 
-  // ===========================================================
   // Filtro optimizado con useMemo
-  // ===========================================================
   const filteredProperties = useMemo(() => {
     const q = queryPropertyName.trim().toLowerCase();
     if (!q) return properties;
     return properties.filter((p) => p.name?.toLowerCase().includes(q));
   }, [properties, queryPropertyName]);
 
-  // ===========================================================
   // Renderizado condicional de carga
-  // ===========================================================
   if (loading) {
     return (
       <div className="container-loader full-screen">
@@ -52,9 +46,7 @@ export const Index = () => {
     );
   }
 
-  // ===========================================================
   // Render principal
-  // ===========================================================
   return (
     <div className="index-container">
       <div className="index-content">

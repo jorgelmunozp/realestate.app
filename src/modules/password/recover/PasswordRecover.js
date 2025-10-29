@@ -7,7 +7,6 @@ import { Box, Paper, TextField, Button, InputAdornment, Typography } from '@mui/
 import { FiAtSign } from 'react-icons/fi';
 import './PasswordRecover.scss';
 
-const urlBaseFrontend = process.env.REACT_APP_URL_BASE_FRONTEND;
 const recoverEndpoint = process.env.REACT_APP_ENDPOINT_PASSWORD_RECOVER;
 
 export const PasswordRecover = () => {

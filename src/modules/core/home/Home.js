@@ -14,7 +14,6 @@ import { FaUserSecret, FaUserTie, FaUser } from "react-icons/fa6";
 import { FiPlus, FiEdit2, FiTrash2 } from "react-icons/fi";
 import "./Home.scss";
 
-const urlBaseFrontend = process.env.REACT_APP_URL_BASE_FRONTEND;
 const propertyEndpoint = process.env.REACT_APP_ENDPOINT_PROPERTY;
 
 export const Home = () => {
@@ -42,9 +41,7 @@ export const Home = () => {
   const firstName = ((authUser?.name || tokenUser?.name || "").split(" ")[0]) || "";
   const displayRole = role ? role.charAt(0).toUpperCase() + role.slice(1) : "";
 
-  // ===========================================================
   // Cargar propiedades al montar y al cambiar paginación
-  // ===========================================================
   useEffect(() => {
     if (!userId) {
       navigate('/index');
@@ -59,9 +56,7 @@ export const Home = () => {
     }
   }, [dispatch, location.pathname, location.state, pagination.page, pagination.limit, navigate, userId]);
 
-  // ===========================================================
   // Handlers
-  // ===========================================================
   const handleEditProperty = (propertyId) => navigate(`/edit-property/${propertyId}`);
   const handleAddProperty = () => navigate('/add-property');
 
@@ -96,9 +91,7 @@ export const Home = () => {
 
   const handleChangePage = (newPage) => setPagination((prev) => ({ ...prev, page: newPage }));
 
-  // ===========================================================
   // Render: Loading
-  // ===========================================================
   if (loading) {
     return (
       <div className="loader-overlay">
@@ -108,9 +101,7 @@ export const Home = () => {
     );
   }
 
-  // ===========================================================
   // Render principal
-  // ===========================================================
   return (
     <div className="home-container">
       <div className="home-content">

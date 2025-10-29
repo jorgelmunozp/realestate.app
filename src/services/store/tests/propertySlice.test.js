@@ -20,9 +20,7 @@ describe("propertySlice", () => {
     store = configureStore({ reducer: { property: propertyReducer } });
   });
 
-  // ===========================================================
   // Acción asincrónica: fetchProperties
-  // ===========================================================
   it("carga correctamente las propiedades y actualiza el estado", async () => {
     const mockResponse = {
       ok: true,
@@ -53,9 +51,7 @@ describe("propertySlice", () => {
     expect(state.properties).toEqual([]);
   });
 
-  // ===========================================================
   // Acción asincrónica: createProperty
-  // ===========================================================
   it("crea una propiedad correctamente", async () => {
     const mockResponse = {
       ok: true,
@@ -83,9 +79,7 @@ describe("propertySlice", () => {
     expect(state.properties).toEqual([]);
   });
 
-  // ===========================================================
   // Reducers internos: estados de loading y error
-  // ===========================================================
   it("cambia a 'loading' cuando se está haciendo fetch", () => {
     const action = { type: fetchProperties.pending.type };
     const state = propertyReducer(undefined, action);

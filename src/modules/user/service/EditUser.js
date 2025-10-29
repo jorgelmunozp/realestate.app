@@ -22,9 +22,7 @@ export const EditUser = () => {
   const role = (authUser?.role || tokenUser?.role || "user").toLowerCase();
   const isAdmin = role === "admin";
 
-  // ===========================================================
   // Formulario usuario (solo perfil propio)
-  // ===========================================================
   const [form, setForm] = useState({
     name: authUser?.name || tokenUser?.name || "",
     email: authUser?.email || tokenUser?.email || "",
@@ -44,9 +42,7 @@ export const EditUser = () => {
     setForm((prev) => ({ ...prev, [name]: value }));
   };
 
-  // ===========================================================
   // Guardar perfil propio
-  // ===========================================================
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -91,9 +87,7 @@ export const EditUser = () => {
     }
   };
 
-  // ===========================================================
   // Render perfil personal
-  // ===========================================================
   return (
     <div className="edituser-container">
       <Paper elevation={3} className="edituser-card">

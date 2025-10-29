@@ -6,9 +6,7 @@ describe("authSlice", () => {
     jest.clearAllMocks();
   });
 
-  // ===========================================================
   // Estado inicial
-  // ===========================================================
   it("usa el estado inicial correcto", () => {
     const state = authReducer(undefined, { type: "@@INIT" });
     expect(state).toEqual({
@@ -18,9 +16,7 @@ describe("authSlice", () => {
     });
   });
 
-  // ===========================================================
   // Acción: login
-  // ===========================================================
   it("realiza login correctamente (payload plano)", () => {
     const payload = {
       id: "u1",
@@ -77,9 +73,7 @@ describe("authSlice", () => {
     expect(state).toEqual(prev);
   });
 
-  // ===========================================================
   // Acción: logout
-  // ===========================================================
   it("realiza logout correctamente y limpia sessionStorage", () => {
     const prev = {
       user: { id: "1", name: "Ana" },
@@ -104,9 +98,7 @@ describe("authSlice", () => {
     expect(sessionStorage.getItem("logged")).toBeNull();
   });
 
-  // ===========================================================
   // Acción: updateProfile
-  // ===========================================================
   it("actualiza los datos del usuario correctamente", () => {
     const prev = {
       user: { id: "10", name: "Pepe", email: "old@mail.com", role: "editor" },

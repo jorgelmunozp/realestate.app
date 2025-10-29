@@ -16,9 +16,7 @@ describe("token.js utilities", () => {
     jest.restoreAllMocks();
   });
 
-  // ===========================================================
   // getToken()
-  // ===========================================================
   it("devuelve el token desde sessionStorage", () => {
     sessionStorage.setItem("token", "abc123");
     expect(getToken()).toBe("abc123");
@@ -33,9 +31,7 @@ describe("token.js utilities", () => {
     expect(getToken("token", badStorage)).toBeNull();
   });
 
-  // ===========================================================
   // saveToken() y clearToken()
-  // ===========================================================
   it("guarda y limpia el token correctamente", () => {
     saveToken("xyz");
     expect(sessionStorage.getItem("token")).toBe("xyz");
@@ -43,9 +39,7 @@ describe("token.js utilities", () => {
     expect(sessionStorage.getItem("token")).toBeNull();
   });
 
-  // ===========================================================
   // decodeToken()
-  // ===========================================================
   it("decodifica un JWT válido correctamente", () => {
     const payload = { id: "u1", name: "Jorge" };
     const base64 = btoa(JSON.stringify(payload));
@@ -60,9 +54,7 @@ describe("token.js utilities", () => {
     expect(decodeToken("invalid.token")).toBeNull();
   });
 
-  // ===========================================================
   // getTokenPayload()
-  // ===========================================================
   it("obtiene el payload desde sessionStorage", () => {
     const payload = { email: "test@mail.com" };
     const base64 = btoa(JSON.stringify(payload));
@@ -71,9 +63,7 @@ describe("token.js utilities", () => {
     expect(result).toEqual(payload);
   });
 
-  // ===========================================================
   // getUserFromToken()
-  // ===========================================================
   it("extrae id, name, email y role desde el payload", () => {
     const payload = {
       sub: "123",
@@ -95,9 +85,7 @@ describe("token.js utilities", () => {
     expect(getUserFromToken("string")).toBeNull();
   });
 
-  // ===========================================================
   // getTokenExp(), isTokenExpired(), isTokenNearExpiry()
-  // ===========================================================
   it("obtiene la expiración del payload correctamente", () => {
     const payload = { exp: 1712345678 };
     expect(getTokenExp(payload)).toBe(1712345678);

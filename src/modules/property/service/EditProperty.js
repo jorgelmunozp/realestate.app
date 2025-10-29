@@ -41,9 +41,7 @@ export const EditProperty = () => {
     []
   );
 
-  // ===========================================================
   // Cargar datos completos de la propiedad
-  // ===========================================================
   useEffect(() => {
     const loadProperty = async () => {
       try {
@@ -74,9 +72,7 @@ export const EditProperty = () => {
     loadProperty();
   }, [propertyId, location.state, endpoint]);
 
-  // ===========================================================
   // Handlers
-  // ===========================================================
   const clampNonNegative = (v) => {
     const n = Number(v);
     return Number.isFinite(n) ? Math.max(0, n) : 0;
@@ -113,9 +109,7 @@ export const EditProperty = () => {
     setTraceAlert({ message: "Traza eliminada localmente (se guardará al actualizar)", severity: "info" });
   };
 
-  // ===========================================================
   // Guardar cambios (PATCH con wrapper adaptado)
-  // ===========================================================
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -184,9 +178,7 @@ export const EditProperty = () => {
     }
   };
 
-  // ===========================================================
   // Renderizado
-  // ===========================================================
   if (loading)
     return (
       <div className="container-loader full-screen">
@@ -289,7 +281,7 @@ export const EditProperty = () => {
                 <TextField name="name" label="Evento" value={trace.name || ""} onChange={(e) => handleChange(e, "traces", index)} required />
                 <TextField type="number" name="value" label="Valor" value={trace.value || 0} onChange={(e) => handleChange(e, "traces", index)} required />
                 <TextField type="number" name="tax" label="Impuesto" value={trace.tax || 0} onChange={(e) => handleChange(e, "traces", index)} required />
-                <button type="button" className="trace-delete-btn" onClick={() => handleDeleteTrace(index)}>
+                <button type="button" className="editproperty-trace-delete-btn" onClick={() => handleDeleteTrace(index)}>
                   <FiTrash2 />
                 </button>
               </div>

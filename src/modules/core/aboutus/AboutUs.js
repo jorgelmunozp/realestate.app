@@ -20,8 +20,6 @@ const services = [
   { icon: <FiTrendingUp />, title: 'Gestión de alquileres', description: 'Administramos tus propiedades para maximizar rentabilidad.' }
 ];
 
-const urlBaseFrontend = process.env.REACT_APP_URL_BASE_FRONTEND;
-
 export const AboutUs = () => {
   const navigate = useNavigate();
   const [currentSlide, setCurrentSlide] = useState(0);

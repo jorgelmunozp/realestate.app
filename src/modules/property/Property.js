@@ -18,9 +18,7 @@ export const Property = () => {
 
   const goBack = () => navigate(-1);
 
-  // ===========================================================
   // Loader
-  // ===========================================================
   if (loading) {
     return (
       <div className="container-loader full-screen">
@@ -30,9 +28,7 @@ export const Property = () => {
     );
   }
 
-  // ===========================================================
   // Error o sin datos
-  // ===========================================================
   if (error || !property) {
     return (
       <div className="property-error">
@@ -41,14 +37,10 @@ export const Property = () => {
     );
   }
 
-  // ===========================================================
   // Extracción de datos
-  // ===========================================================
   const { name, address, price, year, idProperty, codeInternal, image, owner, traces = [] } = property.data;
 
-  // ===========================================================
   // Render principal
-  // ===========================================================
   return (
     <div className="property-container">
       <div className="property-card">

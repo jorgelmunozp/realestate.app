@@ -7,7 +7,6 @@ import { TextField, Button, InputAdornment, Box, Paper } from '@mui/material';
 import { FiUser, FiAtSign, FiLock } from 'react-icons/fi';
 import './Register.scss';
 
-const urlBaseFrontend = process.env.REACT_APP_URL_BASE_FRONTEND;
 const registerEndpoint = process.env.REACT_APP_ENDPOINT_REGISTER;
 
 export const Register = () => {

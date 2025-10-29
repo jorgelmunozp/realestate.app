@@ -78,9 +78,7 @@ export const AddProperty = () => {
     setPropertyTrace((prev) => prev.filter((_, i) => i !== index));
   };
 
-  // ===========================================================
   // Guardar nueva propiedad (POST con wrapper adaptado)
-  // ===========================================================
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -210,7 +208,7 @@ export const AddProperty = () => {
                 <TextField name="name" label="Evento" value={trace.name} onChange={(e) => handleChange(e, "traces", i)} required />
                 <TextField type="number" name="value" label="Valor" value={trace.value} onChange={(e) => handleChange(e, "traces", i)} required />
                 <TextField type="number" name="tax" label="Impuesto" value={trace.tax} onChange={(e) => handleChange(e, "traces", i)} required />
-                <button type="button" className="trace-delete-btn" onClick={() => handleDeleteTrace(i)}>
+                <button type="button" className="addproperty-trace-delete-btn" onClick={() => handleDeleteTrace(i)}>
                   <FiTrash2 />
                 </button>
               </div>

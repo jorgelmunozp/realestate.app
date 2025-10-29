@@ -7,7 +7,6 @@ import { Box, Paper, TextField, Button, InputAdornment } from '@mui/material';
 import { FiLock } from 'react-icons/fi';
 import './PasswordReset.scss';
 
-const urlBaseFrontend = process.env.REACT_APP_URL_BASE_FRONTEND;
 const resetEndpoint = process.env.REACT_APP_ENDPOINT_PASSWORD_RESET;
 
 export const PasswordReset = () => {

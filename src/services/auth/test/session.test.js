@@ -29,9 +29,7 @@ describe("session.js (auth interceptors & refresh flow)", () => {
     sessionStorage.clear();
   });
 
-  // ===========================================================
   // refreshToken()
-  // ===========================================================
   it("no hace refresh si no hay endpoint o token", async () => {
     process.env.REACT_APP_ENDPOINT_TOKEN_REFRESH = "";
     getToken.mockReturnValue(null);
@@ -73,9 +71,7 @@ describe("session.js (auth interceptors & refresh flow)", () => {
     expect(window.location.replace).toHaveBeenCalledWith("/login");
   });
 
-  // ===========================================================
   // ensureFreshToken()
-  // ===========================================================
   it("devuelve null si no hay payload", async () => {
     getTokenPayload.mockReturnValue(null);
     const result = await ensureFreshToken();
@@ -100,9 +96,7 @@ describe("session.js (auth interceptors & refresh flow)", () => {
     expect(token).toBe("tokenActual");
   });
 
-  // ===========================================================
   // installAuthInterceptors()
-  // ===========================================================
   it("instala interceptores de request y response correctamente", async () => {
     const fakeApi = { interceptors: { request: { use: jest.fn() }, response: { use: jest.fn() } } };
     installAuthInterceptors(fakeApi);

@@ -135,21 +135,33 @@
 /* Items del menú */
 .menu-item {
   display: flex !important;
+  background-color: transparent !important;
   align-items: center;
   gap: 16px;
   color: $black-color;
-  padding: 18px 0;
+  padding: 20px ;
   text-decoration: none;
   font-family: 'Poppins', sans-serif;
   font-weight: 500;
   font-size: 1.5rem;
+  border: none;
   border-radius: 8px;
+  width: 99%;
   transition: all 0.3s ease;
 
+  .menu-item-icon {
+    color: $blue-color;
+    transition: all 0.3s ease;
+  }
+
   &:hover {
-    color: #fff;
-    background-color: $blue-color;
+    color: $white-color;
+    background-color: $blue-color!important;
     transform: translateX(5px);
+
+    .menu-item-icon {
+      color: $white-color;
+    }
   }
 
   @include screen-md {

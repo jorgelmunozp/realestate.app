@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Paper, TextField, Button, MenuItem } from "@mui/material";
+import { FiTrash2 } from "react-icons/fi";
 import { Title } from "../../../components/title/Title";
 import { Search as SearchBox } from "../../../components/search/Search";
 import Swal from "sweetalert2";
@@ -17,9 +18,7 @@ export const ManageUsers = () => {
 
   const userEndpoint = process.env.REACT_APP_ENDPOINT_USER;
 
-  // ===========================================================
   // Cargar usuarios
-  // ===========================================================
   useEffect(() => {
     const load = async () => {
       setLoading(true);
@@ -47,9 +46,7 @@ export const ManageUsers = () => {
     load();
   }, [userEndpoint]);
 
-  // ===========================================================
   // Guardar cambios de rol
-  // ===========================================================
   const handleRoleChange = async (user, newRole) => {
     try {
       const url = `${userEndpoint}/${encodeURIComponent(user.email)}`;
@@ -81,9 +78,7 @@ export const ManageUsers = () => {
     }
   };
 
-  // ===========================================================
   // Eliminar usuario
-  // ===========================================================
   const handleDelete = async (email) => {
     const confirm = await Swal.fire({
       title: "¿Eliminar usuario?",
@@ -117,9 +112,7 @@ export const ManageUsers = () => {
     }
   };
 
-  // ===========================================================
   // Filtro
-  // ===========================================================
   const filtered = (users || []).filter((u) => {
     const q = query.trim().toLowerCase();
     if (!q) return true;
@@ -130,9 +123,7 @@ export const ManageUsers = () => {
     );
   });
 
-  // ===========================================================
   // Render
-  // ===========================================================
   return (
     <div className="manageusers-container">
       <Title title="Administrar usuarios" />
@@ -161,22 +152,15 @@ export const ManageUsers = () => {
             <div key={`${u.email}-${idx}`} className="manageusers-row">
               <TextField value={u.name || ""} fullWidth disabled />
               <TextField value={u.email || ""} fullWidth disabled />
-              <TextField
-                select
-                value={u.role || "user"}
+              <TextField select value={u.role || "user"}
                 onChange={(e) => handleRoleChange(u, e.target.value)}
-                fullWidth
-              >
+                fullWidth >
                 <MenuItem value="admin">Admin</MenuItem>
                 <MenuItem value="editor">Editor</MenuItem>
                 <MenuItem value="user">User</MenuItem>
               </TextField>
-              <Button
-                variant="outlined"
-                color="error"
-                onClick={() => handleDelete(u.email)}
-              >
-                Eliminar
+              <Button variant="outlined manageusers-replace-btn" color="error" onClick={() => handleDelete(u.email)} >
+                <FiTrash2 />
               </Button>
             </div>
           ))}
