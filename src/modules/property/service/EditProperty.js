@@ -149,10 +149,12 @@ export const EditProperty = () => {
         traces: cleanedTraces,
       };
 
-      console.log("📦 PATCH limpio →", patchPayload);
+      console.log("PATCH Ok →", patchPayload);
 
       const resUpdate = await errorWrapper(api.patch(`${endpoint}/${propertyId}`, patchPayload));
-      const { success, message } = resUpdate;
+      const { success, message, error } = resUpdate;
+      console.log("message: ", message)
+      console.log("error: ", error)
 
       if (success) {
         Swal.fire({

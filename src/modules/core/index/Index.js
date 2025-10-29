@@ -54,27 +54,16 @@ export const Index = () => {
           <Title title="Inmuebles Disponibles" />
         </div>
 
-        <Search
-          value={queryPropertyName}
-          onChange={setQueryPropertyName}
-          placeholder="Buscar inmueble..."
-        />
+        <Search value={queryPropertyName} onChange={setQueryPropertyName} placeholder="Buscar inmueble..." />
 
         <div className="index-grid">
           {filteredProperties.length > 0 ? (
             filteredProperties.map((p) => (
-              <div
-                key={p.idProperty}
-                className="index-property-card"
-                onClick={() => handleOpenProperty(p.idProperty)}
-              >
+              <div key={p.idProperty} className="index-property-card" onClick={() => handleOpenProperty(p.idProperty)} >
                 {p.image && p.image.file ? (
-                  <img
-                    className="index-property-card-img"
+                  <img className="index-property-card-img"
                     src={`data:image/jpeg;base64,${p.image.file}`}
-                    alt={p.name}
-                    loading="lazy"
-                  />
+                    alt={p.name} loading="lazy" />
                 ) : (
                   <div className="no-image">Sin imagen</div>
                 )}
@@ -91,11 +80,7 @@ export const Index = () => {
           )}
         </div>
 
-        <Pagination
-          page={pagination.page}
-          lastPage={meta?.last_page || pagination.last_page}
-          onPageChange={handleChangePage}
-        />
+        <Pagination page={pagination.page}  lastPage={meta?.last_page || pagination.last_page} onPageChange={handleChangePage}  />
       </div>
     </div>
   );

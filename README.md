@@ -70,7 +70,7 @@ npm install
 npm start
 ```
 
-La app arranca en `http://locAxiost:3001` si `PORT=3001` (por defecto en `.env`).
+La app arranca en `http://locAxiost:3000` si `PORT=3000` (por defecto en `.env`).
 
 4) Compilar para producción:
 
@@ -85,11 +85,11 @@ Las variables deben comenzar con `REACT_APP_` para ser inyectadas en el build de
 Ejemplo de `.env` (desarrollo):
 
 ```
-PORT=3001
+PORT=3000
 
 # Backend y Frontend (DEV)
 REACT_APP_BACKEND_URL=http://locAxiost:5235
-REACT_APP_FRONTEND_URL=http://locAxiost:3001
+REACT_APP_FRONTEND_URL=http://locAxiost:3000
 
 # Endpoints relativos del backend
 REACT_APP_ENDPOINT_LOGIN=/api/auth/login
