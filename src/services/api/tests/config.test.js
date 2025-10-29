@@ -3,7 +3,7 @@
 // Si no existe, usa el fallback local.
 // ===========================================================
 export const getBaseURL = () => {
-  const envUrl = process.env.REACT_APP_API_BASE_URL;
+  const envUrl = process.env.REACT_APP_API_BACKEND_URL;
   if (envUrl && envUrl.trim() !== "") return envUrl.trim();
   return "http://localhost:5235/api";
 };
