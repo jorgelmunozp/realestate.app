@@ -1,0 +1,35 @@
+<!doctype html><html lang="es"><head>
+<meta charset="utf-8"><meta name="robots" content="noindex">
+<title>404 | RealEstate</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<style>
+  html,body{height:100%;margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Helvetica,Arial}
+  .wrap{min-height:100%;display:flex;align-items:center;justify-content:center;text-align:center;padding:24px}
+  .card{max-width:560px}
+  h1{font-size:56px;margin:0 0 8px}
+  p{margin:8px 0 0;opacity:.8}
+  a{display:inline-block;margin-top:16px;text-decoration:none}
+</style>
+</head><body>
+<div class="wrap"><div class="card">
+  <h1>404</h1>
+  <p>No encontramos esta ruta. Redirigiendo a la app…</p>
+  <a id="link" href="#">Volver al inicio</a>
+</div></div>
+
+<script>
+  // Guarda la ruta solicitada para que React Router la resuelva
+  sessionStorage.redirect = location.pathname + location.search + location.hash;
+
+  // Detecta el repo en GitHub Pages: /<repo>/
+  var seg = location.pathname.split('/').filter(Boolean);
+  var base = seg.length ? '/' + seg[0] + '/' : '/';
+
+  // Enlaza el botón y redirige
+  document.getElementById('link').href = base;
+  location.replace(base);
+</script>
+<noscript>
+  <meta http-equiv="refresh" content="0;url=/">
+</noscript>
+</body></html>
