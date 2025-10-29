@@ -93,30 +93,9 @@ export const EditUser = () => {
       <Paper elevation={3} className="edituser-card">
         <Title title="Editar perfil" />
         <Box component="form" className="edituser-form" onSubmit={handleSubmit}>
-          <TextField
-            name="name"
-            label="Nombre"
-            value={form.name}
-            onChange={handleChange}
-            fullWidth
-            required
-          />
-          <TextField
-            name="email"
-            label="Correo"
-            type="email"
-            value={form.email}
-            fullWidth
-            disabled // 🔒 Email no editable
-          />
-          <TextField
-            name="role"
-            label="Rol"
-            value={form.role}
-            select
-            fullWidth
-            disabled // 🔒 Solo visualización
-          >
+          <TextField name="name" label="Nombre" value={form.name} onChange={handleChange} fullWidth required />
+          <TextField name="email" label="Correo" type="email" value={form.email} fullWidth disabled />
+          <TextField name="role" label="Rol" value={form.role} select fullWidth disabled >
             <MenuItem value="admin">Admin</MenuItem>
             <MenuItem value="editor">Editor</MenuItem>
             <MenuItem value="user">User</MenuItem>

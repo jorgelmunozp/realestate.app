@@ -2,6 +2,7 @@
 import { useNavigate } from "react-router-dom";
 import { api } from "../../../services/api/api";
 import { errorWrapper } from "../../../services/api/errorWrapper";
+import { Title } from "../../../components/title/Title.js";
 import { AddButton } from "../../../components/button/AddButton.js";
 import { FiTrash2 } from "react-icons/fi";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
@@ -125,7 +126,7 @@ export const AddProperty = () => {
   return (
     <div className="addproperty-container">
       <form className="addproperty-card" onSubmit={handleSubmit}>
-        <h1 className="addproperty-title">Registrar nueva propiedad</h1>
+        <Title title="Registrar nueva propiedad" />
 
         {/* --- Datos generales --- */}
         <div className="form-section">

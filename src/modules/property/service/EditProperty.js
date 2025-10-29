@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 import { useNavigate, useParams, useLocation } from "react-router-dom";
 import { api } from "../../../services/api/api";
 import { errorWrapper } from "../../../services/api/errorWrapper";
+import { Title } from "../../../components/title/Title.js";
 import { AddButton } from "../../../components/button/AddButton.js";
 import { FiTrash2 } from "react-icons/fi";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
@@ -193,9 +194,9 @@ export const EditProperty = () => {
     return <p style={{ textAlign: "center", color: "red" }}>Propiedad no encontrada</p>;
 
   return (
-    <div className="addproperty-container">
-      <form className="addproperty-card" onSubmit={handleSubmit}>
-        <h1 className="addproperty-title">Editar propiedad</h1>
+    <div className="editproperty-container">
+      <form className="editproperty-card" onSubmit={handleSubmit}>
+        <Title title="Editar propiedad" />
 
         {/* --- Datos generales --- */}
         <div className="form-section">
@@ -299,8 +300,8 @@ export const EditProperty = () => {
           <AddButton label="Añadir evento" handleChange={handleAddTrace} />
         </div>
 
-        <button type="submit" className="addproperty-btn primary">Actualizar Propiedad</button>
-        <button type="button" className="addproperty-btn secondary" onClick={() => navigate('/home')}>Cancelar</button>
+        <button type="submit" className="editproperty-btn primary">Actualizar Propiedad</button>
+        <button type="button" className="editproperty-btn secondary" onClick={() => navigate('/home')}>Cancelar</button>
       </form>
     </div>
   );

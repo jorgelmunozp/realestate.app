@@ -14,9 +14,9 @@
   background: #f6f8fb;
   padding: 3rem 1rem;
 
-  @include screen-sm {
-    padding: 3rem 0.5rem;
-  }
+  padding: 2rem 2rem;
+
+  @include screen-sm { padding: 1rem 0.5rem; }
 }
 
 .addproperty-card {
@@ -33,13 +33,6 @@
   @include screen-sm {
     padding: 2rem 1rem;
   }
-}
-
-.addproperty-title {
-  text-align: center;
-  color: $blue-color;
-  font-size: 2.2rem;
-  margin-bottom: 2.5rem;
 }
 
 .form-section {

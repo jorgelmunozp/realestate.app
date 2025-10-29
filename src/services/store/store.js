@@ -11,7 +11,7 @@ const createSessionStorage = () => {
   try {
     return createWebStorage("session");
   } catch {
-    // 🔸 Fallback para entornos sin window (SSR o pruebas)
+    // Fallback para entornos sin window (SSR o pruebas)
     return {
       getItem: () => Promise.resolve(null),
       setItem: (_key, value) => Promise.resolve(value),
@@ -27,7 +27,7 @@ const sessionStorage = createSessionStorage();
 const persistConfig = {
   key: "auth",
   storage: sessionStorage,
-  whitelist: ["user", "token", "logged"], // 🔸 persistimos solo lo necesario
+  whitelist: ["user", "token", "logged"], // persistimos solo lo necesario
 };
 
 // Reducer persistente para autenticación

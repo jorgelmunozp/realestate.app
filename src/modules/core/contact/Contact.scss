@@ -63,7 +63,7 @@
     height: 140px;
     border-radius: 50%;
     object-fit: cover;
-    border: 3px solid $blue-color;
+    border: 3px solid $orange-color;
     transition: transform 0.3s ease;
 
     &:hover {
@@ -96,7 +96,7 @@
         margin-right: 4px;
       }
 
-      color: $blue-color; // resto del número azul
+      color: $orange-color; // resto del número naranja
     }
   }
 }

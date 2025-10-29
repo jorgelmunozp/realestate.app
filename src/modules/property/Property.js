@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Title } from "../../components/title/Title.js";
+import { Button } from "../../components/button/Button.js";
 import { useFetch } from "../../services/fetch/useFetch.js";
 import "./Property.scss";
 
@@ -45,21 +46,14 @@ export const Property = () => {
     <div className="property-container">
       <div className="property-card">
 
-        {/* 🖼️ Imagen principal */}
-        {image?.file ? (
-          <div className="property-image-wrapper">
-            <img
-              src={`data:image/jpeg;base64,${image.file}`}
-              alt={name}
-              className="property-main-image"
-              loading="lazy"
-            />
-          </div>
-        ) : (
-          <div className="no-image">Sin imagen disponible</div>
-        )}
+        {/* Imagen principal */}
+        {image?.file ? ( <div className="property-image-wrapper">
+                           <img src={`data:image/jpeg;base64,${image.file}`} alt={name} className="property-main-image" loading="lazy" />
+                         </div> ) 
+                     : ( <div className="no-image">Sin imagen disponible</div> )
+        }
 
-        {/* 📋 Información general */}
+        {/* Información general */}
         <div className="property-info">
           <Title title={name} />
           <p className="property-address">📍 {address || "Sin dirección"}</p>
@@ -77,23 +71,15 @@ export const Property = () => {
           {owner && (
             <div className="property-owner">
               <h3>👤 Propietario</h3>
-              {owner.photo ? (
-                <img
-                  src={`data:image/jpeg;base64,${owner.photo}`}
-                  alt={owner.name}
-                  className="owner-photo"
-                  loading="lazy"
-                />
-              ) : (
-                <div className="no-image">Sin foto</div>
-              )}
+              {owner.photo ? ( <img src={`data:image/jpeg;base64,${owner.photo}`} alt={owner.name} className="owner-photo" loading="lazy" /> )
+                           : ( <div className="no-image">Sin foto</div> )}
               <p className="owner-name">{owner.name || "Nombre no disponible"}</p>
               <p>{owner.address || "Sin dirección"}</p>
               <p>🎂 {owner.birthday || "Sin fecha de nacimiento"}</p>
             </div>
           )}
 
-          {/* 📄 Historial */}
+          {/* Historial */}
           <div className="property-traces">
             <h3>📄 Historial de transacciones</h3>
             {traces.length > 0 ? (
@@ -110,10 +96,7 @@ export const Property = () => {
             )}
           </div>
 
-          {/* 🔙 Botón volver */}
-          <button className="property-button" onClick={goBack}>
-            ← Regresar
-          </button>
+          <Button label={'← Regresar'} onClick={goBack} />
         </div>
       </div>
     </div>

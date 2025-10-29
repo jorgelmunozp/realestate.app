@@ -11,11 +11,9 @@
   align-items: center;
   min-height: 100vh;
   background: #f6f8fb;
-  padding: 2rem;
+  padding: 2rem 2rem;
 
-  @include screen-sm {
-    padding: 1rem;
-  }
+  @include screen-sm { padding: 1rem 0.5rem !important; }
 }
 
 /* =========================================================
@@ -24,7 +22,6 @@
 .login-card {
   background-color: #fff;
   border-radius: 20px;
-  padding: 2.5rem 2rem; // igual que register
   width: 100%;
   max-width: 420px;
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
@@ -33,9 +30,11 @@
   color: #333;
   font-family: $primary-font;
   transition: all 0.3s ease;
+  padding: 2.5rem 2rem;
 
+  @include screen-sm { padding: 1.5rem 0.5rem; }
   /* =========================================================
-     🔸 TÍTULO (idéntico a register)
+     TÍTULO (idéntico a register)
      ========================================================= */
   h2,
   .MuiTypography-root {
@@ -44,7 +43,7 @@
   }
 
   /* =========================================================
-     🔸 CAMPOS DE TEXTO
+     CAMPOS DE TEXTO
      ========================================================= */
   .MuiTextField-root {
     background-color: #f9fafb;
@@ -86,7 +85,7 @@
   }
 
   /* =========================================================
-     🔸 BOTONES (igual que register)
+     BOTONES (igual que register)
      ========================================================= */
   .MuiButton-root {
     width: 100%;
@@ -117,7 +116,7 @@
   }
 
   /* =========================================================
-     🔸 LINKS (mantiene estilo limpio)
+     LINKS (mantiene estilo limpio)
      ========================================================= */
   .login-link {
     color: $blue-color;
@@ -151,7 +150,7 @@
    ========================================================= */
 @media (max-width: 480px) {
   .login-card {
-    padding: 1.5rem;
+    padding: 1.125rem !important;
   }
 
   .MuiTextField-root input {

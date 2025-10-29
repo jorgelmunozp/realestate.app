@@ -21,11 +21,10 @@ export const User = () => {
     <div className="user-profile">
       <div className="user-header">
         <Title title="Mi perfil" />
-        {isLogged && (
-          <Link to="/profile/edit" className="user-edit-btn">
-            Editar
-          </Link>
-        )}
+        {isLogged && ( <Link to="/profile/edit" className="user-edit-btn">
+                        Editar
+                      </Link> )
+        }
       </div>
 
       <div className="user-card">
@@ -42,9 +41,6 @@ export const User = () => {
               <span className="meta-label">ID de usuario</span>
               <span className="meta-value">{userId}</span>
             </div>
-          </div>
-
-          <div className="user-meta">
             <div className="meta-item">
               <span className="meta-label">Rol</span>
               <span className="meta-value">{role}</span>

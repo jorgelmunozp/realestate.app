@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Title } from '../../../components/title/Title';
 import { Label } from '../../../components/label/Label';
+import { Button } from '../../../components/button/Button';
 import { FiHome, FiUserCheck, FiStar, FiTrendingUp, FiChevronLeft, FiChevronRight } from "react-icons/fi";
 import './AboutUs.scss';
 
@@ -43,12 +44,8 @@ export const AboutUs = () => {
         {/* Slider */}
         <div className="aboutUs-slider">
           {sliderImages.map((img, idx) => (
-            <img
-              key={idx}
-              src={img}
-              alt={`Propiedad ${idx + 1}`}
-              className={idx === currentSlide ? 'active' : ''}
-            />
+            <img key={idx}src={img}
+              alt={`Propiedad ${idx + 1}`} className={idx === currentSlide ? 'active' : ''} />
           ))}
 
           {/* Flechas */}
@@ -89,8 +86,8 @@ export const AboutUs = () => {
 
         {/* Botones */}
         <div className="aboutUs-buttons">
-          <button onClick={() => navigate('/index')} className="aboutUs-buttons aboutUs-link-button">Ver Propiedades</button>
-          <button onClick={() => navigate('/contact')} className="aboutUs-buttons aboutUs-link-button">Contáctanos</button>
+          <Button label={'Ver Propiedades'} onClick={() => navigate('/index')} />
+          <Button label={'Contáctanos'} onClick={() => navigate('/contact')} />
         </div>
       </div>
     </div>

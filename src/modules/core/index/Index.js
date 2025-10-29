@@ -64,9 +64,7 @@ export const Index = () => {
                   <img className="index-property-card-img"
                     src={`data:image/jpeg;base64,${p.image.file}`}
                     alt={p.name} loading="lazy" />
-                ) : (
-                  <div className="no-image">Sin imagen</div>
-                )}
+                ) : ( <div className="no-image">Sin imagen</div> )}
 
                 <div className="index-property-card-info">
                   <h3>{p.name}</h3>

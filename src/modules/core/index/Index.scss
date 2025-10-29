@@ -10,7 +10,7 @@
   background: #f6f8fb;
   padding: 2rem 2rem;
 
-  @include screen-sm { padding: 2rem 0.5rem; }
+  @include screen-sm { padding: 1rem 0.5rem; }
 
 }
 
@@ -57,14 +57,17 @@
 }
 
 // Cards
-
 .index-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
   gap: 2rem;
 }
 
 .index-property-card {
+  width: 30%;
+  display: flex;
+  flex-direction: column;
   background-color: #fff;
   border-radius: 16px;
   overflow: hidden;
@@ -72,6 +75,8 @@
   transition: all 0.3s ease;
   border: 1px solid #e5e7eb;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+
+  @include screen-sm { width: 100%; }
 
   &:hover {
     transform: translateY(-8px);
@@ -105,7 +110,7 @@
     }
 
     .price {
-      color: $blue-color;
+      color: $orange-color;
       font-weight: bold;
       font-size: 1.1rem;
       margin-top: 0.5rem;
