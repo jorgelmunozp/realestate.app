@@ -12,11 +12,10 @@ import { PasswordRecover } from "../modules/password/recover/PasswordRecover";
 import { PasswordReset } from "../modules/password/reset/PasswordReset";
 import { AboutUs } from "../modules/core/aboutus/AboutUs";
 import { Contact } from "../modules/core/contact/Contact";
-
-const basename = process.env.REACT_APP_URL_BASE_FRONTEND || "/";
+import { NotFound } from "../modules/core/notfound/NotFound"
 
 export const AppRouter = () => (
-  <BrowserRouter basename={basename}>
+  <BrowserRouter>
     <AppMenu />
     <Header />
     <Routes>
@@ -30,7 +29,8 @@ export const AppRouter = () => (
       <Route path="/about-us" element={<PublicRoute><AboutUs/></PublicRoute>} />
       <Route path="/contact" element={<PublicRoute><Contact/></PublicRoute>} />
       <Route path="/*" element={<PrivateRoute><DashboardRoutes/></PrivateRoute>} />
-      <Route path="*" element={<PublicRoute><Index/></PublicRoute>} />
+      {/* <Route path="*" element={<PublicRoute><Index/></PublicRoute>} /> */}
+      <Route path="*" element={<PublicRoute><NotFound/></PublicRoute>} />
     </Routes>
   </BrowserRouter>
 );
