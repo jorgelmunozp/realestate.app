@@ -57,6 +57,7 @@ export const Pagination = ({
             border: 'none',
             padding: 0,
             margin: 0,
+            fontSize: 'inherit',
             fontWeight: 600,
             cursor: lastDisabled ? 'default' : 'pointer',
           }}
