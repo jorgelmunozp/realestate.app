@@ -13,9 +13,10 @@ import { PasswordReset } from "../modules/password/reset/PasswordReset";
 import { AboutUs } from "../modules/core/aboutus/AboutUs";
 import { Contact } from "../modules/core/contact/Contact";
 import { NotFound } from "../modules/core/notfound/NotFound"
+const urlBasepath = process.env.REACT_APP_FRONTEND_BASEPATH;
 
 export const AppRouter = () => (
-  <BrowserRouter>
+  <BrowserRouter basename={urlBasepath}>
     <AppMenu />
     <Header />
     <Routes>
