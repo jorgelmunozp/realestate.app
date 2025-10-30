@@ -38,7 +38,7 @@ export const ManageUsers = () => {
           : [];
         setUsers(list.map((u) => normalizeUser(u)));
       } else {
-        setErrorMsg(error?.message || message || "No se pudieron cargar los usuarios");
+        setErrorMsg(error?.message || message || "No se obtuvieron los usuarios");
       }
 
       setLoading(false);

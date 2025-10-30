@@ -12,7 +12,8 @@ import { PasswordRecover } from "../modules/password/recover/PasswordRecover";
 import { PasswordReset } from "../modules/password/reset/PasswordReset";
 import { AboutUs } from "../modules/core/aboutus/AboutUs";
 import { Contact } from "../modules/core/contact/Contact";
-import { NotFound } from "../modules/core/notfound/NotFound"
+import { NotFound } from "../modules/core/notfound/NotFound";
+
 const urlBasepath = process.env.REACT_APP_FRONTEND_BASEPATH;
 
 export const AppRouter = () => (
@@ -20,7 +21,6 @@ export const AppRouter = () => (
     <AppMenu />
     <Header />
     <Routes>
-      <Route path="/" element={<PublicRoute><Index/></PublicRoute>} />
       <Route path="/index/*" element={<PublicRoute><Index/></PublicRoute>} />
       <Route path="/property/:propertyId" element={<PublicRoute><Property/></PublicRoute>} />
       <Route path="/login/*" element={<PublicRoute><Login/></PublicRoute>} />
@@ -30,8 +30,8 @@ export const AppRouter = () => (
       <Route path="/about-us" element={<PublicRoute><AboutUs/></PublicRoute>} />
       <Route path="/contact" element={<PublicRoute><Contact/></PublicRoute>} />
       <Route path="/*" element={<PrivateRoute><DashboardRoutes/></PrivateRoute>} />
-      {/* <Route path="*" element={<PublicRoute><Index/></PublicRoute>} /> */}
-      <Route path="*" element={<PublicRoute><NotFound/></PublicRoute>} />
+      <Route path="*" element={<PublicRoute><Index/></PublicRoute>} />
+      {/* <Route path="*" element={<PublicRoute><NotFound/></PublicRoute>} /> */}
     </Routes>
   </BrowserRouter>
 );

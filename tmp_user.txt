@@ -72,7 +72,7 @@ export const EditUser = () => {
             : (Array.isArray(data?.users) ? data.users : []));
         setUsers(list.map((u) => normalizeUser(u)));
       } else {
-        setError(error?.message || 'No se pudieron cargar los usuA�os');
+        setError(error?.message || 'No se obtuvieron los usuarios');
       }
       setLoading(false);
     };

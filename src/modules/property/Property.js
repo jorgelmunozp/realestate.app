@@ -9,12 +9,9 @@ const propertyEndpoint = process.env.REACT_APP_ENDPOINT_PROPERTY;
 
 export const Property = () => {
   const navigate = useNavigate();
-  const { propertyId, page, limit } = useParams();
+  const { propertyId } = useParams();
   const { data: property, loading, error } = useFetch(`${propertyEndpoint}/${propertyId}`);
 
-  console.log("propertyId: ",propertyId)
-  console.log("page: ",page)
-  console.log("limit: ",limit)
   // Scroll al inicio al montar
   useEffect(() => {
     window.scrollTo(0, 0);

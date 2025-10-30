@@ -65,7 +65,7 @@ export const EditProperty = () => {
         if (property.traces?.length) setPropertyTrace(property.traces);
       } catch (err) {
         console.error("Error al cargar propiedad:", err);
-        Swal.fire({ icon: "error", title: "Error", text: "No se pudieron cargar los datos de la propiedad" });
+        Swal.fire({ icon: "error", title: "Error", text: "No se obtuvo los datos del inmueble" });
       } finally {
         setLoading(false);
       }
