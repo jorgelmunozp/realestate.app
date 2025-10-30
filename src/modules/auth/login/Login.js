@@ -100,7 +100,7 @@ export const Login = () => {
               ),
             }}
           />
-          <Button variant="contained" color="primary" onClick={handleLogin} disabled={loading} sx={{ borderRadius: 2, textTransform: 'none', py: 1.2 }}>
+          <Button variant="contained" color={loading ? 'secondary': 'primary'} onClick={handleLogin} disabled={loading} sx={{ borderRadius: 2, textTransform: 'none', py: 1.2 }}>
             {loading ? 'Ingresando...' : 'Ingresar'}
           </Button>
           <Button variant="outlined" color="secondary" onClick={() => navigate('/register')} sx={{ borderRadius: 2, textTransform: 'none', py: 1.2 }}>

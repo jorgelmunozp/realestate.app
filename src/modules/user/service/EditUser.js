@@ -1,13 +1,13 @@
 ﻿import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { api } from "../../../services/api/api";
 import { Title } from "../../../components/title/Title";
 import { updateProfile } from "../../../services/store/authSlice";
 import { getTokenPayload, getUserFromToken } from "../../../services/auth/token";
 import { TextField, Button, Box, Paper, MenuItem } from "@mui/material";
-import Swal from "sweetalert2";
-import { api } from "../../../services/api/api";
 import { errorWrapper } from "../../../services/api/errorWrapper";
 import { mapUserToDto } from "../../user/mapper/userMapper";
+import Swal from "sweetalert2";
 import "./EditUser.scss";
 
 export const EditUser = () => {

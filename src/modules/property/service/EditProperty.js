@@ -150,7 +150,7 @@ export const EditProperty = () => {
         traces: cleanedTraces,
       };
 
-      console.log("PATCH Ok →", patchPayload);
+      console.log("Actualización Ok →", patchPayload);
 
       const resUpdate = await errorWrapper(api.patch(`${endpoint}/${propertyId}`, patchPayload));
       const { success, message, error } = resUpdate;
@@ -258,7 +258,7 @@ export const EditProperty = () => {
               {!itemOwner.ownerPhotoPreview && !itemOwner.photo ? (
                 <Box className="dropzone-box" onClick={() => document.getElementById("ownerFileInput").click()}>
                   <Typography variant="body1" color="textSecondary">Cargar imagen del propietario</Typography>
-                  <input id="ownerFileInput" type="file" accept="image/*" hidden onChange={(e) => handleImageChange(e, "owner")} required aria-required="true" />
+                  <input id="ownerFileInput" name="file" type="file" accept="image/*" hidden onChange={(e) => handleImageChange(e, "owner")} required aria-required="true" />
                 </Box>
               ) : (
                 <div className="image-preview filled">
@@ -278,7 +278,7 @@ export const EditProperty = () => {
         <div className="form-section">
           <h2>Historial</h2>
           {itemPropertyTrace.map((trace, index) => (
-            <div key={index} className="trace-wrapper">
+            <div key={index} className="editproperty-trace-wrapper">
               <div className="trace-grid">
                 <TextField type="date" name="dateSale" label="Fecha" value={trace.dateSale || ""} onChange={(e) => handleChange(e, "traces", index)} InputLabelProps={{ shrink: true }} required />
                 <TextField name="name" label="Evento" value={trace.name || ""} onChange={(e) => handleChange(e, "traces", index)} required />
@@ -300,7 +300,7 @@ export const EditProperty = () => {
           <AddButton label="Añadir evento" handleChange={handleAddTrace} />
         </div>
 
-        <button type="submit" className="editproperty-btn primary">Actualizar Propiedad</button>
+        <button type="submit" className="editproperty-btn primary">{loading ? 'Actalizando...' : 'Actualizar Propiedad'}</button>
         <button type="button" className="editproperty-btn secondary" onClick={() => navigate('/home')}>Cancelar</button>
       </form>
     </div>

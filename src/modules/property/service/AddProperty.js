@@ -112,7 +112,7 @@ export const AddProperty = () => {
       const { success, message } = res;
 
       if (success) {
-        Swal.fire("Inmueble registrado", "success");
+        Swal.fire({title:"Inmueble registrado", icon:"success"});
         navigate('/home', { state: { refresh: true } });
       } else {
         Swal.fire("Error", message || "Ocurrió un error al registrar el inmueble.", "error");
@@ -183,7 +183,7 @@ export const AddProperty = () => {
               {!itemOwner.ownerPhotoPreview ? (
                 <Box className="dropzone-box" onClick={() => document.getElementById("ownerFileInput").click()}>
                   <Typography variant="body1" color="textSecondary">Cargar imagen del propietario</Typography>
-                  <input id="ownerFileInput" type="file" accept="image/*" hidden onChange={(e) => handleImageChange(e, "owner")} required />
+                  <input id="ownerFileInput" name="file" type="file" accept="image/*" hidden onChange={(e) => handleImageChange(e, "owner")} required />
                 </Box>
               ) : (
                 <div className="image-preview filled">
@@ -203,7 +203,7 @@ export const AddProperty = () => {
         <div className="form-section">
           <h2>Historial</h2>
           {itemPropertyTrace.map((trace, i) => (
-            <div key={i} className="trace-wrapper">
+            <div key={i} className="addproperty-trace-wrapper">
               <div className="trace-grid">
                 <TextField type="date" name="dateSale" label="Fecha" value={trace.dateSale} onChange={(e) => handleChange(e, "traces", i)} InputLabelProps={{ shrink: true }} required />
                 <TextField name="name" label="Evento" value={trace.name} onChange={(e) => handleChange(e, "traces", i)} required />
