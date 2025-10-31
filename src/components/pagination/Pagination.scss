@@ -1,0 +1,64 @@
+@import '../../assets/styles/scss/mixins/colors';
+@import '../../assets/styles/scss/mixins/screen';
+@import '../../assets/styles/scss/mixins/fonts';
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 2rem;
+  font-family: $primary-font;
+  color: #374151;
+}
+
+.pagination__btn {
+  background: $blue-color;
+  border: none;
+  color: #fff;
+  padding: 0.55rem 1.15rem;
+  border-radius: 999px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: .15s ease-out;
+  display: inline-flex;
+  align-items: center;
+  gap: .35rem;
+}
+
+.pagination__btn:hover:not(:disabled) {
+  background: darken($blue-color, 7%);
+  transform: translateY(-2px);
+}
+
+.pagination__btn:disabled {
+  background: #e5e7eb;
+  color: #9ca3af;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.pagination__info {
+  font-size: .9rem;
+}
+
+.pagination__last {
+  background: transparent;
+  border: none;
+  color: $blue-color;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  padding: 0;
+}
+
+.pagination__last:disabled {
+  color: #9ca3af;
+  cursor: default;
+}
+
+@include screen-sm {
+  .pagination { gap: .6rem; }
+  .pagination__btn span { display: none; }
+  .pagination__info { font-size: .8rem; }
+}

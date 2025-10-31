@@ -5,13 +5,11 @@
 .index-container {
   display: flex;
   justify-content: center;
-  align-items: start;
+  align-items: flex-start;
   min-height: 90vh;
   background: #f6f8fb;
   padding: 2rem 2rem;
-
   @include screen-sm { padding: 1rem 0.5rem; }
-
 }
 
 .index-content {
@@ -23,7 +21,6 @@
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
   color: #333;
   padding: 2rem 2rem;
-
   @include screen-sm { padding: 1.5rem 0.5rem; }
 }
 
@@ -32,40 +29,27 @@
   justify-content: center;
   align-items: center;
   margin-bottom: 2rem;
-
   h1 {
     font-family: $primary-font;
     color: $blue-color;
     font-size: 2.2rem;
   }
-
-  .index-add-btn {
-    background-color: $blue-color;
-    color: #fff;
-    border: none;
-    border-radius: 50%;
-    font-size: 2rem;
-    padding: 0.5rem 0.8rem;
-    cursor: pointer;
-    transition: all 0.3s ease;
-
-    &:hover {
-      background-color: #1d4ed8;
-      transform: rotate(90deg);
-    }
-  }
 }
 
-// Cards
+.index-search { margin-bottom: 1.5rem; }
+
+/* ===== GRID CARDS ===== */
 .index-grid {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
   gap: 2rem;
+  width: 100%;
 }
 
 .index-property-card {
-  width: 30%;
+  flex: 1 1 calc(33.333% - 2rem);
+  max-width: calc(33.333% - 2rem);
   display: flex;
   flex-direction: column;
   background-color: #fff;
@@ -75,8 +59,6 @@
   transition: all 0.3s ease;
   border: 1px solid #e5e7eb;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-
-  @include screen-sm { width: 100%; }
 
   &:hover {
     transform: translateY(-8px);
@@ -90,9 +72,7 @@
     transition: transform 0.3s ease;
   }
 
-  &:hover .index-property-card-img {
-    transform: scale(1.03);
-  }
+  &:hover .index-property-card-img { transform: scale(1.03); }
 
   .index-property-card-info {
     padding: 1rem;
@@ -118,70 +98,19 @@
   }
 }
 
-.index-pagination {
-  margin-top: 2rem;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 1rem;
-  color: #555;
-
-  .index-page-btn {
-    background-color: $blue-color;
-    border: none;
-    color: #fff;
-    padding: 0.6rem 1.2rem;
-    border-radius: 20px;
-    cursor: pointer;
-    transition: 0.3s;
-
-    &:hover:not(:disabled) {
-      background-color: #1d4ed8;
-      transform: translateY(-2px);
-    }
-
-    &:disabled {
-      background-color: #e5e7eb;
-      color: #9ca3af;
-      cursor: not-allowed;
-    }
-
-    span {
-      display: inline-block;
-
-      @include screen-sm { display: none; }
-
-    }
+/* tablet: 2 columnas */
+@media (max-width: 992px) {
+  .index-property-card {
+    flex: 1 1 calc(50% - 1.5rem);
+    max-width: calc(50% - 1.5rem);
   }
 }
 
-.index-accept-btn {
-  background-color: $blue-color;
-  color: #fff;
-  border-radius: 8px;
-  padding: 0.7rem 1.5rem;
-  font-weight: bold;
-  border: none;
-  transition: background 0.3s ease;
-
-  &:hover {
-    background-color: #1d4ed8;
+/* mobile: 1 columna */
+@media (max-width: 576px) {
+  .index-grid { gap: 1.25rem; }
+  .index-property-card {
+    flex: 1 1 100%;
+    max-width: 100%;
   }
-}
-
-// Estilo claro para SweetAlert
-.index-swal-popup {
-  background-color: #ffffff !important;
-  color: #333 !important;
-  border-radius: 12px !important;
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15) !important;
-}
-
-// Responsive
-@media (max-width: 768px) {
-
-  .index-header h1 {
-    font-size: 1.8rem;
-  }
-
 }

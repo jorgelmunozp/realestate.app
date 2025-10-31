@@ -4,20 +4,37 @@ import { errorWrapper } from '../../services/api/errorWrapper';
 
 const ENDPOINT = process.env.REACT_APP_ENDPOINT_PROPERTY;
 
-// Obtener propiedades (con imagen incluida desde el backend)
 export const fetchProperties = createAsyncThunk(
   'property/fetchAll',
-  async ({ page = 1, limit = 6, refresh = false } = {}) => {
+  async ({
+    page = 1,
+    limit = 6,
+    name = '',
+    address = '',
+    minPrice = '',
+    maxPrice = '',
+    refresh = false
+  } = {}) => {
     if (!ENDPOINT) throw new Error('Falta configuración: REACT_APP_ENDPOINT_PROPERTY');
 
-    const url = `${ENDPOINT}?page=${page}&limit=${limit}${refresh ? '&refresh=true' : ''}`;
+    const params = new URLSearchParams();
+    params.append('page', page);
+    params.append('limit', limit);
+    if (name && name.trim() !== '') params.append('name', name.trim());
+    if (address && address.trim() !== '') params.append('address', address.trim());
+    if (minPrice !== '' && minPrice !== null) params.append('minPrice', minPrice);
+    if (maxPrice !== '' && maxPrice !== null) params.append('maxPrice', maxPrice);
+    if (refresh) params.append('refresh', 'true');
+
+    const url = `${ENDPOINT}?${params.toString()}`;
+
     const res = await errorWrapper(api.get(url, { __skipAuth: true }), { unwrap: false });
     if (!res.ok) throw res.error;
+
     const body = res.data || {};
     let items = [];
     let meta = {};
 
-    // Adaptación al wrapper actual del backend
     if (body?.data?.data && Array.isArray(body.data.data)) {
       items = body.data.data;
       meta = body.data.meta || {};
@@ -31,7 +48,6 @@ export const fetchProperties = createAsyncThunk(
 
     const finalMeta = meta || { page, limit, total: items.length, last_page: 1 };
 
-    // Normalización (con campos camelCase y fallback seguro)
     const normalized = items.map((p) => ({
       idProperty: p.idProperty ?? p.IdProperty ?? p.id ?? '',
       name: p.name ?? p.Name ?? '',
@@ -45,11 +61,19 @@ export const fetchProperties = createAsyncThunk(
       traces: p.traces ?? [],
     }));
 
-    return { items: normalized, meta: finalMeta };
+    return {
+      items: normalized,
+      meta: finalMeta,
+      filters: {                    // guarda filtros actuales en el state
+        name: name?.trim() || '',
+        address: address?.trim() || '',
+        minPrice: minPrice || '',
+        maxPrice: maxPrice || '',
+      }
+    };
   }
 );
 
-// Crear propiedad
 export const createProperty = createAsyncThunk(
   'property/create',
   async (propertyData) => {
@@ -59,7 +83,6 @@ export const createProperty = createAsyncThunk(
   }
 );
 
-// Slice principal
 const propertySlice = createSlice({
   name: 'property',
   initialState: {
@@ -67,6 +90,12 @@ const propertySlice = createSlice({
     meta: { page: 1, limit: 6, total: 0, last_page: 1 },
     loading: false,
     error: null,
+    filters: {
+      name: '',
+      address: '',
+      minPrice: '',
+      maxPrice: '',
+    },
   },
   reducers: {},
   extraReducers: (builder) => {
@@ -79,6 +108,7 @@ const propertySlice = createSlice({
         state.loading = false;
         state.properties = action.payload.items || [];
         state.meta = action.payload.meta || state.meta;
+        state.filters = action.payload.filters || state.filters;
       })
       .addCase(fetchProperties.rejected, (state, action) => {
         state.loading = false;

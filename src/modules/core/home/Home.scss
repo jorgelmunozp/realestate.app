@@ -32,7 +32,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 2rem;
+  margin-bottom: 1.5rem;
 
   h1 {
     font-family: $title-font;
@@ -62,28 +62,41 @@
   }
 }
 
-// Saludo sutil al usuario
+// meta usuario (saludo + badge)
+.home-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: .8rem;
+  margin-bottom: 1.25rem;
+
+  @include screen-sm {
+    flex-wrap: wrap;
+  }
+}
+
 .home-greeting {
-  margin: -0.5rem 0 1rem 0.25rem;
-  color: #6b7280; /* Gray-500 */
+  margin: 0;
+  color: #6b7280;
   font-size: 0.95rem;
   font-weight: 500;
   font-style: italic;
 }
 
 .home-role {
-  margin: -0.5rem 0 1rem 0.25rem;
+  margin: 0;
   display: inline-flex;
   align-items: center;
   gap: 0.4rem;
-  padding: 0.25rem 0.6rem;
+  padding: 0.35rem 0.7rem;
   border-radius: 9999px;
-  background-color: #e0f2fe;    // light blue
+  background-color: #e0f2fe;
   color: $orange-color;
   box-shadow: 0 2px 8px rgba(37, 99, 235, 0.12);
   font-style: normal;
   font-size: 0.9rem;
   font-weight: 600;
+  line-height: 1;
 
   svg {
     width: 16px;
@@ -96,10 +109,9 @@
   }
 }
 
-.home-meta {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+// barra de búsqueda NUEVA
+.home-search {
+  margin-bottom: 1.5rem;
 }
 
 // TARJETAS DE PROPIEDADES
@@ -143,9 +155,7 @@
       object-fit: cover;
       transition: transform 0.3s ease;
 
-      &:hover {
-        transform: scale(1.03);
-      }
+      &:hover { transform: scale(1.03); }
     }
 
     .no-image {
@@ -196,13 +206,10 @@
         }
       }
 
-      &.btn-edit.editor {               //  Editor: botón de editar verde
-        background-color: #d1fae5;    // green-100
-        color: #065f46;               // green-800
-
-        &:hover {
-          background-color: #a7f3d0;  // green-200
-        }
+      &.btn-edit.editor {
+        background-color: #d1fae5;
+        color: #065f46;
+        &:hover { background-color: #a7f3d0; }
       }
 
       &.btn-delete {
@@ -218,91 +225,48 @@
   }
 }
 
-// PAGINACIÓN
-.home-pagination {
-  margin-top: 2rem;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 1rem;
-  color: #555;
-
-  .home-page-btn {
-    background-color: $blue-color;
-    border: none;
-    color: #fff;
-    padding: 0.6rem 1.2rem;
-    border-radius: 20px;
-    cursor: pointer;
-    transition: 0.3s;
-
-    &:hover:not(:disabled) {
-      background-color: darken($blue-color, 10%);
-      transform: translateY(-2px);
-    }
-
-    &:disabled {
-      background-color: #e5e7eb;
-      color: #9ca3af;
-      cursor: not-allowed;
-    }
-
-    span {
-      display: inline-block;
-      @include screen-sm {
-        display: none;
-      }
-    }
-  }
-}
-
-// LOADER GLOBAL (pantalla completa)
-.loader-overlay {
+// LOADER GLOBAL (blindado)
+.loader-overlay,
+.loader-overlay.loader-overlay--home {
   position: fixed;
   inset: 0;
-  background: rgba(255, 255, 255, 0.85);
-  display: flex;
+  background: rgba(255, 255, 255, 0.9);
+  display: flex !important;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  z-index: 999;
-
-  .loader-spinner {
-    width: 60px;
-    height: 60px;
-    border: 5px solid #dbeafe;
-    border-top-color: $blue-color;
-    border-radius: 50%;
-    animation: spin 0.9s linear infinite;
-  }
-
-  .loader-text {
-    margin-top: 1.2rem;
-    font-size: 1.1rem;
-  }
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 1.2rem;
+  z-index: 9999;
+  text-align: center;
 }
 
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-// Loader pequeño inline
-.loader-inline {
-  width: 25px;
-  height: 25px;
-  border: 3px solid #dbeafe;
+.loader-overlay .loader-spinner,
+.loader-overlay--home .loader-spinner {
+  width: 60px;
+  height: 60px;
+  border: 5px solid #dbeafe;
   border-top-color: $blue-color;
   border-radius: 50%;
   animation: spin 0.9s linear infinite;
 }
 
-// Admin: mismo estilo que editor para botón editar
+.loader-overlay .loader-text,
+.loader-overlay--home .loader-text {
+  margin-top: 0;
+  font-size: 1.1rem;
+  color: #1f2937;
+  font-weight: 500;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+// Admin
 .home-property-card .home-property-card-buttons button.btn-edit.admin {
-  background-color: #d1fae5;  // green-100
-  color: #065f46;             // green-800
+  background-color: #d1fae5;
+  color: #065f46;
 }
 .home-property-card .home-property-card-buttons button.btn-edit.admin:hover {
-  background-color: #a7f3d0; // green-200
+  background-color: #a7f3d0;
 }
