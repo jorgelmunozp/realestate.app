@@ -12,9 +12,7 @@ Aplicación web frontend para gestionar inmuebles (crear, listar, editar, elimin
 
 ## Tabla de contenidos
 
-- Introducción
 - Stack y dependencias clave
-- Requisitos
 - Instalación y ejecución
 - Variables de entorno
 - Scripts de npm
@@ -29,11 +27,6 @@ Aplicación web frontend para gestionar inmuebles (crear, listar, editar, elimin
 - Estilos y UI
 - Pruebas
 - Despliegue
-- Resolución de problemas
- - Flujos de UI
- - Convenciones de código
- - Rendimiento y accesibilidad
- - Checklist de producción
 
 ## Introducción
 
@@ -673,13 +666,6 @@ Errores comunes:
 - Scripts: `npm test`.
 - Pruebas de ejemplo: `src/modules/core/home/Home.test.js`.
 
-## Despliegue
-
-- Generar build: `npm run build` (se produce en `build/`).
-- Servir el `build/` desde un hosting estático o detrás de un servidor web.
-- Asegurar que las variables `REACT_APP_*` apunten al backend correcto antes del build.
-- Si usas enrutamiento con `BrowserRouter`, configura reglas de fallback a `index.html` en el servidor (SPA).
-
 ## Flujos de UI
 
 - Login: guarda `token` y datos mínimos del usuario en `sessionStorage` (vía acciones `login`), redirige a última ruta (`lastPath`).
@@ -703,21 +689,69 @@ Errores comunes:
 - Minimizar re-render usando `useCallback` en operaciones intensivas.
 - Colores con suficiente contraste y foco visible por defecto (MUI + estilos propios).
 
-## Checklist de producción
-
-- Definir `REACT_APP_BACKEND_URL` y endpoints exAxios en `.env`.
-- Configurar CORS en backend con dominios permitidos.
-- Asegurar fallback SPA a `index.html` en hosting.
-- Revisar que el token JWT se almacene de forma segura (sesión, expiración).
-- Ejecutar `npm run build` y servir `build/` detrás de TLS (HTTPS).
-
 ## Datos
 
 - El módulo Property estandariza con wrapper de succes; `errorWrapper` en frontend abstrae estas diferencias.
-- El token se almacena en `sessionStorage` (clave `token`) para que expire al cerrar el navegador. Puedes migrarlo a cookies httpOnly si el backend lo soporta.
+- El token se almacena en `sessionStorage` (clave `token`) para que expire al cerrar el navegador.
 - Se forzan datos frescos tras una mutacióncon `?refresh=true` en listados o re-fetch desde la UI (ya implementado en `Home`).
 
+## Despliegue del Frontend en GitHub Pages
 
+El frontend de este proyecto (React) está diseñado para ser servido como sitio estático desde GitHub Pages, ideal cuando el backend vive en otro dominio/servicio (Render o un API en Docker).
 
+### 1. Configurar el `package.json`
 
+En el `package.json` se debe agregar la ruta de la app:
 
+```json
+{
+  "homepage": "https://usuario.github.io/RealEstate.App"
+}
+```
+### 2. Agregar scripts de despliegue
+
+En el `package.json` se agrega:
+
+```json
+{
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build"
+  }
+}
+```
+
+- `predeploy` construye la app.
+
+### 3. Desplegar
+`deploy` publica la carpeta `build` en la rama `gh-pages` del repo.
+
+```bash
+npm run deploy
+```
+
+Esto va a:
+1. Construir el proyecto (`npm run build`)
+2. Crear/actualizar la rama `gh-pages`
+3. Subir el contenido estático listo para GitHub Pages
+
+Luego GitHub Pages servirá la app en:
+
+- `https://usuario.github.io/RealEstate.App/`
+
+### 4. Configurar GitHub Pages en el repositorio
+
+1. Ir a Settings → Pages
+2. En Source seleccionar: Deploy from branch
+3. Branch: `gh-pages`
+4. Folder: `/ (root)`
+
+GitHub mostrará la URL pública.
+
+---
+## Autor
+
+**Jorge Luis Muñoz**  
+Frontend – React · Redux · JWT · Github Pages  
