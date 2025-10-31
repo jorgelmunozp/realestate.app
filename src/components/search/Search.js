@@ -17,7 +17,7 @@ export const Search = ({ value = '', onChange, handleChange, placeholder = 'Busc
   // Borrar temporizador al desmontar
   useEffect(() => () => { if (timerRef.current) clearTimeout(timerRef.current); }, []);
 
-  const handle = useCallback((next) => {
+  const handleSearch = useCallback((next) => {
     setInternal(next);
     if (typeof change !== 'function') return;
     if (!debounceMs || debounceMs <= 0) {
@@ -31,7 +31,7 @@ export const Search = ({ value = '', onChange, handleChange, placeholder = 'Busc
 
   return (
     <div className={`search ${className}`.trim()}>
-      <Input Icon={Icon} type="search" value={internal} placeholder={placeholder} handleChange={handle} />
+      <Input Icon={Icon} type="search" value={internal} placeholder={placeholder} handleChange={handleSearch} />
     </div>
   );
 };
