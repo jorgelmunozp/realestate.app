@@ -68,14 +68,8 @@ export const Login = () => {
       <Paper elevation={3} className="login-card" sx={{ borderRadius: 4, width: '100%', maxWidth: 420, p: 4, textAlign: 'center' }}>
         <Title title="Iniciar sesión" />
         <Box display="flex" flexDirection="column" gap={2} mt={3}>
-          <TextField
-            label="Correo electrónico"
-            name="email"
-            type="email"
-            variant="outlined"
-            value={form.email}
-            onChange={handleChange}
-            fullWidth
+          <TextField label="Correo electrónico" name="email" type="email" variant="outlined"
+            value={form.email} onChange={handleChange} fullWidth
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
@@ -84,14 +78,8 @@ export const Login = () => {
               ),
             }}
           />
-          <TextField
-            label="Contraseña"
-            name="password"
-            type="password"
-            variant="outlined"
-            value={form.password}
-            onChange={handleChange}
-            fullWidth
+          <TextField label="Contraseña" name="password" type="password"
+            variant="outlined" value={form.password} onChange={handleChange} fullWidth
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
@@ -116,8 +104,7 @@ export const Login = () => {
               fontSize: '0.95rem',
               mt: 1,
               '&:hover': { color: '#000' },
-            }}
-          >
+            }} >
             ¿Olvidaste tu contraseña?
           </Button>
         </Box>

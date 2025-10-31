@@ -5,8 +5,8 @@ import './Search.scss';
 
 export const Search = ({
   value = '',
-  onChange, // preferred
-  handleChange, // alias
+  onChange,
+  handleChange,
   placeholder = 'Buscar...',
   Icon = FiSearch,
   className = '',
@@ -16,13 +16,13 @@ export const Search = ({
   const [internal, setInternal] = useState(value || '');
   const timerRef = useRef(null);
 
-  // Keep local value in sync when parent value changes externally
+  // Sincroniza el valor local cuando el valor principal cambie externamente
   useEffect(() => {
-    if (value !== internal) setInternal(value || '');
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    if (value !== internal) setInternal(value || '');   // eslint-disable-next-line react-hooks/exhaustive-deps
+    
   }, [value]);
 
-  // Clear timer on unmount
+  // Borrar temporizador al desmontar
   useEffect(() => () => { if (timerRef.current) clearTimeout(timerRef.current); }, []);
 
   const handle = useCallback((next) => {

@@ -1,4 +1,3 @@
-// src/modules/core/Index.test.jsx (ajusta la ruta según tu estructura)
 import { render, screen } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import { store } from '../../services/store/store'; // <- ajusta si tu test vive en otra carpeta

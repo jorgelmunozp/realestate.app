@@ -67,7 +67,7 @@ export const Property = () => {
             <p><strong>Año construcción:</strong> {year || "N/A"}</p>
           </div>
 
-          {/* 👤 Propietario */}
+          {/* Propietario */}
           {owner && (
             <div className="property-owner">
               <h3>👤 Propietario</h3>

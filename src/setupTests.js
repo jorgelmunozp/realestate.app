@@ -1,4 +1,3 @@
-// src/setupTests.js
 import '@testing-library/jest-dom';
 
 // polyfills comunes en jsdom

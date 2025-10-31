@@ -1,14 +1,4 @@
-import {
-  getToken,
-  decodeToken,
-  getTokenPayload,
-  getUserFromToken,
-  getTokenExp,
-  isTokenExpired,
-  isTokenNearExpiry,
-  saveToken,
-  clearToken
-} from "../token";
+import { getToken, decodeToken, getTokenPayload, getUserFromToken, getTokenExp, isTokenExpired, isTokenNearExpiry, saveToken, clearToken } from "../token";
 
 describe("token.js utilities", () => {
   beforeEach(() => {

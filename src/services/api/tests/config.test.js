@@ -1,7 +1,5 @@
-// ===========================================================
-// Obtiene la URL base de la API desde variables de entorno.
-// Si no existe, usa el fallback local.
-// ===========================================================
+
+// Obtiene la URL base de la API desde variables de entorno. Si no existe, usa el fallback local.
 export const getBaseURL = () => {
   const envUrl = process.env.REACT_APP_API_BACKEND_URL;
   if (envUrl && envUrl.trim() !== "") return envUrl.trim();

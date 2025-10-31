@@ -26,7 +26,7 @@ export const AppMenu = () => {
     } catch { return { logged: Boolean(user), role: (user?.role || '').toLowerCase() }; }
   }, [user]);
 
-  // --- Control del menú para poder cerrarlo al navegar ---
+  // Control del menú para poder cerrarlo al navegar
   const [menuOpen, setMenuOpen] = useState(false);
   const closeMenu = useCallback(() => setMenuOpen(false), []);
   const syncMenu = useCallback(s => setMenuOpen(s.isOpen), []);

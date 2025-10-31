@@ -67,7 +67,7 @@
   @include screen-md { gap: 0.75rem; }
 }
 
-// Ubicar "Estado" a la derecha en pantallas anchas (tercer item)
+// Ubica "Estado" a la derecha en pantallas anchas (tercer item)
 .user-meta .meta-item:nth-child(3) { 
   grid-column: 2; 
 

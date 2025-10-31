@@ -9,7 +9,6 @@ jest.mock('react-redux', () => ({
 }));
 
 // Importa DESPUÉS del mock
-
 afterEach(() => jest.clearAllMocks());
 
 test('bloquea cuando no está logueado', () => {

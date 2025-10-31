@@ -80,13 +80,8 @@ export const Register = () => {
         <Title title="Crear cuenta" />
 
         <Box display="flex" flexDirection="column" gap={2} mt={3}>
-          <TextField
-            label="Nombre"
-            name="name"
-            variant="outlined"
-            value={form.name}
-            onChange={handleChange}
-            fullWidth
+          <TextField label="Nombre" name="name" variant="outlined"
+            value={form.name} onChange={handleChange} fullWidth
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
@@ -96,14 +91,8 @@ export const Register = () => {
             }}
           />
 
-          <TextField
-            label="Correo electrónico"
-            name="email"
-            type="email"
-            variant="outlined"
-            value={form.email}
-            onChange={handleChange}
-            fullWidth
+          <TextField label="Correo electrónico" name="email" type="email"
+            variant="outlined" value={form.email} onChange={handleChange} fullWidth
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
@@ -113,14 +102,8 @@ export const Register = () => {
             }}
           />
 
-          <TextField
-            label="Contraseña"
-            name="password"
-            type="password"
-            variant="outlined"
-            value={form.password}
-            onChange={handleChange}
-            fullWidth
+          <TextField label="Contraseña" name="password" type="password"
+            variant="outlined" value={form.password} onChange={handleChange} fullWidth
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">

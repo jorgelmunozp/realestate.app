@@ -1,6 +1,4 @@
-// ===========================================================
 // Normaliza PropertyDto del backend → formato frontend (camelCase)
-// ===========================================================
 export const normalizeProperty = (data = {}) => ({
   idProperty: data?.idProperty ?? data?.IdProperty ?? "",
   name: data?.name ?? data?.Name ?? "",
@@ -41,9 +39,7 @@ export const normalizeProperty = (data = {}) => ({
     : [],
 });
 
-// ===========================================================
 // Mapea Property del frontend → formato backend (camelCase compatible con .NET)
-// ===========================================================
 export const mapPropertyToDto = (property = {}) => ({
   idProperty: property?.idProperty ?? "",
   name: property?.name ?? "",

@@ -194,16 +194,7 @@ export const Home = () => {
           )}
         </div>
 
-        <Pagination
-          page={pagination.page}
-          lastPage={meta?.last_page || pagination.last_page}
-          onPageChange={handleChangePage}
-          className="home-pagination"
-          buttonClassName="home-page-btn"
-          prevLabel="Anterior"
-          nextLabel="Siguiente"
-          disabled={loading}
-        />
+        <Pagination page={pagination.page} lastPage={meta?.last_page || pagination.last_page} onPageChange={handleChangePage} className="home-pagination" buttonClassName="home-page-btn" prevLabel="Anterior" nextLabel="Siguiente" disabled={loading} />
       </div>
     </div>
   );

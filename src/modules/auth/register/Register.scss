@@ -2,9 +2,8 @@
 @import '../../../assets/styles/scss/mixins/screen';
 @import '../../../assets/styles/scss/mixins/fonts';
 
-/* =========================================================
-   CONTENEDOR PRINCIPAL
-   ========================================================= */
+// CONTENEDOR PRINCIPAL
+
 .register-container {
   display: flex;
   justify-content: center;
@@ -16,9 +15,8 @@
   @include screen-sm { padding: 1rem 0.5rem !important; }
 }
 
-/* =========================================================
-   TARJETA (Paper MUI)
-   ========================================================= */
+// TARJETA (Paper MUI)
+
 .register-card {
   background-color: #fff;
   border-radius: 20px;
@@ -38,9 +36,8 @@
     color: $blue-color;
   }
 
-  /* =========================================================
-     CAMPOS DE TEXTO
-     ========================================================= */
+  // CAMPOS DE TEXTO
+  
   .MuiTextField-root {
     background-color: #f9fafb;
     border-radius: 12px;
@@ -85,9 +82,7 @@
     }
   }
 
-  /* =========================================================
-     BOTONES
-     ========================================================= */
+  // BOTONES
   .MuiButton-root {
     width: 100%;
     border-radius: 12px;
@@ -116,9 +111,7 @@
   }
 }
 
-/* =========================================================
-   RESPONSIVE
-   ========================================================= */
+// RESPONSIVE
 @media (max-width: 480px) {
   .register-card {
     padding: 1.125rem !important;

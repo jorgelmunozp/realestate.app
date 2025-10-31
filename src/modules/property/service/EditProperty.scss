@@ -2,10 +2,7 @@
 @import '../../../assets/styles/scss/mixins/screen';
 @import '../../../assets/styles/scss/mixins/fonts';
 
-/* =========================================================
-   ESTILOS COMPLETOS PARA EditProperty
-   ========================================================= */
-
+// ESTILOS COMPLETOS PARA EditProperty
 .editproperty-container {
   display: flex;
   justify-content: center;
@@ -40,9 +37,7 @@
   margin-bottom: 2.5rem;
 }
 
-/* =========================================================
-   SECCIONES
-   ========================================================= */
+// SECCIONES
 .form-section {
   margin-bottom: 2.5rem;
 
@@ -61,9 +56,7 @@
   gap: 1.4rem;
 }
 
-/* =========================================================
-   CAMPO AÑO Y MUI
-   ========================================================= */
+// CAMPO AÑO Y MUI
 .year-input, .MuiOutlinedInput-root {
   background-color: #f9fafb !important;
   border-radius: 10px;
@@ -88,9 +81,7 @@
   }
 }
 
-/* =========================================================
-   IMÁGENES Y DROPZONES
-   ========================================================= */
+// IMÁGENES Y DROPZONES
 .image-upload-container {
   width: 100%;
   min-height: 220px;
@@ -103,7 +94,7 @@
   margin-bottom: 1.5rem;
 }
 
-/* Caja de carga (Dropzone) */
+// Caja de carga (Dropzone)
 .dropzone-box {
   width: 100%;
   min-height: 220px;
@@ -137,7 +128,7 @@
   }
 }
 
-/* Previsualización de imagen */
+// Previsualización de imagen
 .image-preview {
   width: 100%;
   min-height: 220px;
@@ -216,9 +207,7 @@
   }
 }
 
-/* =========================================================
-   HISTORIAL (Trazas)
-   ========================================================= */
+// HISTORIAL (Trazas)
 .editproperty-trace-wrapper {
   margin-bottom: 1.5rem;
   padding: 1rem 1rem 1.5rem;
@@ -267,9 +256,7 @@
   }
 }
 
-/* =========================================================
-   BOTONES
-   ========================================================= */
+// BOTONES
 .editproperty-btn {
   width: 100%;
   padding: 1rem;
@@ -300,9 +287,7 @@
   }
 }
 
-/* =========================================================
-   MUI GLOBAL (duplicado)
-   ========================================================= */
+// MUI GLOBAL (duplicado)
 .MuiOutlinedInput-root {
   background-color: #f9fafb !important;
   border-radius: 10px;
@@ -326,11 +311,7 @@
   border-radius: 10px;
 }
 
-/* =========================================================
-   AJUSTES ESPECÍFICOS
-   ========================================================= */
-
-/* Propietario: zona de carga a ancho completo */
+// Propietario: zona de carga a ancho completo
 .form-grid .image-upload-container {
   grid-column: 1 / -1;
 }

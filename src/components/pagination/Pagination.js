@@ -35,21 +35,12 @@ export const Pagination = ({
 
   return (
     <div className={className}>
-      <button
-        className={buttonClassName}
-        disabled={prevDisabled}
-        onClick={handlePrev}
-        aria-label="Anterior"
-      >
+      <button className={buttonClassName} disabled={prevDisabled} onClick={handlePrev} aria-label="Anterior" >
         <span>{prevLabel}</span>
       </button>
       <span>
         Página {page} de{' '}
-        <button
-          type="button"
-          onClick={handleGoLast}
-          disabled={lastDisabled}
-          aria-label="Ir a la última página"
+        <button type="button" onClick={handleGoLast} disabled={lastDisabled} aria-label="Ir a la última página"
           style={{
             color: primaryColor,
             textDecoration: 'none',
@@ -60,17 +51,11 @@ export const Pagination = ({
             fontSize: 'inherit',
             fontWeight: 600,
             cursor: lastDisabled ? 'default' : 'pointer',
-          }}
-        >
+          }} >
           {lastPage}
         </button>
       </span>
-      <button
-        className={buttonClassName}
-        disabled={nextDisabled}
-        onClick={handleNext}
-        aria-label="Siguiente"
-      >
+      <button className={buttonClassName} disabled={nextDisabled} onClick={handleNext} aria-label="Siguiente" >
         <span>{nextLabel}</span>
       </button>
     </div>

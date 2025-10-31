@@ -7,5 +7,4 @@ export const PublicRoute = ({ children }) => {
   return logged ? <DashboardRoutes /> : children;
 };
 
-
 export default PublicRoute;

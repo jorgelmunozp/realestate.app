@@ -2,9 +2,7 @@
 @import "../../../assets/styles/scss/mixins/screen";
 @import "../../../assets/styles/scss/mixins/fonts";
 
-/* =========================================================
-   CONTENEDOR PRINCIPAL
-   ========================================================= */
+// CONTENEDOR PRINCIPAL
 .home-container {
   display: flex;
   justify-content: center;
@@ -29,9 +27,7 @@
   @include screen-sm { padding: 1.5rem 0.5rem; }
 }
 
-/* =========================================================
-   CABECERA Y BOTÓN DE AGREGAR
-   ========================================================= */
+// CABECERA Y BOTÓN DE AGREGAR
 .home-header {
   display: flex;
   justify-content: space-between;
@@ -66,7 +62,7 @@
   }
 }
 
-/* Saludo sutil al usuario */
+// Saludo sutil al usuario
 .home-greeting {
   margin: -0.5rem 0 1rem 0.25rem;
   color: #6b7280; /* Gray-500 */
@@ -77,14 +73,13 @@
 
 .home-role {
   margin: -0.5rem 0 1rem 0.25rem;
-  /* Compact pill with icon + text, matching palette */
   display: inline-flex;
   align-items: center;
   gap: 0.4rem;
   padding: 0.25rem 0.6rem;
   border-radius: 9999px;
-  background-color: #e0f2fe; /* light blue */
-  color: $orange-color; /* primary blue */
+  background-color: #e0f2fe;    // light blue
+  color: $orange-color;
   box-shadow: 0 2px 8px rgba(37, 99, 235, 0.12);
   font-style: normal;
   font-size: 0.9rem;
@@ -107,11 +102,7 @@
   align-items: center;
 }
 
-/* Search styles are centralized in components/search/Search.scss */
-
-/* =========================================================
-   TARJETAS DE PROPIEDADES
-   ========================================================= */
+// TARJETAS DE PROPIEDADES
 .home-grid {
   display: flex;
   flex-wrap: wrap;
@@ -205,13 +196,12 @@
         }
       }
 
-      /* Editor: botón de editar verde */
-      &.btn-edit.editor {
-        background-color: #d1fae5; /* green-100 */
-        color: #065f46; /* green-800 */
+      &.btn-edit.editor {               //  Editor: botón de editar verde
+        background-color: #d1fae5;    // green-100
+        color: #065f46;               // green-800
 
         &:hover {
-          background-color: #a7f3d0; /* green-200 */
+          background-color: #a7f3d0;  // green-200
         }
       }
 
@@ -228,9 +218,7 @@
   }
 }
 
-/* =========================================================
-   PAGINACIÓN
-   ========================================================= */
+// PAGINACIÓN
 .home-pagination {
   margin-top: 2rem;
   display: flex;
@@ -268,9 +256,7 @@
   }
 }
 
-/* =========================================================
-   LOADER GLOBAL (pantalla completa)
-   ========================================================= */
+// LOADER GLOBAL (pantalla completa)
 .loader-overlay {
   position: fixed;
   inset: 0;
@@ -302,7 +288,7 @@
   }
 }
 
-/* Loader pequeño inline */
+// Loader pequeño inline
 .loader-inline {
   width: 25px;
   height: 25px;
@@ -312,11 +298,11 @@
   animation: spin 0.9s linear infinite;
 }
 
-/* Admin: mismo estilo que editor para botón editar */
+// Admin: mismo estilo que editor para botón editar
 .home-property-card .home-property-card-buttons button.btn-edit.admin {
-  background-color: #d1fae5; /* green-100 */
-  color: #065f46; /* green-800 */
+  background-color: #d1fae5;  // green-100
+  color: #065f46;             // green-800
 }
 .home-property-card .home-property-card-buttons button.btn-edit.admin:hover {
-  background-color: #a7f3d0; /* green-200 */
+  background-color: #a7f3d0; // green-200
 }

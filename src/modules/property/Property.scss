@@ -24,7 +24,7 @@
   animation: fadeIn 0.4s ease-in-out;
 }
 
-/* 🖼️ Imagen principal */
+// Imagen principal
 .property-image-wrapper {
   position: relative;
   background-color: #f0f4ff;
@@ -50,7 +50,7 @@
   }
 }
 
-/* 🧾 Información general */
+// Información general
 .property-info {
   padding: 2rem;
 
@@ -156,7 +156,7 @@
   }
 }
 
-/* Loader */
+// Loader
 .container-loader {
   display: flex;
   flex-direction: column;
@@ -187,7 +187,7 @@
   }
 }
 
-/* Animaciones */
+// Animaciones
 @keyframes imageFadeIn {
   0% {
     opacity: 0;
@@ -216,7 +216,7 @@
   }
 }
 
-/* Responsive */
+// Responsive
 @media (max-width: 768px) {
   .property-main-image {
     height: 260px;

@@ -1,24 +1,19 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-// ===========================================================
 // Estado inicial
-// ===========================================================
 const initialState = {
   user: null,     // Datos del usuario logueado
   token: null,    // JWT activo
   logged: false,  // Estado de sesión
 };
 
-// ===========================================================
+
 // Slice de autenticación
-// ===========================================================
 const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
-    // =======================================================
     //useFetch Inicia sesión (guarda usuario + token en Redux y storage)
-    // =======================================================
     login: (state, { payload }) => {
       if (!payload) return;
 
@@ -30,7 +25,7 @@ const authSlice = createSlice({
       state.token = token || null;
       state.logged = true;
 
-      // 🧩 Persistencia en sessionStorage (rehidratable)
+      // Persistencia en sessionStorage (rehidratable)
       try {
         sessionStorage.setItem("token", token);
         sessionStorage.setItem("user", JSON.stringify(state.user));
@@ -38,9 +33,7 @@ const authSlice = createSlice({
       } catch (_) {}
     },
 
-    // =======================================================
     //useFetch Cierra sesión (limpia Redux y almacenamiento)
-    // =======================================================
     logout: (state) => {
       state.user = null;
       state.token = null;
@@ -53,9 +46,7 @@ const authSlice = createSlice({
       } catch (_) {}
     },
 
-    // =======================================================
     //useFetch Actualiza datos del perfil
-    // =======================================================
     updateProfile: (state, { payload }) => {
       if (!payload) return;
       state.user = { ...(state.user || {}), ...payload };

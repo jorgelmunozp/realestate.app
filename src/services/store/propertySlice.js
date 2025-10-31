@@ -2,14 +2,9 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { api } from '../../services/api/api';
 import { errorWrapper } from '../../services/api/errorWrapper';
 
-// ===========================================================
-// Endpoint desde variables de entorno (.env)
-// ===========================================================
 const ENDPOINT = process.env.REACT_APP_ENDPOINT_PROPERTY;
 
-// ===========================================================
 // Obtener propiedades (con imagen incluida desde el backend)
-// ===========================================================
 export const fetchProperties = createAsyncThunk(
   'property/fetchAll',
   async ({ page = 1, limit = 6, refresh = false } = {}) => {
@@ -54,9 +49,7 @@ export const fetchProperties = createAsyncThunk(
   }
 );
 
-// ===========================================================
 // Crear propiedad
-// ===========================================================
 export const createProperty = createAsyncThunk(
   'property/create',
   async (propertyData) => {
@@ -66,9 +59,7 @@ export const createProperty = createAsyncThunk(
   }
 );
 
-// ===========================================================
 // Slice principal
-// ===========================================================
 const propertySlice = createSlice({
   name: 'property',
   initialState: {

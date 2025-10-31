@@ -18,7 +18,7 @@ jest.mock("redux-persist/lib/storage/createWebStorage", () =>
         delete mockStorage[key];
         return Promise.resolve();
       },
-      _storage: mockStorage, // solo para test
+      _storage: mockStorage,    // solo para test
     };
   })
 );
@@ -83,7 +83,7 @@ describe("🧩 Redux Persist Integration (auth persist sessionStorage)", () => {
     const persistedState = await sessionStorage.getItem("persist:auth");
     expect(persistedState).toContain("Luis");
 
-    // 🔄 Simula recargar la app (nueva store con misma persistencia)
+    // Simula recargar la app (nueva store con misma persistencia)
     const newSessionStorage = createWebStorage("session");
     newSessionStorage._storage["persist:auth"] = persistedState;
 

@@ -1,6 +1,4 @@
-// ===========================================================
 // Normaliza imagen del backend (PascalCase → camelCase)
-// ===========================================================
 export const normalizePropertyImage = (data = {}) => ({
   idPropertyImage: data?.IdPropertyImage ?? data?.idPropertyImage ?? data?.id ?? "",
   idProperty: data?.IdProperty ?? data?.idProperty ?? "",
@@ -13,9 +11,8 @@ export const normalizePropertyImage = (data = {}) => ({
     : "",
 });
 
-// ===========================================================
+
 // Mapea imagen del frontend (camelCase → PascalCase)
-// ===========================================================
 export const mapPropertyImageToDto = (image = {}) => ({
   IdPropertyImage: image?.idPropertyImage ?? image?.IdPropertyImage ?? image?.id ?? "",
   IdProperty: image?.idProperty ?? image?.IdProperty ?? "",

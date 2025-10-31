@@ -3,23 +3,19 @@ import { installAuthInterceptors } from "../../auth/session";
 import { getBaseURL } from "../config";
 import { store } from "../../store/store";
 
-// ===========================================================
 // Instancia global de Axios
-// ===========================================================
 export const api = axios.create({
   baseURL: getBaseURL(),
   timeout: 20000,
   headers: { "Content-Type": "application/json" },
 });
 
-// ===========================================================
-// Interceptores de autenticación
-// ===========================================================
 
-// 1️⃣ Interceptores de sesión (auto-refresh, etc.)
+// Interceptores de autenticación
+// Interceptores de sesión (auto-refresh, etc.)
 installAuthInterceptors(api);
 
-// 2️⃣ Agregar token JWT automáticamente
+// Agrega token JWT automáticamente
 api.interceptors.request.use(
   (config) => {
     try {

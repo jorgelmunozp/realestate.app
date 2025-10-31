@@ -4,9 +4,7 @@ import createWebStorage from "redux-persist/lib/storage/createWebStorage";
 import authReducer from "./authSlice";
 import propertyReducer from "./propertySlice";
 
-// ===========================================================
 //useFetch Configuración del almacenamiento en sesión (sessionStorage)
-// ===========================================================
 const createSessionStorage = () => {
   try {
     return createWebStorage("session");
@@ -21,9 +19,7 @@ const createSessionStorage = () => {
 };
 const sessionStorage = createSessionStorage();
 
-// ===========================================================
 //useFetch Configuración de persistencia solo para auth
-// ===========================================================
 const persistConfig = {
   key: "auth",
   storage: sessionStorage,
@@ -33,9 +29,7 @@ const persistConfig = {
 // Reducer persistente para autenticación
 const persistedAuthReducer = persistReducer(persistConfig, authReducer);
 
-// ===========================================================
 //useFetch Store principal
-// ===========================================================
 export const store = configureStore({
   reducer: {
     auth: persistedAuthReducer,
@@ -47,7 +41,5 @@ export const store = configureStore({
     }),
 });
 
-// ===========================================================
 //useFetch Persistor (necesario para <PersistGate> en tu App.jsx)
-// ===========================================================
 export const persistor = persistStore(store);

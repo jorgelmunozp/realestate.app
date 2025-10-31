@@ -1,23 +1,22 @@
-// src/modules/core/Home.test.jsx (ajusta la ruta si es distinta)
 import { render, screen, act } from '@testing-library/react';
 import { MemoryRouter, Routes, Route } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { Home } from './Home';
 import { api } from '../../../services/api/api';
 
-// --- Mock react-redux: solo hooks (sin Providers) ---
+// Mock react-redux: solo hooks (sin Providers)
 jest.mock('react-redux', () => ({
   useDispatch: jest.fn(() => jest.fn()),
   useSelector: jest.fn(),
 }));
 
-// --- Mock API: evita axios real/ESM y controla respuestas ---
+// Mock API: evita axios real/ESM y controla respuestas
 jest.mock('../../../services/api/api', () => {
   const get = jest.fn();
   return { api: { get }, default: { get } };
 });
 
-// --- util para montar Home con estado de ruta (state) ---
+// util para montar Home con estado de ruta (state)
 const renderHome = (initialState) =>
   render(
     <MemoryRouter initialEntries={[{ pathname: '/home', state: initialState }]}>

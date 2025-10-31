@@ -2,9 +2,7 @@
 @import '../../../assets/styles/scss/mixins/screen';
 @import '../../../assets/styles/scss/mixins/fonts';
 
-/* =========================================================
-   CONTENEDOR PRINCIPAL
-   ========================================================= */
+// CONTENEDOR PRINCIPAL
 .login-container {
   display: flex;
   justify-content: center;
@@ -16,9 +14,8 @@
   @include screen-sm { padding: 1rem 0.5rem !important; }
 }
 
-/* =========================================================
-   TARJETA (idéntica al register)
-   ========================================================= */
+// TARJETA (idéntica al register)
+
 .login-card {
   background-color: #fff;
   border-radius: 20px;
@@ -33,18 +30,14 @@
   padding: 2.5rem 2rem;
 
   @include screen-sm { padding: 1.5rem 0.5rem; }
-  /* =========================================================
-     TÍTULO (idéntico a register)
-     ========================================================= */
-  h2,
-  .MuiTypography-root {
+  
+  // TÍTULO
+  h2, .MuiTypography-root {
     font-weight: 700;
     color: $blue-color;
   }
 
-  /* =========================================================
-     CAMPOS DE TEXTO
-     ========================================================= */
+  // CAMPOS DE TEXTO
   .MuiTextField-root {
     background-color: #f9fafb;
     border-radius: 12px;
@@ -77,16 +70,14 @@
       }
     }
 
-    /* Íconos azul institucional */
+    // Íconos azul institucional
     .MuiInputAdornment-root svg {
       color: $blue-color !important;
       transition: color 0.2s ease-in-out;
     }
   }
 
-  /* =========================================================
-     BOTONES (igual que register)
-     ========================================================= */
+  // BOTONES
   .MuiButton-root {
     width: 100%;
     border-radius: 12px;
@@ -115,9 +106,7 @@
     }
   }
 
-  /* =========================================================
-     LINKS (mantiene estilo limpio)
-     ========================================================= */
+  // LINKS
   .login-link {
     color: $blue-color;
     font-weight: 500;
@@ -145,9 +134,7 @@
   }
 }
 
-/* =========================================================
-   RESPONSIVE
-   ========================================================= */
+// RESPONSIVE
 @media (max-width: 480px) {
   .login-card {
     padding: 1.125rem !important;

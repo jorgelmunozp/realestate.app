@@ -1,4 +1,3 @@
-// src/modules/property/tests/Property.test.js
 import { render, screen } from '@testing-library/react';
 import Property from '../Property';
 import { Provider } from 'react-redux';

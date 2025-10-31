@@ -24,7 +24,6 @@ describe('Login', () => {
     fireEvent.change(screen.getByPlaceholderText(/contraseña/i), { target: { value: '123456' } });
     fireEvent.click(screen.getByRole('button', { name: /ingresar/i }));
 
-    // tu lógica de espera/mocks...
     expect(__getNavigateMock()).toHaveBeenCalledWith('/dashboard');
   });
 });
