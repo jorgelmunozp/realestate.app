@@ -33,7 +33,7 @@ export const Register = () => {
 
       if (response.status >= 200 && response.status < 300) {
         Swal.fire({
-          text: 'Registro exitoso. Ahora puedes iniciar sesión.',
+          title: 'Registro exitoso',
           icon: 'success',
           timer: 1500,
           showConfirmButton: false,
@@ -47,21 +47,21 @@ export const Register = () => {
       let errorHtml = '';
 
       if (errors && typeof errors === 'object') {
+        console.log("errors: ",errors)
         errorHtml = '<ul style="padding-left: 20px; text-align: left; margin: 0;">';
-        for (const key in errors) {
-          if (Array.isArray(errors[key])) {
-            for (const msg of errors[key]) {
-              errorHtml += `<li style="margin-bottom: 6px; color: #d33;">${msg}</li>`;
-            }
+        if (Array.isArray(errors)) {
+          for (const msg of errors) {
+            errorHtml += `<li style="margin-bottom: 6px; color: #d33;">${msg}</li>`;
           }
         }
         errorHtml += '</ul>';
       } else {
-        errorHtml = '<span style="color: #d33;">Ocurrió un error inesperado. Intenta nuevamente.</span>';
+        errorHtml = `<span style="color: #d33;">Ocurrió un error inesperado. Intenta nuevamente.</span>`;
       }
 
       Swal.fire({
         html: errorHtml,
+        title: 'Error',
         icon: 'error',
         confirmButtonText: 'Aceptar',
         customClass: {
@@ -113,7 +113,7 @@ export const Register = () => {
             }}
           />
 
-          <Button variant="contained" color="primary" onClick={handleRegister} disabled={loading} sx={{ borderRadius: 2, textTransform: 'none', py: 1.2 }}>
+          <Button variant="contained" color={loading ? "secondary" : "primary"} onClick={handleRegister} disabled={loading} sx={{ borderRadius: 2, textTransform: 'none', py: 1.2 }}>
             {loading ? 'Registrando...' : 'Crear cuenta'}
           </Button>
 

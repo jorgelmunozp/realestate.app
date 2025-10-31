@@ -106,7 +106,7 @@ export const AddProperty = () => {
         traces: itemPropertyTrace,
       });
 
-      console.log("📤 propertyPayload", payload);
+      console.log("propertyPayload", payload);
 
       const res = await errorWrapper(api.post(endpoints.property, payload));
       const { success, message } = res;
