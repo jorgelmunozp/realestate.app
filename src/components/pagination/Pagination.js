@@ -1,16 +1,7 @@
 import React from 'react';
 import { primaryColor } from '../../global';
 
-export const Pagination = ({
-  page = 1,
-  lastPage = 1,
-  onPageChange,
-  className = 'index-pagination',
-  buttonClassName = 'index-page-btn',
-  prevLabel = 'Anterior',
-  nextLabel = 'Siguiente',
-  disabled = false,
-}) => {
+export const Pagination = ({ page = 1, lastPage = 1, onPageChange, className = 'index-pagination', buttonClassName = 'index-page-btn', prevLabel = 'Anterior', nextLabel = 'Siguiente', disabled = false, }) => {
   const prevDisabled = disabled || page <= 1;
   const nextDisabled = disabled || page >= lastPage;
   const lastDisabled = disabled || page >= lastPage;

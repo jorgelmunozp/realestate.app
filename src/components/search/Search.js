@@ -3,15 +3,7 @@ import { FiSearch } from 'react-icons/fi';
 import { Input } from '../input/Input';
 import './Search.scss';
 
-export const Search = ({
-  value = '',
-  onChange,
-  handleChange,
-  placeholder = 'Buscar...',
-  Icon = FiSearch,
-  className = '',
-  debounceMs = 300,
-}) => {
+export const Search = ({ value = '', onChange, handleChange, placeholder = 'Buscar...', Icon = FiSearch, className = '', debounceMs = 300, }) => {
   const change = onChange || handleChange;
   const [internal, setInternal] = useState(value || '');
   const timerRef = useRef(null);

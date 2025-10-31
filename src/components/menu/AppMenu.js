@@ -4,8 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '../../services/store/authSlice.js';
 import { slide as Menu } from 'react-burger-menu';
 import { Header } from '../header/Header.js';
-import { FiHome, FiUser, FiUsers, FiPhone, FiLogOut, FiUpload } from 'react-icons/fi';
-import { primaryColor } from '../../global.js';
+import { FiHome, FiUser, FiUsers, FiPhone, FiLogOut, FiUpload, FiEdit } from 'react-icons/fi';
 import { getTokenPayload, getUserFromToken, isTokenExpired } from '../../services/auth/token';
 import './AppMenu.scss';
 
@@ -34,6 +33,7 @@ export const AppMenu = () => {
   const go = useCallback((whenIn, whenOut) => { navigate(logged ? whenIn : whenOut); closeMenu(); }, [logged, navigate, closeMenu]);
   const goUsers = useCallback(() => { navigate('/users'); closeMenu(); }, [navigate, closeMenu]);
   const goLogin = useCallback(() => { navigate('/login'); closeMenu(); }, [navigate, closeMenu]);
+  const goAddProperty = useCallback(() => { navigate('/add-property'); closeMenu(); }, [navigate, closeMenu]);
 
   const handleLogout = useCallback(() => {
     dispatch(logout());
@@ -57,7 +57,7 @@ export const AppMenu = () => {
       </button>
 
       <button type="button" className="menu-item" onClick={() => go('/add-property', '/about-us')}>
-        {logged ? (<><FiUpload className='menu-item-icon' /> Subir inmueble</>) : (<><FiUser className='menu-item-icon' /> Nosotros</>)}
+        {logged ? (<><FiUpload className='menu-item-icon' /> Registrar inmueble</>) : (<><FiUser className='menu-item-icon' /> Nosotros</>)}
       </button>
 
       {logged && role === 'admin' && (
