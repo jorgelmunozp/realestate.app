@@ -122,7 +122,7 @@ export const Home = () => {
           </div>
         )}
 
-        <Search className="home-search" filters={filters} onChange={handleFiltersChange} />
+        <Search filters={filters} onChange={handleFiltersChange} />
 
         <div className="home-grid">
           {properties.length > 0 ? (

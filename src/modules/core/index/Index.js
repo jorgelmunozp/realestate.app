@@ -38,7 +38,7 @@ export const Index = () => {
     <div className="index-container">
       <div className="index-content">
         <div className="index-header"><Title title="Inmuebles Disponibles" /></div>
-        <Search className="index-search" filters={filters} onChange={handleSearchChange} />
+        <Search filters={filters} onChange={handleSearchChange} />
         <div className="index-grid">
           {properties.length > 0 ? (
             properties.map((p) => (

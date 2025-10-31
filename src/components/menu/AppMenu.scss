@@ -166,13 +166,13 @@
 
   @include screen-md {
     gap: 10px;
-    font-size: 1.325rem;
+    font-size: 1.25rem;
     padding: 12px 0;
   }
 
   @include screen-sm {
     gap: 8px;
-    font-size: 1.25rem;
+    font-size: 1.125rem;
     padding: 10px 0;
   }
 }

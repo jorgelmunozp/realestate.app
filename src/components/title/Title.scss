@@ -14,16 +14,14 @@
         margin: 0;
         font-size: 2rem;
 
-        /* Ajuste para tablets */
         @include screen-md {
-            font-size: 2.2rem !important;
+            font-size: 1.8rem !important;
         }
 
         @include tablet {
-            font-size: 2rem !important;
+            font-size: 1.6rem !important;
         }
 
-        /* Ajuste para móviles */
         @include screen-sm {
             font-size: 1.8rem !important;
         }
@@ -37,33 +35,33 @@
         }
 
         @include mobileLandscape {
-            font-size: 1.6rem !important;
+            font-size: 1.4rem !important;
         }
     }
 
     /* Ajuste de padding para pantallas más pequeñas */
     @include screen-md {
-        padding-top: 15px;
-        padding-bottom: 25px;
+        padding-top: 0;
+        padding-bottom: 0;
     }
 
     @include screen-sm {
-        padding-top: 10px;
-        padding-bottom: 20px;
+        padding-top: 0;
+        padding-bottom: 0;
     }
 
     @include mobile {
-        padding-top: 8px;
-        padding-bottom: 18px;
+        padding-top: 0;
+        padding-bottom: 0;
     }
 
     @include mobilePortrait {
-        padding-top: 6px;
-        padding-bottom: 15px;
+        padding-top: 0;
+        padding-bottom: 0;
     }
 
     @include mobileLandscape {
-        padding-top: 7px;
-        padding-bottom: 16px;
+        padding-top: 0;
+        padding-bottom: 0;
     }
 }
