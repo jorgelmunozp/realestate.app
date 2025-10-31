@@ -21,6 +21,7 @@ export const AppRouter = () => (
     <AppMenu />
     <Header />
     <Routes>
+      <Route path="*" element={<PublicRoute><Index/></PublicRoute>} />
       <Route path="/index/*" element={<PublicRoute><Index/></PublicRoute>} />
       <Route path="/property/:propertyId" element={<PublicRoute><Property/></PublicRoute>} />
       <Route path="/login/*" element={<PublicRoute><Login/></PublicRoute>} />
@@ -30,7 +31,6 @@ export const AppRouter = () => (
       <Route path="/about-us" element={<PublicRoute><AboutUs/></PublicRoute>} />
       <Route path="/contact" element={<PublicRoute><Contact/></PublicRoute>} />
       <Route path="/*" element={<PrivateRoute><DashboardRoutes/></PrivateRoute>} />
-      <Route path="*" element={<PublicRoute><Index/></PublicRoute>} />
       {/* <Route path="*" element={<PublicRoute><NotFound/></PublicRoute>} /> */}
     </Routes>
   </BrowserRouter>
