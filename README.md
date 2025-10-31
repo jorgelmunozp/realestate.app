@@ -1,10 +1,12 @@
-﻿# Real Estate App — Frontend
+﻿# RealEstate.App — Plataforma de Gestión Inmobiliaria
 
 ![React](https://img.shields.io/badge/Frontend-React-blue?logo=react)
 ![Redux](https://img.shields.io/badge/State-Redux_Toolkit-764abc?logo=redux)
 ![MUI](https://img.shields.io/badge/UI-MUI-007FFF?logo=mui)
 ![Axios](https://img.shields.io/badge/HTTP-Axios-5A29E4)
 ![JWT](https://img.shields.io/badge/Auth-JWT-orange?logo=jsonwebtokens)
+
+## Frontend
 
 Aplicación web frontend para gestionar inmuebles (crear, listar, editar, eliminar), propietarios, imágenes y trazas de transacciones. Incluye autenticación, enrutamiento público/privado, consumo de API vía Axios, manejo centralizado de errores y almacenamiento de sesión con Redux Toolkit + redux-persist.
 
