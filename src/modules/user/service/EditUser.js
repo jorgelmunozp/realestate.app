@@ -14,7 +14,7 @@ export const EditUser = () => {
   const dispatch = useDispatch();
   const authUser = useSelector((state) => state.auth.user);
 
-  // Leer token real del navegador
+  // Lee token real del navegador
   const token = localStorage.getItem("token") || sessionStorage.getItem("token") || "";
   const payload = getTokenPayload(token);
   const tokenUser = getUserFromToken(payload) || {};
@@ -42,13 +42,13 @@ export const EditUser = () => {
     setForm((prev) => ({ ...prev, [name]: value }));
   };
 
-  // Guardar perfil propio
+  // Guarda perfil propio
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       const userDto = mapUserToDto(form);
 
-      // Solo enviar campos modificados
+      // Solo envia campos modificados
       const changedFields = {};
       if (authUser?.name !== userDto.Name && userDto.Name.trim() !== "")
         changedFields.name = userDto.Name.trim();
@@ -87,7 +87,6 @@ export const EditUser = () => {
     }
   };
 
-  // Render perfil personal
   return (
     <div className="edituser-container">
       <Paper elevation={3} className="edituser-card">

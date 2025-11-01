@@ -2,7 +2,6 @@
 @import '../../../assets/styles/scss/mixins/screen';
 @import '../../../assets/styles/scss/mixins/fonts';
 
-// ESTILOS PARA AddProperty
 .addproperty-container {
   display: flex;
   justify-content: center;
@@ -48,31 +47,6 @@
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
   gap: 1.4rem;
-}
-
-// CAMPO AÑO (formato y sombreado del CrudProperty)
-.year-input, .MuiOutlinedInput-root {
-  background-color: #f9fafb !important;
-  border-radius: 10px;
-
-  fieldset {
-    border-color: #d1d5db;
-  }
-
-  &:hover fieldset {
-    border-color: #9ca3af;
-  }
-
-  &.Mui-focused fieldset {
-    border-color: $blue-color;
-    box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.15);
-  }
-
-  input::placeholder {
-    color: #9ca3af;
-    text-transform: lowercase;
-    opacity: 0.8;
-  }
 }
 
 // IMAGEN PROPIETARIO A ANCHO COMPLETO
@@ -160,31 +134,6 @@
   }
 }
 
-
-// MUI
-.MuiOutlinedInput-root {
-  background-color: #f9fafb !important;
-  border-radius: 10px;
-
-  fieldset {
-    border-color: #d1d5db;
-  }
-
-  &:hover fieldset {
-    border-color: #9ca3af;
-  }
-
-  &.Mui-focused fieldset {
-    border-color: $blue-color;
-    box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.15);
-  }
-}
-
-.year-input .MuiOutlinedInput-root {
-  background-color: #f9fafb !important;
-  border-radius: 10px;
-}
-
 // IMÁGENES Y DROPZONES
 .image-upload-container {
   width: 100%;
@@ -196,40 +145,6 @@
   transition: all 0.3s ease;
   margin-top: 1rem;
   margin-bottom: 1.5rem;
-}
-
-// Caja de carga (Dropzone) 
-.dropzone-box {
-  width: 100%;
-  min-height: 220px;
-  border: 2px dashed #107ACC;
-  border-radius: 12px;
-  padding: 1.5rem 1rem;
-  text-align: center;
-  background-color: #f9fafb;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.3s ease;
-  opacity: 1;
-  visibility: visible;
-
-  &:hover {
-    background-color: #eff6ff;
-  }
-
-  p {
-    color: #555;
-    font-size: 0.95rem;
-    margin: 0;
-  }
-
-  &.fade-out {
-    opacity: 0;
-    visibility: hidden;
-    transition: opacity 0.4s ease, visibility 0.4s ease;
-  }
 }
 
 // Previsualización de imagen

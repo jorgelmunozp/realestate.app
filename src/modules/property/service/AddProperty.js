@@ -137,9 +137,7 @@ export const AddProperty = () => {
             <TextField name="price" label="Precio" type="number" value={itemProperty.price} onChange={handleChange} required />
             <TextField name="codeInternal" label="Código interno" type="number" value={itemProperty.codeInternal} onChange={handleChange} required />
             <LocalizationProvider dateAdapter={AdapterDayjs}>
-              <DatePicker
-                label="Año"
-                views={["year"]}
+              <DatePicker label="Año" views={["year"]}
                 value={itemProperty.year ? dayjs(String(itemProperty.year), "YYYY") : null}
                 onChange={(v) => handleChange({ target: { name: "year", value: v ? v.year() : "" } })}
                 slotProps={{ textField: { fullWidth: true, required: true } }}

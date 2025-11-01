@@ -8,7 +8,7 @@ import { saveToken } from '../../../services/auth/token';
 import { TextField, Button, InputAdornment, Box, Paper } from '@mui/material';
 import { PiUserCircleFill } from 'react-icons/pi';
 import { FiLock } from 'react-icons/fi';
-import { orangeColor } from '../../../global';
+import { blueColor, orangeColor } from '../../../global';
 import Swal from 'sweetalert2';
 import './Login.scss';
 
@@ -95,17 +95,7 @@ export const Login = () => {
           <Button variant="outlined" color="secondary" onClick={() => navigate('/register')} sx={{ borderRadius: 2, textTransform: 'none', py: 1.2 }}>
             Crear cuenta
           </Button>
-          <Button
-            variant="text"
-            onClick={() => navigate('/password-recover')}
-            sx={{
-              color: '#107ACC',
-              textTransform: 'none',
-              fontWeight: 500,
-              fontSize: '0.95rem',
-              mt: 1,
-              '&:hover': { color: '#000' },
-            }} >
+          <Button variant="text" onClick={() => navigate('/password-recover')} sx={{ color: blueColor, textTransform: 'none', fontWeight: 500, fontSize: '0.95rem', mt: 1, '&:hover': { color: '#000' }, }} >
             ¿Olvidaste tu contraseña?
           </Button>
         </Box>

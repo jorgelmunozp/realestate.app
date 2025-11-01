@@ -2,7 +2,7 @@
 @import '../../assets/styles/scss/mixins/fonts';
 @import '../../assets/styles/scss/mixins/screen';
 
-/* === Botón hamburguesa === */
+/* Botón hamburguesa */
 .bm-burger-button {
   position: absolute;
   width: 30px;
@@ -38,7 +38,7 @@
 }
 
 .bm-burger-bars-hover {
-  background: darken($blue-color, 10%);
+  background: darken($black-color, 10%);
 }
 
 /* Botón cerrar */
@@ -120,7 +120,7 @@
 
 /* Línea horizontal */
 .bm-hr {
-  border: 1px solid $blue-color;
+  border: 1px solid $orange-color;
   margin: 1rem 0.25rem;
 
   @include screen-md {
@@ -150,7 +150,7 @@
   transition: all 0.3s ease;
 
   .menu-item-icon {
-    color: $blue-color;
+    color: $orange-color;
     transition: all 0.3s ease;
   }
 

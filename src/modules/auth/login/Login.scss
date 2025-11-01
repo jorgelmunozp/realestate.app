@@ -90,9 +90,7 @@
     &.MuiButton-containedPrimary {
       background-color: $blue-color;
 
-      &:hover {
-        background-color: #1d4ed8;
-      }
+      &:hover { background-color: #1d4ed8; }
     }
 
     &.MuiButton-outlinedSecondary {

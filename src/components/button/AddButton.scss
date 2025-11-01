@@ -13,11 +13,10 @@
   align-items: center;
   background-color: transparent;
   border: none;
+  transition: all 0.3s ease;
   cursor: pointer;
 
-  &:hover {
-    transform: translateY(-10px);
-  }
+  &:hover { transform: translateY(-10px); }
 }
 
 .add-btn-label {
@@ -27,20 +26,16 @@
     border-radius: 50%;
     font-size: 2rem;
     padding: 0.5rem 0.8rem;
-    cursor: pointer;
-    transition: all 0.3s ease;
     font-size: 2rem;
     padding: 0.5rem 0.8rem;
     margin-right: 0.5rem;
+    cursor: pointer;
 
     @include desktop { font-size: 2rem; }
     @include screen-md { font-size: 1.5rem; }
     @include screen-sm { font-size: 1rem !important; padding: 0.4rem 0.7rem; }
 
-    &:hover {
-      background-color: #1d4ed8;
-      transform: translateY(-10px);
-    }
+    &:hover { background-color: #1d4ed8; }
   }
 
   .add-btn-text {

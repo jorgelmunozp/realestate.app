@@ -4,9 +4,13 @@
 @import './assets/styles/scss/mixins/colors';
 @import './assets/styles/scss/mixins/fonts';
 
-// Swal2 styles
+// Swal2 Alert styles
 @import './assets/styles/scss/components/Alert.scss';
 
-.App {
-  text-align: center;
-}
+// Mui components
+@import './assets/styles/scss/components/Mui.scss';
+
+// DropZone image component
+@import './assets/styles/scss/components/DropZone.scss';
+
+.App { text-align: center; }

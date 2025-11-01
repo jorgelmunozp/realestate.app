@@ -1,0 +1,36 @@
+@import '../mixins/colors';
+@import '../mixins/fonts';
+
+// Cuadro de carga de imagenes (Dropzone)
+.dropzone-box {
+  width: 100%;
+  min-height: 220px;
+  border: 2px dashed $orange-color;
+  border-radius: 12px;
+  padding: 1.5rem 1rem;
+  text-align: center;
+  background-color: lighten($orange-color, 48.75%);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  opacity: 1;
+  visibility: visible;
+
+  &:hover {
+    background-color: lighten($orange-color, 46.5%);
+  }
+
+  p {
+    color: #555;
+    font-size: 0.95rem;
+    margin: 0;
+  }
+
+  &.fade-out {
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.4s ease, visibility 0.4s ease;
+  }
+}

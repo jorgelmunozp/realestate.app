@@ -1,0 +1,46 @@
+@import '../mixins/colors';
+@import '../mixins/fonts';
+
+// MUI
+.MuiOutlinedInput-root {
+  background-color: #f9fafb !important;
+  border-radius: 16px !important;
+
+  fieldset { border-color: #d1d5db; }
+
+  &:hover fieldset { border-color: #9ca3af; }
+
+  &.Mui-focused fieldset {
+    border-color: $blue-color;
+    box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.15);
+  }
+}
+
+// CAMPO AÑO (formato y sombreado del CrudProperty)
+.MuiButton-root {
+  border-radius: 16px !important;
+  font-family: $primary-font !important;
+  text-transform: none !important;
+  font-size: 1.05rem !important;
+  font-weight: 600 !important;
+}
+
+.year-input, .MuiOutlinedInput-root {
+  background-color: #f9fafb !important;
+  border-radius: 12px !important;
+
+  fieldset { border-color: #d1d5db; }
+
+  &:hover fieldset { border-color: #9ca3af; }
+
+  &.Mui-focused fieldset {
+    border-color: $blue-color;
+    box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.15);
+  }
+
+  input::placeholder {
+    color: #9ca3af;
+    text-transform: lowercase;
+    opacity: 0.8;
+  }
+}

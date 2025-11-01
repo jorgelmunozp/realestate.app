@@ -111,11 +111,11 @@ export const ManageUsers = () => {
 
   return (
     <div className="manageusers-container">
-      <Title title="Administrar usuarios" />
-
-      {errorMsg && <p className="error-text">{errorMsg}</p>}
-
       <Paper elevation={3} className="manageusers-card">
+        <Title title="Administrar usuarios" />
+
+        {errorMsg && <p className="error-text">{errorMsg}</p>}
+
         <div className="manageusers-toolbar">
           <TextField value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Buscar por nombre, correo o rol..." InputProps={{ startAdornment: (<InputAdornment position="start"><FiSearch size={18} color={orangeColor} /></InputAdornment>) }} fullWidth className="manageusers-search-input" />
         </div>

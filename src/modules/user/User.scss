@@ -2,17 +2,22 @@
 @import '../../assets/styles/scss/mixins/screen';
 @import '../../assets/styles/scss/mixins/fonts';
 
-.user-profile {
+.user-container {
   padding: 0 16px 32px;
 }
 
 .user-card {
   max-width: 920px;
-  margin: 0 auto;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 1.5rem;
   background: $white-color;
   border: 1px solid #e5e7eb;
   border-radius: 16px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+}
+
+.user-data {
   display: grid;
   grid-template-columns: 25% 1fr;
   gap: 32px;
@@ -83,8 +88,6 @@
   border-radius: 12px;
   padding: 16px 18px;
   width: 100% !important;
-
-  @include screen-sm { width: 80% !important; }
 }
 
 .meta-label {
@@ -111,14 +114,14 @@
   align-self:center;
 
   &.ok {
-    background: #e0f2fe;
-    color: $green-color;
+    background: $green-color;
+    color: $white-color;
     border: 1px solid #bae6fd;
   }
 
   &.off {
-    background: #fee2e2;
-    color: $red-color;
+    background: $red-color;
+    color: $white-color;
     border: 1px solid #fecaca;
   }
 }
@@ -128,18 +131,30 @@
   align-items:center; 
   justify-content:space-between; 
   gap:12px; 
-  margin-bottom:8px; 
+  padding: 1.5rem 2.5rem;
+
+  @include screen-sm { padding: 1.5rem 0.5rem; }
 }
 
-.user-edit-btn { 
-  background:#107ACC; 
-  color:#fff; 
-  padding:8px 14px; 
-  border-radius:10px; 
-  text-decoration:none; 
-  font-weight:600; 
-  font-size:0.95rem; 
+.user-edit-btn {
+  display: flex;
+  align-items: center;
+  background-color: transparent;
+  border: none;
+  transition: all 0.3s ease;
+  cursor: pointer;
+
+  &:hover { transform: translateY(-10px); }
+
+  label {
+    font-family: $primary-font;
+    font-weight: 600;
+  }
+
+  .user-edit-btn-icon { 
+    margin-left:10px; 
+
+    &:hover { color: darken($orange-color, 10%) !important; }
+  }
+
 }
-
-.user-edit-btn:hover { background:#0d63c6; }
-
