@@ -25,8 +25,8 @@
   position: relative;
 
   .searchbar-indicator {
-    background: rgba($orange-color, .12);
-    color: $orange-color;
+    background: rgba($secondary-color, .12);
+    color: $secondary-color;
     padding: .1rem .4rem;
     border-radius: 999px;
     font-size: .65rem;
@@ -66,22 +66,40 @@
   padding: .4rem .5rem;
   flex: 1 1 0;
   min-width: 170px;
+  border: none !important;
+
+  .MuiTextField-root { 
+    background-color: transparent;
+    
+    .MuiOutlinedInput-root  {
+      background-color: transparent;
+
+      fieldset{ border: none; }
+    }
+  }
 
   input {
     flex: 1 1 auto;
-    border: none;
+    border: none !important;
     outline: none;
     background: transparent;
+
+    // &::placeholder { color: #9ca3af; }
+    &::placeholder { color: #f00; }
+  }
+
+  label { 
     font-family: $primary-font;
-    font-size: .9rem;
-    color: #1f2933;
-    &::placeholder { color: #9ca3af; }
+    font-size: .75rem !important;
+    color: #999 !important;
+    vertical-align: middle;
+    margin-top: 5px;
   }
 }
 
 .searchbar-icon {
   font-size: 1rem;
-  color: $orange-color;
+  color: $secondary-color;
   flex: 0 0 auto;
 }
 
@@ -101,7 +119,7 @@
   min-width: 180px;
 }
 
-//== SLIDER ==
+// Slider Precio
 .price-slider {
   position: relative;
   flex: 1 1 auto;
@@ -124,7 +142,7 @@
   cursor: pointer;
 }
 
-// tramo azul centrado igual
+// tramo slider centrado
 .price-slider-range {
   position: absolute;
   top: 50%;
@@ -157,7 +175,7 @@
   width: 16px;
   border-radius: 50%;
   background: #fff;
-  border: 2px solid $orange-color;
+  border: 2px solid $secondary-color;
   cursor: pointer;
 }
 
@@ -168,7 +186,7 @@
   width: 16px;
   border-radius: 50%;
   background: #fff;
-  border: 2px solid $orange-color;
+  border: 2px solid $secondary-color;
   cursor: pointer;
 }
 
@@ -181,47 +199,61 @@
   display: flex;
   justify-content: space-between;
   font-size: .7rem;
-  color: #6b7280;
+  color: #999;
   pointer-events: none;
   font-family: inherit;
 }
 
-// acciones 
+// Acciones 
 .searchbar-actions {
   display: flex;
   gap: .6rem;
   align-items: center;
 }
 
+// Boton Limpiar
 .searchbar-clear {
   display: flex;
   align-items: center;
   gap: .3rem;
+  font-family: $primary-font;
   background: transparent;
-  border: 1px solid rgba($orange-color, .15);
-  color: #374151;
-  border-radius: 10px;
+  border: 2px solid $secondary-color;
+  color: #999;
+  border-radius: 20px;
   padding: .4rem .7rem;
   height: 34px;
   font-size: .75rem;
   cursor: pointer;
-  &:hover { background: rgba($orange-color, .04); }
+  transition: all 0.3s ease;
+
+  &:hover { 
+    background: rgba($secondary-color, .04); 
+    color: #374151;
+  }
 }
 
+// Boton Aplicar
 .searchbar-apply {
   display: flex;
   align-items: center;
-  gap: .4rem;
-  background: $orange-color;
-  border: none;
-  color: #fff;
+  gap: .3rem;
+  font-family: $primary-font;
+  border: 2px solid $secondary-color;
+  background-color: transparent;
+  color: #999;
   font-weight: 500;
-  border-radius: 12px;
-  padding: .5rem 1rem;
+  border-radius: 20px;
+  padding: .4rem .7rem;
+  height: 34px;
+  font-size: .75rem;
   cursor: pointer;
-  height: 38px;
-  transition: .15s;
-  &:hover { background: darken($orange-color, 4%); }
+  transition: all 0.3s ease;
+
+  &:hover { 
+    background: rgba($secondary-color, .04); 
+    color: #374151;
+  }
 }
 
 @include desktop {
@@ -270,7 +302,7 @@
     justify-content: center;
     text-align: center;
     gap: .4rem;
-    .searchbar-icon { color: $orange-color; }
+    .searchbar-icon { color: $secondary-color; }
     .searchbar-toggle-close { display: none; }
   }
 

@@ -3,9 +3,9 @@
 @import '../../assets/styles/scss/mixins/fonts';
 
 .button {
-  background-color: $blue-color;
+  background-color: $primary-color;
   color: #fff;
-  font-family: 'Montserrat';
+  font-family: $primary-font;
   border-radius: 12px;
   padding: 1.15rem;
   font-weight: bold;

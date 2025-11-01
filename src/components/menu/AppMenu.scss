@@ -59,7 +59,7 @@
 }
 
 .bm-cross {
-  background: $blue-color;
+  background: $primary-color;
 }
 
 /* ====== Menú ====== */
@@ -104,7 +104,7 @@
 
   h2 {
     font-family: 'Poppins', sans-serif;
-    color: $blue-color;
+    color: $primary-color;
     font-weight: 600;
     font-size: 1.4rem;
 
@@ -120,7 +120,7 @@
 
 /* Línea horizontal */
 .bm-hr {
-  border: 1px solid $orange-color;
+  border: 1px solid $secondary-color;
   margin: 1rem 0.25rem;
 
   @include screen-md {
@@ -150,13 +150,13 @@
   transition: all 0.3s ease;
 
   .menu-item-icon {
-    color: $orange-color;
+    color: $secondary-color;
     transition: all 0.3s ease;
   }
 
   &:hover {
     color: $white-color;
-    background-color: $blue-color!important;
+    background-color: $primary-color!important;
     transform: translateX(5px);
 
     .menu-item-icon {

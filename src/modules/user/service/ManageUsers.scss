@@ -44,12 +44,12 @@
 
 .manageusers-search-input .MuiInputAdornment-root {
   margin-right: .35rem;
-  svg { color: $blue-color; }
+  svg { color: $primary-color; }
 }
 
 .manageusers-search-input .MuiInputBase-root.Mui-focused {
-  border: 1px solid rgba($blue-color, .5);
-  box-shadow: 0 0 0 3px rgba($blue-color, .14);
+  border: 1px solid rgba($primary-color, .5);
+  box-shadow: 0 0 0 3px rgba($primary-color, .14);
 }
 
 /* tabla */

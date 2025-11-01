@@ -9,7 +9,7 @@
 
     h1 {
         font-family: $primary-font;
-        color: $blue-color;
+        color: $primary-color;
         font-weight: 600;
         margin: 0;
         font-size: 1.6rem;
@@ -26,26 +26,26 @@
     /* Ajuste de padding para pantallas más pequeñas */
     @include screen-md {
         padding-top: 0;
-        padding-bottom: 0;
+        padding-bottom: 15px;
     }
 
     @include screen-sm {
         padding-top: 0;
-        padding-bottom: 0;
+        padding-bottom: 15px;
     }
 
     @include mobile {
         padding-top: 0;
-        padding-bottom: 0;
+        padding-bottom: 15px;
     }
 
     @include mobilePortrait {
         padding-top: 0;
-        padding-bottom: 0;
+        padding-bottom: 15px;
     }
 
     @include mobileLandscape {
         padding-top: 0;
-        padding-bottom: 0;
+        padding-bottom: 15px;
     }
 }

@@ -15,7 +15,7 @@
 
   &:hover fieldset { border-color: #9ca3af; }
 
-    &.Mui-focused fieldset { border-color: $orange-color; }
+    &.Mui-focused fieldset { border-color: $secondary-color; }
 
     input {
       text-align: center !important;
@@ -32,7 +32,7 @@
   // Label
   .MuiFormLabel-root {
     &.MuiInputLabel-root {
-      font-family: 'Montserrat';
+      font-family: $primary-font;
       font-size: 0.9rem;
 
       &.Mui-focused { color: $black-color !important; }
@@ -41,13 +41,13 @@
 
   //Iconos naranjas
   .MuiInputAdornment-root svg {
-    color: $orange-color !important;
+    color: $secondary-color !important;
     transition: color 0.2s ease-in-out;
   }
 
   // Al enfocar el input, mantiene el naranja
   .MuiOutlinedInput-root.Mui-focused + .MuiInputAdornment-root svg {
-    color: $orange-color !important;
+    color: $secondary-color !important;
   }
 }
 
@@ -71,7 +71,7 @@
   margin-top: 0.6rem !important;
 
   &.MuiButton-containedPrimary {
-    background-color: $blue-color !important;
+    background-color: $primary-color !important;
 
     &:hover { background-color: #1d4ed8 !important;; }
   }

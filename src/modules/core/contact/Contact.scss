@@ -14,7 +14,7 @@
   @include screen-sm { padding: 4rem 1em; }
 
   h2 {
-    color: $blue-color;
+    color: $primary-color;
     font-family: 'Poppins', sans-serif;
     margin-bottom: 0.5rem;
   }
@@ -63,7 +63,7 @@
     height: 140px;
     border-radius: 50%;
     object-fit: cover;
-    border: 3px solid $orange-color;
+    border: 3px solid $secondary-color;
     transition: transform 0.3s ease;
 
     &:hover {
@@ -96,7 +96,7 @@
         margin-right: 4px;
       }
 
-      color: $orange-color; // resto del número naranja
+      color: $secondary-color; // resto del número naranja
     }
   }
 }

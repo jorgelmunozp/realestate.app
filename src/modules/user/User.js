@@ -1,5 +1,5 @@
 import { useSelector } from 'react-redux';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { Title } from '../../components/title/Title';
 import { PiUserCircleFill, } from 'react-icons/pi';
 import { FiEdit } from 'react-icons/fi';

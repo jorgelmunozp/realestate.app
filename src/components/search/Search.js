@@ -1,6 +1,7 @@
 import { memo, useEffect, useRef, useState } from "react";
+import { TextField, Button, Box, Paper, MenuItem } from "@mui/material";
 import { FiSearch, FiMapPin, FiDollarSign, FiFilter, FiX, FiRotateCcw } from "react-icons/fi";
-import { MAX_PRICE, STEP } from "../../global";
+import { MAX_PRICE, orangeColor, STEP } from "../../global";
 import "./Search.scss";
 
 const formatShort = (v) => (v >= 1_000_000 ? `${Math.round(v / 1_000_000)} M` : `$ ${v.toLocaleString()}`);
@@ -77,16 +78,18 @@ export const Search = ({ filters = {}, onChange, className = "" }) => {
         <div className="searchbar-group">
           <div className="searchbar-field">
             <FiSearch className="searchbar-icon" />
-            <input type="text" value={name} onChange={(e) => setName(e.target.value)} placeholder="Nombre" />
+            {/* <input type="text" value={name} onChange={(e) => setName(e.target.value)} placeholder="Nombre" /> */}
+            <TextField type="text" value={name} onChange={(e) => setName(e.target.value)} label="Nombre" />
           </div>
           <div className="searchbar-divider" />
           <div className="searchbar-field">
             <FiMapPin className="searchbar-icon" />
-            <input type="text" value={address} onChange={(e) => setAddress(e.target.value)} placeholder="Dirección / sector" />
+            {/* <input type="text" value={address} onChange={(e) => setAddress(e.target.value)} placeholder="Dirección / sector" /> */}
+            <TextField type="text" value={address} onChange={(e) => setAddress(e.target.value)} label="Dirección / sector" />
           </div>
           <div className="searchbar-divider hide-mobile" />
           <div className="searchbar-field searchbar-price">
-            <FiDollarSign strokeWidth={2.5} className="searchbar-icon" />
+            <FiDollarSign strokeWidth={2} className="searchbar-icon" />
             <div className="price-slider" onClick={handleTrackClick}>
               <div className="price-slider-track" ref={trackRef} />
               <div className="price-slider-range" style={{ left: `${(min / MAX_PRICE) * 100}%`, right: `${100 - (max / MAX_PRICE) * 100}%` }} />
@@ -101,8 +104,8 @@ export const Search = ({ filters = {}, onChange, className = "" }) => {
         </div>
 
         <div className="searchbar-actions">
-          <button type="button" className="searchbar-clear" onClick={clear}><FiRotateCcw /><span>Limpiar</span></button>
-          <button type="button" className="searchbar-apply" onClick={apply}><FiFilter /><span>Aplicar</span></button>
+          <button type="button" className="searchbar-clear" onClick={clear}><FiRotateCcw color={orangeColor} /><span>Limpiar</span></button>
+          <button type="button" className="searchbar-apply" onClick={apply}><FiFilter color={orangeColor} /><span>Aplicar</span></button>
         </div>
       </div>
     </div>

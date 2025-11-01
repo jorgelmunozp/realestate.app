@@ -5,11 +5,11 @@
 .dropzone-box {
   width: 100%;
   min-height: 220px;
-  border: 2px dashed $orange-color;
+  border: 2px dashed $secondary-color;
   border-radius: 12px;
   padding: 1.5rem 1rem;
   text-align: center;
-  background-color: lighten($orange-color, 48.75%);
+  background-color: lighten($secondary-color, 48.75%);
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -19,7 +19,7 @@
   visibility: visible;
 
   &:hover {
-    background-color: lighten($orange-color, 46.5%);
+    background-color: lighten($secondary-color, 46.5%);
   }
 
   p {

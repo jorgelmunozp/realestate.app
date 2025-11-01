@@ -91,7 +91,7 @@
         transition: background-color 0.3s;
 
         &.active {
-          background-color: $orange-color;
+          background-color: $secondary-color;
         }
       }
     }
@@ -117,7 +117,7 @@
       font-family: $primary-font;
       margin-bottom: 1rem;
       font-size: 1.5rem;
-      color: $blue-color;
+      color: $primary-color;
     }
 
     .services-grid {
@@ -142,7 +142,7 @@
 
       .service-icon {
         font-size: 2.2rem;
-        color: $orange-color;
+        color: $secondary-color;
         margin-bottom: 0.5rem;
       }
 
