@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
 import { Paper, TextField, Button, MenuItem, InputAdornment } from "@mui/material";
+import { api } from "../../../services/api/api";
+import { errorWrapper } from "../../../services/api/errorWrapper";
 import { FiTrash2, FiSearch } from "react-icons/fi";
 import { Title } from "../../../components/title/Title";
 import { Pagination } from "../../../components/pagination/Pagination";
-import Swal from "sweetalert2";
-import { api } from "../../../services/api/api";
-import { errorWrapper } from "../../../services/api/errorWrapper";
 import { normalizeUser } from "../mapper/userMapper";
-import { primaryColor } from "../../../global";
+import { blueColor, orangeColor } from "../../../global";
+import Swal from "sweetalert2";
 import "./ManageUsers.scss";
 
 const PAGE_SIZE = 6;
@@ -70,7 +70,7 @@ export const ManageUsers = () => {
       text: "Esta acción no se puede deshacer.",
       icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: primaryColor,
+      confirmButtonColor: blueColor,
       cancelButtonColor: "#d33",
       confirmButtonText: "Sí, eliminar",
       cancelButtonText: "Cancelar",
@@ -117,7 +117,7 @@ export const ManageUsers = () => {
 
       <Paper elevation={3} className="manageusers-card">
         <div className="manageusers-toolbar">
-          <TextField value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Buscar por nombre, correo o rol..." InputProps={{ startAdornment: (<InputAdornment position="start"><FiSearch size={18} color="#107ACC" /></InputAdornment>) }} fullWidth className="manageusers-search-input" />
+          <TextField value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Buscar por nombre, correo o rol..." InputProps={{ startAdornment: (<InputAdornment position="start"><FiSearch size={18} color={orangeColor} /></InputAdornment>) }} fullWidth className="manageusers-search-input" />
         </div>
 
         <div className="manageusers-table">

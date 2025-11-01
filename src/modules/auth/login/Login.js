@@ -8,6 +8,7 @@ import { saveToken } from '../../../services/auth/token';
 import { TextField, Button, InputAdornment, Box, Paper } from '@mui/material';
 import { PiUserCircleFill } from 'react-icons/pi';
 import { FiLock } from 'react-icons/fi';
+import { orangeColor } from '../../../global';
 import Swal from 'sweetalert2';
 import './Login.scss';
 
@@ -73,7 +74,7 @@ export const Login = () => {
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
-                  <PiUserCircleFill color="#107ACC" size={20} />
+                  <PiUserCircleFill color={orangeColor} size={20} />
                 </InputAdornment>
               ),
             }}
@@ -83,7 +84,7 @@ export const Login = () => {
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
-                  <FiLock color="#107ACC" size={18} />
+                  <FiLock color={orangeColor} size={18} />
                 </InputAdornment>
               ),
             }}

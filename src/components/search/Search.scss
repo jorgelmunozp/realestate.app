@@ -25,8 +25,8 @@
   position: relative;
 
   .searchbar-indicator {
-    background: rgba($blue-color, .12);
-    color: $blue-color;
+    background: rgba($orange-color, .12);
+    color: $orange-color;
     padding: .1rem .4rem;
     border-radius: 999px;
     font-size: .65rem;
@@ -81,7 +81,7 @@
 
 .searchbar-icon {
   font-size: 1rem;
-  color: $blue-color;
+  color: $orange-color;
   flex: 0 0 auto;
 }
 
@@ -129,7 +129,7 @@
   position: absolute;
   top: 50%;
   height: 4px;
-  background: $blue-color;
+  background: $lightgray-color;
   border-radius: 9999px;
   transform: translateY(-50%);
 }
@@ -157,7 +157,7 @@
   width: 16px;
   border-radius: 50%;
   background: #fff;
-  border: 2px solid $blue-color;
+  border: 2px solid $orange-color;
   cursor: pointer;
 }
 
@@ -168,7 +168,7 @@
   width: 16px;
   border-radius: 50%;
   background: #fff;
-  border: 2px solid $blue-color;
+  border: 2px solid $orange-color;
   cursor: pointer;
 }
 
@@ -198,21 +198,21 @@
   align-items: center;
   gap: .3rem;
   background: transparent;
-  border: 1px solid rgba($blue-color, .15);
+  border: 1px solid rgba($orange-color, .15);
   color: #374151;
   border-radius: 10px;
   padding: .4rem .7rem;
   height: 34px;
   font-size: .75rem;
   cursor: pointer;
-  &:hover { background: rgba($blue-color, .04); }
+  &:hover { background: rgba($orange-color, .04); }
 }
 
 .searchbar-apply {
   display: flex;
   align-items: center;
   gap: .4rem;
-  background: $blue-color;
+  background: $orange-color;
   border: none;
   color: #fff;
   font-weight: 500;
@@ -221,7 +221,7 @@
   cursor: pointer;
   height: 38px;
   transition: .15s;
-  &:hover { background: darken($blue-color, 4%); }
+  &:hover { background: darken($orange-color, 4%); }
 }
 
 @include desktop {
@@ -271,7 +271,6 @@
     text-align: center;
     gap: .4rem;
     .searchbar-icon { color: $orange-color; }
-    .searchbar-indicator { display: none; }
     .searchbar-toggle-close { display: none; }
   }
 

@@ -2,9 +2,10 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { api } from '../../../services/api/api';
 import { Title } from '../../../components/title/Title';
-import Swal from 'sweetalert2';
 import { TextField, Button, InputAdornment, Box, Paper } from '@mui/material';
 import { FiUser, FiAtSign, FiLock } from 'react-icons/fi';
+import { orangeColor } from '../../../global';
+import Swal from 'sweetalert2';
 import './Register.scss';
 
 const registerEndpoint = process.env.REACT_APP_ENDPOINT_REGISTER;
@@ -85,7 +86,7 @@ export const Register = () => {
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
-                  <FiUser color="#107ACC" />
+                  <FiUser color={orangeColor} />
                 </InputAdornment>
               ),
             }}
@@ -96,7 +97,7 @@ export const Register = () => {
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
-                  <FiAtSign color="#107ACC" />
+                  <FiAtSign color={orangeColor} />
                 </InputAdornment>
               ),
             }}
@@ -107,7 +108,7 @@ export const Register = () => {
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
-                  <FiLock color="#107ACC" />
+                  <FiLock color={orangeColor} />
                 </InputAdornment>
               ),
             }}

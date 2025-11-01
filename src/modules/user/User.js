@@ -3,6 +3,7 @@ import { Title } from '../../components/title/Title';
 import { Link } from 'react-router-dom';
 import { PiUserCircleFill } from 'react-icons/pi';
 import { getTokenPayload, getUserFromToken, getToken, isTokenExpired } from '../../services/auth/token';
+import { orangeColor } from '../../global';
 import './User.scss';
 
 export const User = () => {
@@ -29,7 +30,7 @@ export const User = () => {
 
       <div className="user-card">
         <div className="user-avatar">
-          <PiUserCircleFill size={96} color="#107ACC" />
+          <PiUserCircleFill size={96} color={orangeColor} />
         </div>
 
         <div className="user-info">

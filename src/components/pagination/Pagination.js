@@ -1,5 +1,5 @@
 import React from "react";
-import { primaryColor } from "../../global";
+import { blueColor } from "../../global";
 import "./Pagination.scss";
 
 export const Pagination = ({ page = 1, lastPage = 1, onPageChange, className = "pagination", buttonClassName = "pagination__btn", prevLabel = "Anterior", nextLabel = "Siguiente", disabled = false }) => {
