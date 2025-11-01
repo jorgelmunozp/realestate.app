@@ -51,14 +51,28 @@
   }
 }
 
-// Campo año
-.MuiButton-root {
-  border-radius: 16px !important;
-  font-family: $primary-font !important;
-  text-transform: none !important;
-  font-size: 1.05rem !important;
-  font-weight: 600 !important;
+.MuiPickersInputBase-root { 
+  &.MuiPickersOutlinedInput-root { 
+    border-radius: 12px;
+  } 
+  
 }
+
+// Campo año
+.MuiFormControl-root{ 
+  &.MuiPickersTextField-root {
+    background-color: #f9fafb;
+    border-radius: 12px !important;
+  }
+
+  .MuiFormLabel-root { 
+    &.MuiInputLabel-root{ 
+        &.Mui-focused { color: $black-color !important; }
+    }
+  }
+}
+
+
 
 // Botones
 .MuiButton-root {
