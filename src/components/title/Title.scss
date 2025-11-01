@@ -12,31 +12,15 @@
         color: $blue-color;
         font-weight: 600;
         margin: 0;
-        font-size: 2rem;
+        font-size: 1.6rem;
+        transition: all 0.3s ease;
 
-        @include screen-md {
-            font-size: 1.8rem !important;
-        }
-
-        @include tablet {
-            font-size: 1.6rem !important;
-        }
-
-        @include screen-sm {
-            font-size: 1.8rem !important;
-        }
-
-        @include mobile {
-            font-size: 1.6rem !important;
-        }
-
-        @include mobilePortrait {
-            font-size: 1.6rem !important;
-        }
-
-        @include mobileLandscape {
-            font-size: 1.4rem !important;
-        }
+        @include screen-md { font-size: 1.6rem !important; }
+        @include tablet { font-size: 1.4rem !important; }
+        @include screen-sm { font-size: 1.4rem !important; }
+        @include mobile { font-size: 1.4rem !important; }
+        @include mobilePortrait { font-size: 1.4rem !important; }
+        @include mobileLandscape { font-size: 1.2rem !important; }
     }
 
     /* Ajuste de padding para pantallas más pequeñas */

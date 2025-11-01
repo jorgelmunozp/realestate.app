@@ -95,7 +95,7 @@ export const Login = () => {
           <Button variant="outlined" color="secondary" onClick={() => navigate('/register')} sx={{ borderRadius: 2, textTransform: 'none', py: 1.2 }}>
             Crear cuenta
           </Button>
-          <Button variant="text" onClick={() => navigate('/password-recover')} sx={{ color: blueColor, textTransform: 'none', fontWeight: 500, fontSize: '0.95rem', mt: 1, '&:hover': { color: '#000' }, }} >
+          <Button variant="text" onClick={() => navigate('/password-recover')} sx={{ color: blueColor, textTransform: 'none', fontWeight: 500, fontSize: '0.95rem !important', mt: 1, '&:hover': { color: '#000' }, }} >
             ¿Olvidaste tu contraseña?
           </Button>
         </Box>

@@ -3,18 +3,17 @@
 @import '../../assets/styles/scss/mixins/fonts';
 
 .button {
-  width: 100% !important;
-  margin: 0 auto;
   background-color: $blue-color;
   color: #fff;
+  font-family: 'Montserrat';
   border-radius: 12px;
   padding: 1.15rem;
   font-weight: bold;
   font-size: inherit;
+  margin: 0 auto;
   border: none;
-  transition: background 0.3s ease;
+  width: 100% !important;
+  transition: all 0.3s ease;
 
-  &:hover {
-    background-color: #1d4ed8;
-  }
+  &:hover { background-color: #1d4ed8; }
 }

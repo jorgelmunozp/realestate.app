@@ -99,7 +99,7 @@ export const EditUser = () => {
             <MenuItem value="editor">Editor</MenuItem>
             <MenuItem value="user">User</MenuItem>
           </TextField>
-          <Button type="submit" variant="contained" color="primary">
+          <Button type="submit" variant="contained" color="primary" sx={{ borderRadius: 2, textTransform: 'none', py: 1.2 }}>
             Guardar
           </Button>
         </Box>

@@ -2,7 +2,7 @@
 @import '../../../assets/styles/scss/mixins/screen';
 @import '../../../assets/styles/scss/mixins/fonts';
 
-// CONTENEDOR PRINCIPAL
+// Contenedor principal
 .login-container {
   display: flex;
   justify-content: center;
@@ -14,8 +14,7 @@
   @include screen-sm { padding: 1rem 0.5rem !important; }
 }
 
-// TARJETA (idéntica al register)
-
+// TARJETA
 .login-card {
   background-color: #fff;
   border-radius: 20px;
@@ -32,76 +31,9 @@
   @include screen-sm { padding: 1.5rem 0.5rem; }
   
   // TÍTULO
-  h2, .MuiTypography-root {
+  h2 {
     font-weight: 700;
     color: $blue-color;
-  }
-
-  // CAMPOS DE TEXTO
-  .MuiTextField-root {
-    background-color: #f9fafb;
-    border-radius: 12px;
-
-    .MuiOutlinedInput-root {
-      border-radius: 12px;
-
-      fieldset {
-        border-color: #d1d5db;
-      }
-
-      &:hover fieldset {
-        border-color: $blue-color;
-      }
-
-      &.Mui-focused fieldset {
-        border-color: $blue-color;
-        box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.15);
-      }
-
-      input {
-        text-align: center !important;
-        font-size: 1rem;
-        color: #333;
-
-        &::placeholder {
-          text-align: center !important;
-          color: #9ca3af;
-        }
-      }
-    }
-
-    // Íconos naranjas
-    .MuiInputAdornment-root svg {
-      color: $orange-color !important;
-      transition: color 0.2s ease-in-out;
-    }
-  }
-
-  // BOTONES
-  .MuiButton-root {
-    width: 100%;
-    border-radius: 12px;
-    font-size: 1.05rem;
-    font-weight: 600;
-    text-transform: none;
-    padding: 0.9rem;
-    margin-top: 0.6rem;
-
-    &.MuiButton-containedPrimary {
-      background-color: $blue-color;
-
-      &:hover { background-color: #1d4ed8; }
-    }
-
-    &.MuiButton-outlinedSecondary {
-      background-color: #e5e7eb;
-      color: #333;
-      border: none;
-
-      &:hover {
-        background-color: #d1d5db;
-      }
-    }
   }
 
   // LINKS
@@ -132,14 +64,10 @@
   }
 }
 
-// RESPONSIVE
+// Responsive
 @media (max-width: 480px) {
   .login-card {
     padding: 1.125rem !important;
-  }
-
-  .MuiTextField-root input {
-    font-size: 0.95rem;
   }
 
   .login-link {

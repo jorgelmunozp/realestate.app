@@ -7,6 +7,7 @@
   justify-content: center;
   min-height: 90vh;
   background: #f6f8fb;
+  color: #333;
   padding: 2rem;
 }
 
@@ -101,7 +102,7 @@
     font-size: 1rem;
     text-align: justify;
     text-align-last: center;
-
+    color: #333 !important;
 
     @include desktop { font-size: 1.2rem; }
     @include screen-md { font-size: 1.1rem; }

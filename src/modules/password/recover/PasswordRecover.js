@@ -4,7 +4,7 @@ import { api } from '../../../services/api/api';
 import { Title } from '../../../components/title/Title';
 import { Box, Paper, TextField, Button, InputAdornment, Typography } from '@mui/material';
 import { FiAtSign } from 'react-icons/fi';
-import { orangeColor } from '../../../global';
+import { blueColor, orangeColor } from '../../../global';
 import Swal from 'sweetalert2';
 import './PasswordRecover.scss';
 
@@ -59,11 +59,12 @@ export const PasswordRecover = () => {
             Enviar enlace
           </Button>
 
-          <Button variant="outlined" color="secondary" onClick={handleCancel} sx={{ borderRadius: 2, textTransform: 'none', py: 1.2, backgroundColor: '#e5e7eb', color: '#333', border: 'none', '&:hover': { backgroundColor: '#d1d5db' } }}>
+          {/* <Button variant="outlined" color="secondary" onClick={handleCancel} sx={{ borderRadius: 2, textTransform: 'none', py: 1.2, backgroundColor: '#e5e7eb', color: '#333', border: 'none', '&:hover': { backgroundColor: '#d1d5db' } }}> */}
+          <Button variant="outlined" color="secondary" onClick={handleCancel} sx={{ borderRadius: 2, textTransform: 'none', py: 1.2 }}>
             Cancelar
           </Button>
 
-          <Typography onClick={handleBack} sx={{ color: '#107ACC', fontSize: '0.95rem', fontWeight: '500', mt: 2, cursor: 'pointer', '&:hover': { color: '#000' } }}>
+          <Typography onClick={handleBack} sx={{ color:blueColor, fontFamily:'Montserrat', fontSize:'0.95rem', fontWeight:'600', mt:4, cursor:'pointer', '&:hover': { color:'#000 !important', textDecoration:'none !important' } }}>
             ← Volver al inicio de sesión
           </Typography>
         </Box>

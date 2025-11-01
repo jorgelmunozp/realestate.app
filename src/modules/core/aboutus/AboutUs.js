@@ -39,7 +39,7 @@ export const AboutUs = () => {
 
   return (
     <div className="aboutUs-container">
-      <div className="aboutUs-form home-content">
+      <div className="aboutUs-form aboutUs-content">
         <Title title="Nosotros" />
         {/* Slider */}
         <div className="aboutUs-slider">

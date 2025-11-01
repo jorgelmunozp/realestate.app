@@ -2,7 +2,7 @@
 @import "../../../assets/styles/scss/mixins/screen";
 @import "../../../assets/styles/scss/mixins/fonts";
 
-// CONTENEDOR PRINCIPAL
+// Contenedor principal
 .home-container {
   display: flex;
   justify-content: center;
@@ -10,7 +10,8 @@
   min-height: 100vh;
   background: linear-gradient(180deg, #eef2ff 0%, #f9fafb 100%);
   padding: 2rem 2rem;
-
+  transition: all 0.3s ease;
+  
   @include screen-sm { padding: 1rem 0.5rem; }
 }
 
@@ -33,12 +34,6 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: 1.5rem;
-
-  h1 {
-    font-family: $title-font;
-    color: $blue-color;
-    font-size: 2.2rem;
-  }
 
   .home-add-btn {
     background-color: $blue-color;

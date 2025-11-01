@@ -215,7 +215,6 @@ export const EditProperty = () => {
                 slotProps={{
                   textField: {
                     fullWidth: true,
-                    className: "year-input",
                     InputLabelProps: { shrink: true },
                     required: true,
                   },

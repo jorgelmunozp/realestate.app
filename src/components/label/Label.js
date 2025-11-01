@@ -1,8 +1,8 @@
 import './Label.scss';
 
-export const Label = ({ text='' }) => {
+export const Label = ({ text='', color='#000' }) => {
   return (
-    <div className="label"><span>{ text }</span></div>
+    <div className="label" style={{color:color}}><span>{ text }</span></div>
   )
 }
 

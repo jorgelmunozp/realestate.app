@@ -1,22 +1,57 @@
 @import '../mixins/colors';
 @import '../mixins/fonts';
 
-// MUI
-.MuiOutlinedInput-root {
-  background-color: #f9fafb !important;
-  border-radius: 16px !important;
+// Mui Components
+
+// Campos de Texto
+.MuiTextField-root {
+  background-color: #f9fafb;
+  border-radius: 12px;
+
+  .MuiOutlinedInput-root {
+    border-radius: 12px;
 
   fieldset { border-color: #d1d5db; }
 
   &:hover fieldset { border-color: #9ca3af; }
 
-  &.Mui-focused fieldset {
-    border-color: $blue-color;
-    box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.15);
+    &.Mui-focused fieldset { border-color: $orange-color; }
+
+    input {
+      text-align: center !important;
+      font-size: 1rem;
+      color: #333;
+
+      &::placeholder {
+        text-align: center !important;
+        color: #9ca3af;
+      }
+    }
+  }
+
+  // Label
+  .MuiFormLabel-root {
+    &.MuiInputLabel-root {
+      font-family: 'Montserrat';
+      font-size: 0.9rem;
+
+      &.Mui-focused { color: $black-color !important; }
+    }
+  }
+
+  //Iconos naranjas
+  .MuiInputAdornment-root svg {
+    color: $orange-color !important;
+    transition: color 0.2s ease-in-out;
+  }
+
+  // Al enfocar el input, mantiene el naranja
+  .MuiOutlinedInput-root.Mui-focused + .MuiInputAdornment-root svg {
+    color: $orange-color !important;
   }
 }
 
-// CAMPO AÑO (formato y sombreado del CrudProperty)
+// Campo año
 .MuiButton-root {
   border-radius: 16px !important;
   font-family: $primary-font !important;
@@ -25,22 +60,33 @@
   font-weight: 600 !important;
 }
 
-.year-input, .MuiOutlinedInput-root {
-  background-color: #f9fafb !important;
+// Botones
+.MuiButton-root {
+  width: 100% !important;
   border-radius: 12px !important;
+  font-size: 1.05rem !important;
+  font-weight: 600 !important;
+  text-transform: none !important;
+  padding: 0.9rem !important;
+  margin-top: 0.6rem !important;
 
-  fieldset { border-color: #d1d5db; }
+  &.MuiButton-containedPrimary {
+    background-color: $blue-color !important;
 
-  &:hover fieldset { border-color: #9ca3af; }
-
-  &.Mui-focused fieldset {
-    border-color: $blue-color;
-    box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.15);
+    &:hover { background-color: #1d4ed8 !important;; }
   }
 
-  input::placeholder {
-    color: #9ca3af;
-    text-transform: lowercase;
-    opacity: 0.8;
+  &.MuiButton-outlinedSecondary {
+    background-color: #e5e7eb !important;
+    color: #333 !important;
+    border: none !important;
+
+    &:hover { background-color: #d1d5db !important; }
   }
+}
+
+
+// Responsive
+@media (max-width: 480px) {
+  .MuiTextField-root input { font-size: 0.95rem; }
 }
