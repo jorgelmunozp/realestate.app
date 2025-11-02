@@ -8,14 +8,12 @@ import { FiTrash2 } from "react-icons/fi";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import TextField from "@mui/material/TextField";
-import Alert from "@mui/material/Alert";
 import dayjs from "dayjs";
-import Swal from "sweetalert2";
-import { Box, Typography } from "@mui/material";
+import { Box, Typography, TextField, Button, Alert } from "@mui/material";
 import { mapOwnerToDto } from "../../owner/mapper/OwnerMapper";
 import { mapPropertyImageToDto } from "../../propertyImage/mapper/propertyImageMapper";
 import { mapPropertyTraceToDto } from "../../propertyTrace/mapper/propertyTraceMapper";
+import Swal from "sweetalert2";
 import "./EditProperty.scss";
 
 export const EditProperty = () => {
@@ -29,6 +27,8 @@ export const EditProperty = () => {
   const [itemPropertyImage, setPropertyImage] = useState({});
   const [itemPropertyTrace, setPropertyTrace] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [updating, setUpdating] = useState(false);
+  
   const [traceAlert, setTraceAlert] = useState({ message: "", severity: "success" });
 
   const toBase64 = useCallback(
@@ -110,11 +110,13 @@ export const EditProperty = () => {
     setTraceAlert({ message: "Traza eliminada localmente (se guardará al actualizar)", severity: "info" });
   };
 
-  // Guardar cambios (PATCH con wrapper adaptado)
+  // Guardar cambios con wrapper
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      setUpdating(true);
       if (!itemProperty) {
+        setUpdating(false);
         Swal.fire({ icon: "error", title: "Error", text: "No se encontró la propiedad." });
         return;
       }
@@ -176,22 +178,25 @@ export const EditProperty = () => {
       Swal.fire({
         icon: "error",
         title: "Error",
-        text: error?.response?.data?.message || "Ocurrió un error al actualizar la propiedad",
+        text: error?.response?.data?.message || "Ocurrió un error al actualizar el inmueble",
       });
+    } finally {
+      setUpdating(false);
     }
   };
 
-  // Renderizado
-  if (loading)
+  // fallback
+  if (loading || updating)
     return (
-      <div className="container-loader full-screen">
-        <div className="spinner" />
-        <p>Cargando...</p>
+      <div className="loader-overlay loader-overlay--home">
+        <div className="loader-spinner"></div>
+        {loading &&  <p className="loader-text">Cargando inmueble...</p>}
+        {updating &&  <p className="loader-text">Actualizando inmueble...</p>}
       </div>
     );
 
   if (!itemProperty)
-    return <p style={{ textAlign: "center", color: "red" }}>Propiedad no encontrada</p>;
+    return <p style={{ textAlign: "center", color: "red" }}>Inmueble no encontrado</p>;
 
   return (
     <div className="editproperty-container">
@@ -299,8 +304,8 @@ export const EditProperty = () => {
           <AddButton label="Añadir evento" handleChange={handleAddTrace} />
         </div>
 
-        <button type="submit" className="editproperty-btn primary">{loading ? 'Actalizando...' : 'Actualizar Propiedad'}</button>
-        <button type="button" className="editproperty-btn secondary" onClick={() => navigate('/home')}>Cancelar</button>
+        <Button id="updateButton" type="submit" variant="contained" color={updating ? 'secondary':'primary'} disabled={updating} aria-label="update button">{updating ? 'Actualizando...' : 'Actualizar Propiedad'}</Button>
+        <Button id="cancelButton" variant="outlined" color="secondary" onClick={() => navigate('/home')} aria-label="cancel button">Cancelar</Button>
       </form>
     </div>
   );

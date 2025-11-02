@@ -17,8 +17,9 @@ export const PasswordRecover = () => {
 
   const handleRecover = async () => {
     if (!email) return;
-    setSending(true);
+    
     try {
+      setSending(true);
       const { errorWrapper } = await import('../../../services/api/errorWrapper');
       const { ok, data, error } = await errorWrapper(api.post(`${recoverEndpoint}`, { email }), { unwrap: false });
       if (ok) {
@@ -56,7 +57,7 @@ export const PasswordRecover = () => {
           />
 
           <Button id="sendButton" variant="contained" color="primary" onClick={handleRecover} disabled={sending} sx={{ borderRadius: 2, textTransform: 'none', py: 1.2 }} aria-label="send button">
-            Enviar enlace
+             {sending ? 'Enviando...':'Enviar enlace'}
           </Button>
 
           <Button id="cancelutton" variant="outlined" color="secondary" onClick={handleCancel} sx={{ borderRadius: 2, textTransform: 'none', py: 1.2 }} aria-label="send button">

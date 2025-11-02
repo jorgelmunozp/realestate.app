@@ -71,8 +71,8 @@ export const Home = () => {
 
   const handleDeleteProperty = async (propertyId) => {
     const result = await Swal.fire({
-      title: "Eliminar Propiedad",
-      text: "¿Seguro que deseas eliminar este inmueble?",
+      title: "Eliminar",
+      text: "Deseas eliminar este inmueble?",
       icon: "warning",
       showCancelButton: true,
       confirmButtonText: "Sí, eliminar",
@@ -96,6 +96,7 @@ export const Home = () => {
 
   const handleChangePage = (newPage) => setPagination((prev) => ({ ...prev, page: newPage }));
 
+  // fallback
   if (loading) {
     return (
       <div className="loader-overlay loader-overlay--home">
@@ -132,7 +133,7 @@ export const Home = () => {
                   {p.image?.file ? <img className="home-property-card-img" src={`data:image/jpeg;base64,${p.image.file}`} alt={p.name} loading="lazy" /> : <div className="no-image">Sin imagen</div>}
                 </div>
                 <div className="home-property-card-info">
-                  <h3>{p.name}</h3>
+                  <h1>{p.name}</h1>
                   <p className="home-property-price">${Number(p.price || 0).toLocaleString()} | {p.address}</p>
                 </div>
                 <div className="home-property-card-buttons">

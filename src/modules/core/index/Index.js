@@ -34,6 +34,7 @@ export const Index = () => {
     );
   }
 
+  // fallback
   return (
     <div className="index-container">
       <div className="index-content">

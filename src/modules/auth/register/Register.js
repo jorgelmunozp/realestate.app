@@ -114,7 +114,7 @@ export const Register = () => {
             }}
           />
 
-          <Button id="registerButton" variant="contained" color={loading ? "secondary" : "primary"} onClick={handleRegister} disabled={loading} sx={{ borderRadius: 2, textTransform: 'none', py: 1.2 }} aria-label='register button'>
+          <Button id="registerButton" variant="contained" color="primary" onClick={handleRegister} disabled={loading} sx={{ borderRadius: 2, textTransform: 'none', py: 1.2 }} aria-label='register button'>
             {loading ? 'Registrando...' : 'Crear cuenta'}
           </Button>
 

@@ -14,7 +14,7 @@
   @include screen-sm { padding: 1rem 0.5rem !important; }
 }
 
-// TARJETA
+// Tarjeta
 .login-card {
   background-color: #fff;
   border-radius: 20px;
@@ -30,13 +30,13 @@
 
   @include screen-sm { padding: 1.5rem 0.5rem; }
   
-  // TÍTULO
+  // Titulo
   h2 {
     font-weight: 700;
     color: $primary-color;
   }
 
-  // LINKS
+  // Links
   .login-link {
     color: $primary-color;
     font-weight: 500;

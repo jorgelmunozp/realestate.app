@@ -8,15 +8,14 @@ import { FiTrash2 } from "react-icons/fi";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import TextField from "@mui/material/TextField";
 import dayjs from "dayjs";
-import Swal from "sweetalert2";
-import { Box, Typography } from "@mui/material";
+import { Box, Typography, TextField, Button } from "@mui/material";
 import propertyDto from "../dto/PropertyDto.json";
 import ownerDto from "../../owner/dto/OwnerDto.json";
 import propertyImageDto from "../../propertyImage/dto/PropertyImageDto.json";
 import propertyTraceDto from "../../propertyTrace/dto/PropertyTraceDto.json";
 import { mapPropertyToDto } from "../mapper/propertyMapper";
+import Swal from "sweetalert2";
 import "./AddProperty.scss";
 
 export const AddProperty = () => {
@@ -29,6 +28,7 @@ export const AddProperty = () => {
   const [itemOwner, setOwner] = useState(ownerDto);
   const [itemPropertyImage, setPropertyImage] = useState(propertyImageDto);
   const [itemPropertyTrace, setPropertyTrace] = useState([propertyTraceDto]);
+  const [creating, setCreating] = useState(false);
 
   const toBase64 = useCallback(
     (file) =>
@@ -98,15 +98,13 @@ export const AddProperty = () => {
       return Swal.fire("Historial", "Completa los datos de las trazas.", "warning");
 
     try {
-      // Construcción definitiva del payload compatible con backend
-      const payload = mapPropertyToDto({
+      setCreating(true)
+      const payload = mapPropertyToDto({      // Construcción del payload de datos
         ...itemProperty,
         owner: itemOwner,
         image: itemPropertyImage,
         traces: itemPropertyTrace,
       });
-
-      console.log("propertyPayload", payload);
 
       const res = await errorWrapper(api.post(endpoints.property, payload));
       const { success, message } = res;
@@ -117,11 +115,24 @@ export const AddProperty = () => {
       } else {
         Swal.fire("Error", message || "Ocurrió un error al registrar el inmueble.", "error");
       }
-    } catch (err) {
-      console.error("Error al crear propiedad:", err);
-      Swal.fire("Error", "Ocurrió un error al registrar el inmueble.", "error");
-    }
+    } catch (error) {
+      console.error("Error al crear propiedad:", error);
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: error?.response?.data?.message || "Ocurrió un error al registrar el inmueble",
+      });
+    } finally { setCreating(false); } 
   };
+
+  // fallback
+  if (creating)
+    return (
+      <div className="loader-overlay loader-overlay--home">
+        <div className="loader-spinner"></div>
+          <p className="loader-text">Registrando inmueble...</p>
+      </div>
+    );
 
   return (
     <div className="addproperty-container">
@@ -216,8 +227,8 @@ export const AddProperty = () => {
           <AddButton label="Añadir evento" handleChange={handleAddTrace} />
         </div>
 
-        <button type="submit" className="addproperty-btn primary">Crear Propiedad</button>
-        <button type="button" className="addproperty-btn secondary" onClick={()=>navigate('/home')}>Cancelar</button>
+        <Button id="createButton" type="submit" variant="contained" color={creating ? 'secondary':'primary'} disabled={creating}  aria-label="create button">{creating ? 'Registrando...' : 'Registrar Propiedad'}</Button>
+        <Button id="cancelButton" variant="outlined" color="secondary" onClick={() => navigate('/home')} aria-label="cancel button">Cancelar</Button>
       </form>
     </div>
   );

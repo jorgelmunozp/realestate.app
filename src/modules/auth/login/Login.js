@@ -89,7 +89,7 @@ export const Login = () => {
               ),
             }}
           />
-          <Button id="loginButton" variant="contained" color={loading ? 'secondary': 'primary'} onClick={handleLogin} disabled={loading} sx={{ borderRadius: 2, textTransform: 'none', py: 1.2 }} aria-label="login button">
+          <Button id="loginButton" variant="contained" color="primary" onClick={handleLogin} disabled={loading} sx={{ borderRadius: 2, textTransform: 'none', py: 1.2 }} aria-label="login button">
             {loading ? 'Ingresando...' : 'Ingresar'}
           </Button>
           <Button id="registerButton" variant="outlined" color="secondary" onClick={() => navigate('/register')} sx={{ borderRadius: 2, textTransform: 'none', py: 1.2 }} aria-label="register button">
