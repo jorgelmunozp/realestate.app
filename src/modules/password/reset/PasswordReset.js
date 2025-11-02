@@ -53,11 +53,11 @@ export const PasswordReset = () => {
             }}
           />
 
-          <Button variant="contained" color="primary" onClick={handleReset} sx={{ borderRadius: 2, textTransform: 'none', py: 1.2 }}>
+          <Button id="confirmButton" variant="contained" color="primary" onClick={handleReset} sx={{ borderRadius: 2, textTransform: 'none', py: 1.2 }} aria-label='confirm button'>
             Confirmar
           </Button>
 
-          <Button variant="outlined" color="secondary" onClick={handleCancel} sx={{ borderRadius: 2, textTransform: 'none', py: 1.2 }}>
+          <Button id="cancelButton" variant="outlined" color="secondary" onClick={handleCancel} sx={{ borderRadius: 2, textTransform: 'none', py: 1.2 }} aria-label='cancel button'>
             Cancelar
           </Button>
         </Box>

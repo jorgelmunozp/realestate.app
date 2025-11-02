@@ -138,7 +138,7 @@ export const ManageUsers = () => {
                   <MenuItem value="editor">Editor</MenuItem>
                   <MenuItem value="user">User</MenuItem>
                 </TextField>
-                <Button variant="outlined" className="manageusers-replace-btn" color="error" onClick={() => handleDelete(u.email)}><FiTrash2 /></Button>
+                <Button id={`deletebutton${idx}`} variant="outlined" className="manageusers-replace-btn" color="error" onClick={() => handleDelete(u.email)} aria-label={`delete button ${idx}`}><FiTrash2 /></Button>
               </div>
             ))
           ) : (

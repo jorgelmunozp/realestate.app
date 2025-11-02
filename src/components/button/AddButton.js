@@ -7,7 +7,7 @@ export const AddButton = ({ label='', handleChange, className='' }) => {
     
   return (
     <div className={`add-btn-container ${className}`}>
-      <button type="button" onClick={ handleInputChange } className='add-btn-button'>
+      <button id="addButton" type="button" onClick={ handleInputChange } className='add-btn-button' aria-label='add button'>
         <div className="add-btn-label"><FiPlus /></div>
         <label className='add-btn-text'>{ label }</label>
       </button>

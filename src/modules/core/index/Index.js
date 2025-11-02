@@ -45,7 +45,7 @@ export const Index = () => {
               <div key={p.idProperty} className="index-property-card" onClick={() => handleOpenProperty(p.idProperty)}>
                 {p.image && p.image.file ? <img className="index-property-card-img" src={`data:image/jpeg;base64,${p.image.file}`} alt={p.name} loading="lazy" /> : <div className="no-image">Sin imagen</div>}
                 <div className="index-property-card-info">
-                  <h3>{p.name}</h3>
+                  <h1>{p.name}</h1>
                   <p>{p.address}</p>
                   <p className="price">${Number(p.price || 0).toLocaleString()}</p>
                 </div>

@@ -231,7 +231,7 @@ export const EditProperty = () => {
             {!itemPropertyImage.imagePreview ? (
               <Box className="dropzone-box" onClick={() => document.getElementById("propertyFileInput").click()}>
                 <Typography variant="body1" color="textSecondary">Haz clic o arrastra una imagen</Typography>
-                <input id="propertyFileInput" type="file" accept="image/*" hidden onChange={(e) => handleImageChange(e, "property")} required aria-required="true" />
+                <input id="propertyFileInput" type="file" accept="image/*" hidden onChange={(e) => handleImageChange(e, "property")} aria-label="property image input" required aria-required="true" />
               </Box>
             ) : (
               <div className="image-preview filled">
@@ -257,7 +257,7 @@ export const EditProperty = () => {
               {!itemOwner.ownerPhotoPreview && !itemOwner.photo ? (
                 <Box className="dropzone-box" onClick={() => document.getElementById("ownerFileInput").click()}>
                   <Typography variant="body1" color="textSecondary">Cargar imagen del propietario</Typography>
-                  <input id="ownerFileInput" name="file" type="file" accept="image/*" hidden onChange={(e) => handleImageChange(e, "owner")} required aria-required="true" />
+                  <input id="ownerFileInput" name="file" type="file" accept="image/*" hidden onChange={(e) => handleImageChange(e, "owner")} aria-label="owner photo input" required aria-required="true" />
                 </Box>
               ) : (
                 <div className="image-preview filled">

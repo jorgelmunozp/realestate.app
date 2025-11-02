@@ -1,7 +1,7 @@
 import './Button.scss';
 
-export const Button = ({label='', onClick, className=''}) => {
+export const Button = ({id='button', label='', onClick, className=''}) => {
   return (
-   <button onClick={onClick} className={ `button ${className}`}>{ label }</button>
+   <button id={id} onClick={onClick} className={ `button ${className}`} aria-label={ ` ${label} button`}>{ label }</button>
   )
 }

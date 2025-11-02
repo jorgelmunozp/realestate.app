@@ -96,7 +96,7 @@ export const Property = () => {
             )}
           </div>
 
-          <Button label={'← Regresar'} onClick={goBack} />
+          <Button id="buttonBack" label={'← Regresar'} onClick={goBack} arial-label="button back" />
         </div>
       </div>
     </div>

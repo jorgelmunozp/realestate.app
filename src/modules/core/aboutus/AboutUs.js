@@ -86,8 +86,8 @@ export const AboutUs = () => {
 
         {/* Botones */}
         <div className="aboutUs-buttons">
-          <Button label={'Ver Propiedades'} onClick={() => navigate('/index')} />
-          <Button label={'Contáctanos'} onClick={() => navigate('/contact')} />
+          <Button id="navigateProperties" label={'Ver Propiedades'} onClick={() => navigate('/index')}/>
+          <Button id="navigateContact" label={'Contáctanos'} onClick={() => navigate('/contact')}/>
         </div>
       </div>
     </div>

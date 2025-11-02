@@ -89,13 +89,13 @@ export const Login = () => {
               ),
             }}
           />
-          <Button variant="contained" color={loading ? 'secondary': 'primary'} onClick={handleLogin} disabled={loading} sx={{ borderRadius: 2, textTransform: 'none', py: 1.2 }}>
+          <Button id="loginButton" variant="contained" color={loading ? 'secondary': 'primary'} onClick={handleLogin} disabled={loading} sx={{ borderRadius: 2, textTransform: 'none', py: 1.2 }} aria-label="login button">
             {loading ? 'Ingresando...' : 'Ingresar'}
           </Button>
-          <Button variant="outlined" color="secondary" onClick={() => navigate('/register')} sx={{ borderRadius: 2, textTransform: 'none', py: 1.2 }}>
+          <Button id="registerButton" variant="outlined" color="secondary" onClick={() => navigate('/register')} sx={{ borderRadius: 2, textTransform: 'none', py: 1.2 }} aria-label="register button">
             Crear cuenta
           </Button>
-          <Button variant="text" onClick={() => navigate('/password-recover')} sx={{ color: blueColor, textTransform: 'none', fontWeight: 500, fontSize: '0.95rem !important', mt: 1, '&:hover': { color: '#000' }, }} >
+          <Button id="forgotPasswordButton" variant="text" onClick={() => navigate('/password-recover')} sx={{ color: blueColor, textTransform: 'none', fontWeight: 500, fontSize: '0.95rem !important', mt: 1, '&:hover': { color: '#000' }, }} aria-label="forgot password button">
             ¿Olvidaste tu contraseña?
           </Button>
         </Box>

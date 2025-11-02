@@ -55,12 +55,11 @@ export const PasswordRecover = () => {
             }}
           />
 
-          <Button variant="contained" color="primary" onClick={handleRecover} disabled={sending} sx={{ borderRadius: 2, textTransform: 'none', py: 1.2 }}>
+          <Button id="sendButton" variant="contained" color="primary" onClick={handleRecover} disabled={sending} sx={{ borderRadius: 2, textTransform: 'none', py: 1.2 }} aria-label="send button">
             Enviar enlace
           </Button>
 
-          {/* <Button variant="outlined" color="secondary" onClick={handleCancel} sx={{ borderRadius: 2, textTransform: 'none', py: 1.2, backgroundColor: '#e5e7eb', color: '#333', border: 'none', '&:hover': { backgroundColor: '#d1d5db' } }}> */}
-          <Button variant="outlined" color="secondary" onClick={handleCancel} sx={{ borderRadius: 2, textTransform: 'none', py: 1.2 }}>
+          <Button id="cancelutton" variant="outlined" color="secondary" onClick={handleCancel} sx={{ borderRadius: 2, textTransform: 'none', py: 1.2 }} aria-label="send button">
             Cancelar
           </Button>
 

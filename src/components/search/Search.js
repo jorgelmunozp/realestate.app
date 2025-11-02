@@ -78,14 +78,12 @@ export const Search = ({ filters = {}, onChange, className = "" }) => {
         <div className="searchbar-group">
           <div className="searchbar-field">
             <FiSearch className="searchbar-icon" />
-            {/* <input type="text" value={name} onChange={(e) => setName(e.target.value)} placeholder="Nombre" /> */}
-            <TextField type="text" value={name} onChange={(e) => setName(e.target.value)} label="Nombre" />
+            <TextField id="nameSearch" type="text" value={name} onChange={(e) => setName(e.target.value)} label="Nombre" aria-label="name search input"/>
           </div>
           <div className="searchbar-divider" />
           <div className="searchbar-field">
             <FiMapPin className="searchbar-icon" />
-            {/* <input type="text" value={address} onChange={(e) => setAddress(e.target.value)} placeholder="Dirección / sector" /> */}
-            <TextField type="text" value={address} onChange={(e) => setAddress(e.target.value)} label="Dirección / sector" />
+            <TextField id="addressSearch" type="text" value={address} onChange={(e) => setAddress(e.target.value)} label="Dirección / sector" aria-label="address search input"/>
           </div>
           <div className="searchbar-divider hide-mobile" />
           <div className="searchbar-field searchbar-price">
@@ -93,8 +91,8 @@ export const Search = ({ filters = {}, onChange, className = "" }) => {
             <div className="price-slider" onClick={handleTrackClick}>
               <div className="price-slider-track" ref={trackRef} />
               <div className="price-slider-range" style={{ left: `${(min / MAX_PRICE) * 100}%`, right: `${100 - (max / MAX_PRICE) * 100}%` }} />
-              <input type="range" min="0" max={MAX_PRICE} step={STEP} value={min} onChange={(e) => onMinRange(e.target.value)} />
-              <input type="range" min="0" max={MAX_PRICE} step={STEP} value={max} onChange={(e) => onMaxRange(e.target.value)} />
+              <input id="minRangeLimit" type="range" min="0" max={MAX_PRICE} step={STEP} value={min} onChange={(e) => onMinRange(e.target.value)} aria-label="min range limit"/>
+              <input id="maxRangeLimit" type="range" min="0" max={MAX_PRICE} step={STEP} value={max} onChange={(e) => onMaxRange(e.target.value)} aria-label="max range limit"/>
               <div className="price-slider-labels">
                 <span>{formatShort(min)}</span>
                 <span>{formatShort(max)}</span>
@@ -104,8 +102,8 @@ export const Search = ({ filters = {}, onChange, className = "" }) => {
         </div>
 
         <div className="searchbar-actions">
-          <button type="button" className="searchbar-clear" onClick={clear}><FiRotateCcw color={orangeColor} /><span>Limpiar</span></button>
-          <button type="button" className="searchbar-apply" onClick={apply}><FiFilter color={orangeColor} /><span>Aplicar</span></button>
+          <button id="clearButton" type="button" className="searchbar-clear" onClick={clear}><FiRotateCcw color={orangeColor} aria-label="clear button"/><span>Limpiar</span></button>
+          <button id="applyButton" type="button" className="searchbar-apply" onClick={apply}><FiFilter color={orangeColor} aria-label="apply button" /><span>Aplicar</span></button>
         </div>
       </div>
     </div>
