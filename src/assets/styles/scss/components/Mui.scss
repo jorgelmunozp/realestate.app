@@ -49,11 +49,14 @@
   .MuiOutlinedInput-root.Mui-focused + .MuiInputAdornment-root svg {
     color: $secondary-color !important;
   }
+
+  .MuiSvgIcon-root{ color: $secondary-color !important;}
 }
 
 .MuiPickersInputBase-root { 
   &.MuiPickersOutlinedInput-root { 
     border-radius: 12px;
+    border-color: red;
   } 
   
 }
@@ -63,20 +66,32 @@
   &.MuiPickersTextField-root {
     background-color: #f9fafb;
     border-radius: 12px !important;
+
+    &.Mui-focused fieldset {          // Borde color
+      &.MuiPickersOutlinedInput-notchedOutline{ border-color: $secondary-color !important; }
+    }
   }
 
-  .MuiFormLabel-root {                // Label año
+  .MuiFormLabel-root {                // Label "Año"
     &.MuiInputLabel-root{ 
       &.Mui-focused { color: $black-color !important; }
     }
   }
 
-  &.MuiOutlinedInput-input {
-    &.Mui-focused { border-color: $black-color !important; }
+  // Placeholer 'yyyy' & value
+  .MuiPickersSectionList-root {
+    justify-content: center;
+
+    .MuiPickersSectionList-section {
+      text-transform: lowercase;
+      text-align: center !important;
+      font-size: 1rem;
+      // color: #777;
+    }
   }
+
+  .MuiSvgIcon-root{ color: $secondary-color !important;}
 }
-
-
 
 // Botones
 .MuiButton-root {

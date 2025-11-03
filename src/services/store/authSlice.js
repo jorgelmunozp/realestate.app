@@ -1,21 +1,21 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-// Lee token guardado
+// 1. leer token guardado
 const storedToken =
   sessionStorage.getItem("token") || localStorage.getItem("token") || "";
 
-// Decodifica usuario desde el JWT
+// 2. intentar decodificar usuario desde el JWT
 let storedUser = null;
 if (storedToken) {
   try {
-    const base64Payload = storedToken.split(".")[1] || "";
-    storedUser = JSON.parse(atob(base64Payload));
-  } catch (err) {
+    const payload = storedToken.split(".")[1] || "";
+    storedUser = JSON.parse(atob(payload));
+  } catch {
     storedUser = null;
   }
 }
 
-// estado inicial
+// 3. estado inicial limpio
 const initialState = {
   logged: !!storedToken,
   token: storedToken,
@@ -26,56 +26,23 @@ const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
-    // Mantiene compatibilidad con dispatch(login({...}))
-    login(state, action) {
-      const payload = action.payload || {};
-
-      // puede venir de 2 formas:
-      // a) { token, user: {...} }
-      // b) { id, name, email, role, token }
-      const nextToken = payload.token || state.token;
-
-      state.logged = true;
-      state.token = nextToken;
-
-      if (payload.user) {
-        state.user = payload.user;
-      } else {
-        const { id, name, email, role } = payload;
-        state.user = {
-          ...(state.user || {}),
-          ...(id ? { id } : {}),
-          ...(name ? { name } : {}),
-          ...(email ? { email } : {}),
-          ...(role ? { role } : {}),
-        };
-      }
-
-      // Para persistencia
-      if (nextToken) {
-        sessionStorage.setItem("token", nextToken);
-      }
-    },
-
+    // acción única para poner auth en redux
     setAuth(state, action) {
-      const payload = action.payload || {};
+      const { token, user } = action.payload || {};
       state.logged = true;
-      if (payload.token) {
-        state.token = payload.token;
-        sessionStorage.setItem("token", payload.token);
+      if (token) {
+        state.token = token;
+        sessionStorage.setItem("token", token);
       }
-      if (payload.user) {
-        state.user = payload.user;
+      if (user) {
+        state.user = user;
       }
     },
 
-    // USado en EditUser.js
+    // para cuando el user actualiza su propio perfil
     updateProfile(state, action) {
       const changes = action.payload || {};
-      state.user = {
-        ...(state.user || {}),
-        ...changes,
-      };
+      state.user = { ...(state.user || {}), ...changes };
     },
 
     logout(state) {
@@ -88,5 +55,5 @@ const authSlice = createSlice({
   },
 });
 
-export const { login, logout, updateProfile, setAuth } = authSlice.actions;
+export const { setAuth, updateProfile, logout } = authSlice.actions;
 export default authSlice.reducer;

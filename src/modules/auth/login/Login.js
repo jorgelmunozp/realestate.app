@@ -1,18 +1,14 @@
 ﻿import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { api } from '../../../services/api/api';
 import { Title } from '../../../components/title/Title';
-import { login } from '../../../services/store/authSlice';
-import { saveToken } from '../../../services/auth/token';
+import { loginUser } from '../../../services/store/authThunks';
 import { TextField, Button, InputAdornment, Box, Paper } from '@mui/material';
 import { PiUserCircleFill } from 'react-icons/pi';
 import { FiLock } from 'react-icons/fi';
 import { primaryColor, secondaryColor } from '../../../global';
 import Swal from 'sweetalert2';
 import './Login.scss';
-
-const loginEndpoint = process.env.REACT_APP_ENDPOINT_LOGIN;
 
 export const Login = () => {
   const navigate = useNavigate();
@@ -34,29 +30,19 @@ export const Login = () => {
 
     try {
       setLoading(true);
-      const response = await api.post(loginEndpoint, { email, password });
-
-      const { data } = response;
-      const user = data?.data?.user || {};
-      const accessToken = data?.data?.accessToken || '';
-      const refreshToken = data?.data?.refreshToken || '';
-
-      if (!accessToken || !user?.id) {
-        Swal.fire({ text: 'Respuesta inválida del servidor', icon: 'error' });
+      const result = await dispatch(loginUser({ email, password }));
+      if (!result.ok) {
+        Swal.fire({
+          text: result.error?.message || 'Credenciales inválidas o servidor no disponible',
+          icon: 'error',
+        });
         return;
       }
-
-      saveToken(accessToken);
-      if (refreshToken) saveToken(refreshToken, 'refreshToken');
-      sessionStorage.setItem('userId', user.id);
-
-      dispatch(login({ id: user.id, name: user.name, email: user.email, role: user.role, token: accessToken }));
-
       navigate('/home', { replace: true });
     } catch (error) {
-      console.error(' Error en login:', error.response?.data || error.message);
+      console.error(' Error en login:', error);
       Swal.fire({
-        text: error.response?.data?.message || 'Credenciales inválidas o servidor no disponible',
+        text: 'Ocurrió un error al iniciar sesión',
         icon: 'error',
       });
     } finally {
@@ -89,13 +75,13 @@ export const Login = () => {
               ),
             }}
           />
-          <Button id="loginButton" variant="contained" color="primary" onClick={handleLogin} disabled={loading} sx={{ borderRadius: 2, textTransform: 'none', py: 1.2 }} aria-label="login button">
+          <Button id="loginButton" variant="contained" color="primary" onClick={handleLogin} disabled={loading} sx={{ borderRadius: 2, textTransform: 'none', py: 1.2 }}>
             {loading ? 'Ingresando...' : 'Ingresar'}
           </Button>
-          <Button id="registerButton" variant="outlined" color="secondary" onClick={() => navigate('/register')} sx={{ borderRadius: 2, textTransform: 'none', py: 1.2 }} aria-label="register button">
+          <Button id="registerButton" variant="outlined" color="secondary" onClick={() => navigate('/register')} sx={{ borderRadius: 2, textTransform: 'none', py: 1.2 }}>
             Crear cuenta
           </Button>
-          <Button id="forgotPasswordButton" variant="text" onClick={() => navigate('/password-recover')} sx={{ color: primaryColor, textTransform: 'none', fontWeight: 500, fontSize: '0.95rem !important', mt: 1, '&:hover': { color: '#000' }, }} aria-label="forgot password button">
+          <Button id="forgotPasswordButton" variant="text" onClick={() => navigate('/password-recover')} sx={{ color: primaryColor, textTransform: 'none', fontWeight: 500, fontSize: '0.95rem !important', mt: 1, '&:hover': { color: '#000' } }}>
             ¿Olvidaste tu contraseña?
           </Button>
         </Box>

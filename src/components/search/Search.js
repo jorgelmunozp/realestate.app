@@ -1,5 +1,5 @@
 import { memo, useEffect, useRef, useState } from "react";
-import { TextField, Button, Box, Paper, MenuItem } from "@mui/material";
+import { TextField } from "@mui/material";
 import { FiSearch, FiMapPin, FiDollarSign, FiFilter, FiX, FiRotateCcw } from "react-icons/fi";
 import { MAX_PRICE, secondaryColor, STEP } from "../../global";
 import "./Search.scss";
@@ -9,11 +9,22 @@ const formatShort = (v) => (v >= 1_000_000 ? `${Math.round(v / 1_000_000)} M` : 
 export const Search = ({ filters = {}, onChange, className = "" }) => {
   const didInit = useRef(false);
   const trackRef = useRef(null);
+
+  // estado editable (lo que el user está tocando ahora)
   const [name, setName] = useState(filters.name || "");
   const [address, setAddress] = useState(filters.address || "");
   const [min, setMin] = useState(filters.minPrice !== undefined ? Number(filters.minPrice) : 0);
   const [max, setMax] = useState(filters.maxPrice !== undefined ? Number(filters.maxPrice) : MAX_PRICE);
   const [open, setOpen] = useState(false);
+
+  // estado aplicado (lo que realmente se mandó al padre)
+  const [applied, setApplied] = useState({
+    name: filters.name || "",
+    address: filters.address || "",
+    minPrice: filters.minPrice !== undefined ? Number(filters.minPrice) : 0,
+    maxPrice: filters.maxPrice !== undefined ? Number(filters.maxPrice) : MAX_PRICE,
+  });
+
   const cleanup = useRef(null);
 
   useEffect(() => {
@@ -21,14 +32,29 @@ export const Search = ({ filters = {}, onChange, className = "" }) => {
     return () => { if (cleanup.current) clearTimeout(cleanup.current); };
   }, []);
 
-  const isDirty = !!name || !!address || min > 0 || max < MAX_PRICE;
-  const build = () => ({ name, address, minPrice: min, maxPrice: max });
+  // ahora el indicador depende de LO APLICADO, no de lo que se escribe
+  const isApply =
+    !!applied.name ||
+    !!applied.address ||
+    applied.minPrice > 0 ||
+    applied.maxPrice < MAX_PRICE;
 
-  const apply = () => { if (typeof onChange === "function") onChange(build()); setOpen(false); };
+  const buildEditable = () => ({ name, address, minPrice: min, maxPrice: max });
+
+  const apply = () => {
+    const payload = buildEditable();
+    setApplied(payload); // marcar como aplicado
+    if (typeof onChange === "function") onChange(payload);
+    setOpen(false);
+  };
+
   const clear = () => {
     setName(""); setAddress(""); setMin(0); setMax(MAX_PRICE);
-    if (typeof onChange === "function") onChange({ name: "", address: "", minPrice: 0, maxPrice: MAX_PRICE });
+    const cleared = { name: "", address: "", minPrice: 0, maxPrice: MAX_PRICE };
+    setApplied(cleared);
+    if (typeof onChange === "function") onChange(cleared);
   };
+
   const toggle = () => setOpen((v) => !v);
 
   const onMinRange = (val) => {
@@ -42,7 +68,6 @@ export const Search = ({ filters = {}, onChange, className = "" }) => {
     setMax(v);
   };
 
-  // click en la línea → mueve el handle más cercano
   const handleTrackClick = (e) => {
     if (!trackRef.current) return;
     const rect = trackRef.current.getBoundingClientRect();
@@ -54,12 +79,10 @@ export const Search = ({ filters = {}, onChange, className = "" }) => {
     const distMax = Math.abs(value - max);
 
     if (distMin <= distMax) {
-      // mover min
       let nextMin = Math.min(value, max - STEP);
       if (nextMin < 0) nextMin = 0;
       setMin(nextMin);
     } else {
-      // mover max
       let nextMax = Math.max(value, min + STEP);
       if (nextMax > MAX_PRICE) nextMax = MAX_PRICE;
       setMax(nextMax);
@@ -70,7 +93,7 @@ export const Search = ({ filters = {}, onChange, className = "" }) => {
     <div className={`searchbar ${className}`.trim()}>
       <button type="button" className={`searchbar-toggle ${open ? "is-open" : ""}`} onClick={toggle}>
         <FiFilter className="searchbar-icon" /><span>Filtros</span>
-        {isDirty && <small className="searchbar-indicator">aplicados</small>}
+        {isApply && <small className="searchbar-indicator">aplicados</small>}
         {open && <FiX className="searchbar-toggle-close" />}
       </button>
 
@@ -78,12 +101,12 @@ export const Search = ({ filters = {}, onChange, className = "" }) => {
         <div className="searchbar-group">
           <div className="searchbar-field">
             <FiSearch className="searchbar-icon" />
-            <TextField id="nameSearch" type="text" value={name} onChange={(e) => setName(e.target.value)} label="Nombre" aria-label="name search input"/>
+            <TextField id="nameSearch" type="text" value={name} onChange={(e) => setName(e.target.value)} label="Nombre" aria-label="name search input" />
           </div>
           <div className="searchbar-divider" />
           <div className="searchbar-field">
             <FiMapPin className="searchbar-icon" />
-            <TextField id="addressSearch" type="text" value={address} onChange={(e) => setAddress(e.target.value)} label="Dirección | sector" aria-label="address search input"/>
+            <TextField id="addressSearch" type="text" value={address} onChange={(e) => setAddress(e.target.value)} label="Dirección | sector" aria-label="address search input" />
           </div>
           <div className="searchbar-divider hide-mobile" />
           <div className="searchbar-field searchbar-price">
@@ -91,8 +114,8 @@ export const Search = ({ filters = {}, onChange, className = "" }) => {
             <div className="price-slider" onClick={handleTrackClick}>
               <div className="price-slider-track" ref={trackRef} />
               <div className="price-slider-range" style={{ left: `${(min / MAX_PRICE) * 100}%`, right: `${100 - (max / MAX_PRICE) * 100}%` }} />
-              <input id="minRangeLimit" type="range" min="0" max={MAX_PRICE} step={STEP} value={min} onChange={(e) => onMinRange(e.target.value)} aria-label="min range limit"/>
-              <input id="maxRangeLimit" type="range" min="0" max={MAX_PRICE} step={STEP} value={max} onChange={(e) => onMaxRange(e.target.value)} aria-label="max range limit"/>
+              <input id="minRangeLimit" type="range" min="0" max={MAX_PRICE} step={STEP} value={min} onChange={(e) => onMinRange(e.target.value)} aria-label="min range limit" />
+              <input id="maxRangeLimit" type="range" min="0" max={MAX_PRICE} step={STEP} value={max} onChange={(e) => onMaxRange(e.target.value)} aria-label="max range limit" />
               <div className="price-slider-labels">
                 <span>{formatShort(min)}</span>
                 <span>{formatShort(max)}</span>
@@ -102,8 +125,12 @@ export const Search = ({ filters = {}, onChange, className = "" }) => {
         </div>
 
         <div className="searchbar-actions">
-          <button id="clearButton" type="button" className="searchbar-clear" onClick={clear}><FiRotateCcw color={secondaryColor} aria-label="clear button"/><span>Limpiar</span></button>
-          <button id="applyButton" type="button" className="searchbar-apply" onClick={apply}><FiFilter color={secondaryColor} aria-label="apply button" /><span>Aplicar</span></button>
+          <button id="clearButton" type="button" className="searchbar-clear" onClick={clear}>
+            <FiRotateCcw color={secondaryColor} aria-label="clear button" /><span>Limpiar</span>
+          </button>
+          <button id="applyButton" type="button" className="searchbar-apply" onClick={apply}>
+            <FiFilter color={secondaryColor} aria-label="apply button" /><span>Aplicar</span>
+          </button>
         </div>
       </div>
     </div>
