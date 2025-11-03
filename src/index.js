@@ -1,5 +1,5 @@
 import {createRoot} from 'react-dom/client';
-import { Suspense, lazy, useMemo, memo } from 'react';
+import { Suspense, lazy, useEffect, useMemo, memo } from 'react';
 import { TbSmartHome } from "react-icons/tb";
 import { primaryColor } from "./global";
 import './index.scss';
@@ -25,6 +25,14 @@ const FallbackView = memo(() => {
   const style = useMemo( () => ({ display: "flex", alignItems: "center", justifyContent: "center", height: "100vh", width: "100vw", animation: "splash 0.75s linear infinite" }), [] );
   return <div style={bg}><div style={style}><MemoLogo size={120} strokeWidth={1} color={primaryColor} /></div></div>;
 });
+
+// Al montar la app hace ping a Render para despertar la Api
+(function warmApi(){
+  const API = (process.env.REACT_APP_BACKEND_URL).replace(/\/$/,'');
+  if (sessionStorage.getItem("__apiWarmed")) return;
+  sessionStorage.setItem("__apiWarmed","1");
+  fetch(API + "/", { method:"GET", mode:"no-cors", cache:"no-store", keepalive:true }).catch(()=>{});
+})();
 
 const root = createRoot(document.getElementById('root'));
 root.render( <Suspense fallback={<FallbackView />}><App /></Suspense> );

@@ -136,7 +136,7 @@ export const Home = () => {
                 </div>
                 <div className="home-property-card-info">
                   <h1>{p.name}</h1>
-                  <p className="home-property-price">${Number(p.price || 0).toLocaleString()} | {p.address}</p>
+                  <p className="home-property-price">$ {Number(p.price || 0).toLocaleString()} | {p.address}</p>
                 </div>
                 <div className="home-property-card-buttons">
                   {canEdit && <button className={`btn-edit ${isEditor ? "editor" : ""} ${isAdmin ? "admin" : ""}`} title="Editar" onClick={(e) => { e.stopPropagation(); handleEditProperty(p.idProperty); }}><FiEdit2 /></button>}
