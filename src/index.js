@@ -1,5 +1,5 @@
 import {createRoot} from 'react-dom/client';
-import { Suspense, lazy, useEffect, useMemo, memo } from 'react';
+import { Suspense, lazy, useMemo, memo } from 'react';
 import { TbSmartHome } from "react-icons/tb";
 import { primaryColor } from "./global";
 import './index.scss';
