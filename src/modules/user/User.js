@@ -4,7 +4,7 @@ import { Title } from '../../components/title/Title';
 import { PiUserCircleFill, } from 'react-icons/pi';
 import { FiEdit } from 'react-icons/fi';
 import { getTokenPayload, getUserFromToken, getToken, isTokenExpired } from '../../services/auth/token';
-import { orangeColor } from '../../global';
+import { secondaryColor } from '../../global';
 import './User.scss';
 
 export const User = () => {
@@ -26,14 +26,14 @@ export const User = () => {
         <div className="user-header">
           <Title title="Mi perfil" />
           {isLogged && (  <button className="user-edit-btn" onClick={() => navigate('/profile/edit')}>
-                            <label>Editar</label> <FiEdit className="user-edit-btn-icon" size={30} color={orangeColor} />
+                            <label>Editar</label> <FiEdit className="user-edit-btn-icon" size={30} color={secondaryColor} />
                           </button> )
           }
         </div>
 
         <div className="user-data">
           <div className="user-avatar">
-            <PiUserCircleFill size={96} color={orangeColor} />
+            <PiUserCircleFill size={96} color={secondaryColor} />
           </div>
 
           <div className="user-info">

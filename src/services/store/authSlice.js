@@ -1,63 +1,92 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-// Estado inicial
+// Lee token guardado
+const storedToken =
+  sessionStorage.getItem("token") || localStorage.getItem("token") || "";
+
+// Decodifica usuario desde el JWT
+let storedUser = null;
+if (storedToken) {
+  try {
+    const base64Payload = storedToken.split(".")[1] || "";
+    storedUser = JSON.parse(atob(base64Payload));
+  } catch (err) {
+    storedUser = null;
+  }
+}
+
+// estado inicial
 const initialState = {
-  user: null,     // Datos del usuario logueado
-  token: null,    // JWT activo
-  logged: false,  // Estado de sesión
+  logged: !!storedToken,
+  token: storedToken,
+  user: storedUser,
 };
 
-
-// Slice de autenticación
 const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
-    //useFetch Inicia sesión (guarda usuario + token en Redux y storage)
-    login: (state, { payload }) => {
-      if (!payload) return;
+    // Mantiene compatibilidad con dispatch(login({...}))
+    login(state, action) {
+      const payload = action.payload || {};
 
-      // Estructura esperada desde Login.js → { id, name, email, role, token }
-      const { id, name, email, role, token } =
-        payload.user ? { ...payload.user, token: payload.token } : payload;
+      // puede venir de 2 formas:
+      // a) { token, user: {...} }
+      // b) { id, name, email, role, token }
+      const nextToken = payload.token || state.token;
 
-      state.user = { id, name, email, role };
-      state.token = token || null;
       state.logged = true;
+      state.token = nextToken;
 
-      // Persistencia en sessionStorage (rehidratable)
-      try {
-        sessionStorage.setItem("token", token);
-        sessionStorage.setItem("user", JSON.stringify(state.user));
-        sessionStorage.setItem("logged", "true");
-      } catch (_) {}
+      if (payload.user) {
+        state.user = payload.user;
+      } else {
+        const { id, name, email, role } = payload;
+        state.user = {
+          ...(state.user || {}),
+          ...(id ? { id } : {}),
+          ...(name ? { name } : {}),
+          ...(email ? { email } : {}),
+          ...(role ? { role } : {}),
+        };
+      }
+
+      // Para persistencia
+      if (nextToken) {
+        sessionStorage.setItem("token", nextToken);
+      }
     },
 
-    //useFetch Cierra sesión (limpia Redux y almacenamiento)
-    logout: (state) => {
-      state.user = null;
-      state.token = null;
+    setAuth(state, action) {
+      const payload = action.payload || {};
+      state.logged = true;
+      if (payload.token) {
+        state.token = payload.token;
+        sessionStorage.setItem("token", payload.token);
+      }
+      if (payload.user) {
+        state.user = payload.user;
+      }
+    },
+
+    // USado en EditUser.js
+    updateProfile(state, action) {
+      const changes = action.payload || {};
+      state.user = {
+        ...(state.user || {}),
+        ...changes,
+      };
+    },
+
+    logout(state) {
       state.logged = false;
-      try {
-        sessionStorage.removeItem("token");
-        sessionStorage.removeItem("user");
-        sessionStorage.removeItem("logged");
-        sessionStorage.removeItem("userId");
-      } catch (_) {}
-    },
-
-    //useFetch Actualiza datos del perfil
-    updateProfile: (state, { payload }) => {
-      if (!payload) return;
-      state.user = { ...(state.user || {}), ...payload };
-
-      // Sincroniza los cambios en sessionStorage
-      try {
-        sessionStorage.setItem("user", JSON.stringify(state.user));
-      } catch (_) {}
+      state.token = "";
+      state.user = null;
+      sessionStorage.removeItem("token");
+      localStorage.removeItem("token");
     },
   },
 });
 
-export const { login, logout, updateProfile } = authSlice.actions;
+export const { login, logout, updateProfile, setAuth } = authSlice.actions;
 export default authSlice.reducer;

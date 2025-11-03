@@ -8,7 +8,7 @@ import { saveToken } from '../../../services/auth/token';
 import { TextField, Button, InputAdornment, Box, Paper } from '@mui/material';
 import { PiUserCircleFill } from 'react-icons/pi';
 import { FiLock } from 'react-icons/fi';
-import { blueColor, orangeColor } from '../../../global';
+import { primaryColor, secondaryColor } from '../../../global';
 import Swal from 'sweetalert2';
 import './Login.scss';
 
@@ -74,7 +74,7 @@ export const Login = () => {
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
-                  <PiUserCircleFill color={orangeColor} size={20} />
+                  <PiUserCircleFill color={secondaryColor} size={20} />
                 </InputAdornment>
               ),
             }}
@@ -84,7 +84,7 @@ export const Login = () => {
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
-                  <FiLock color={orangeColor} size={18} />
+                  <FiLock color={secondaryColor} size={18} />
                 </InputAdornment>
               ),
             }}
@@ -95,7 +95,7 @@ export const Login = () => {
           <Button id="registerButton" variant="outlined" color="secondary" onClick={() => navigate('/register')} sx={{ borderRadius: 2, textTransform: 'none', py: 1.2 }} aria-label="register button">
             Crear cuenta
           </Button>
-          <Button id="forgotPasswordButton" variant="text" onClick={() => navigate('/password-recover')} sx={{ color: blueColor, textTransform: 'none', fontWeight: 500, fontSize: '0.95rem !important', mt: 1, '&:hover': { color: '#000' }, }} aria-label="forgot password button">
+          <Button id="forgotPasswordButton" variant="text" onClick={() => navigate('/password-recover')} sx={{ color: primaryColor, textTransform: 'none', fontWeight: 500, fontSize: '0.95rem !important', mt: 1, '&:hover': { color: '#000' }, }} aria-label="forgot password button">
             ¿Olvidaste tu contraseña?
           </Button>
         </Box>

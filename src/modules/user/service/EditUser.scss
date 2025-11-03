@@ -9,6 +9,8 @@
   background: #f6f8fb;
   min-height: 60vh;
   padding: 2rem 1rem;
+
+  @include screen-sm { padding: 1rem 0.5rem !important; }
 }
 
 .edituser-card {
@@ -16,6 +18,8 @@
   max-width: 720px;
   padding: 1.5rem 2rem;
   border-radius: 16px !important;
+  @include screen-sm { padding: 1.5rem 0.5rem !important; }
+
 }
 
 .edituser-form {

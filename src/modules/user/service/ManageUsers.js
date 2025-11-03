@@ -6,7 +6,7 @@ import { FiTrash2, FiSearch } from "react-icons/fi";
 import { Title } from "../../../components/title/Title";
 import { Pagination } from "../../../components/pagination/Pagination";
 import { normalizeUser } from "../mapper/userMapper";
-import { blueColor, orangeColor } from "../../../global";
+import { primaryColor, secondaryColor } from "../../../global";
 import Swal from "sweetalert2";
 import "./ManageUsers.scss";
 
@@ -70,7 +70,7 @@ export const ManageUsers = () => {
       text: "Esta acción no se puede deshacer.",
       icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: blueColor,
+      confirmButtonColor: primaryColor,
       cancelButtonColor: "#d33",
       confirmButtonText: "Sí, eliminar",
       cancelButtonText: "Cancelar",
@@ -117,7 +117,7 @@ export const ManageUsers = () => {
         {errorMsg && <p className="error-text">{errorMsg}</p>}
 
         <div className="manageusers-toolbar">
-          <TextField value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Buscar por nombre, correo o rol..." InputProps={{ startAdornment: (<InputAdornment position="start"><FiSearch size={18} color={orangeColor} /></InputAdornment>) }} fullWidth className="manageusers-search-input" />
+          <TextField value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Buscar por nombre, correo o rol..." InputProps={{ startAdornment: (<InputAdornment position="start"><FiSearch size={18} color={secondaryColor} /></InputAdornment>) }} fullWidth className="manageusers-search-input" />
         </div>
 
         <div className="manageusers-table">
@@ -138,7 +138,7 @@ export const ManageUsers = () => {
                   <MenuItem value="editor">Editor</MenuItem>
                   <MenuItem value="user">User</MenuItem>
                 </TextField>
-                <Button id={`deletebutton${idx}`} variant="outlined" className="manageusers-replace-btn" color="error" onClick={() => handleDelete(u.email)} aria-label={`delete button ${idx}`}><FiTrash2 /></Button>
+                <Button id={`deletebutton${idx}`} variant="outlined" className="manageusers-delete-btn" color="error" onClick={() => handleDelete(u.email)} style={{marginTop:0}} aria-label={`delete button ${idx}`}><FiTrash2 /></Button>
               </div>
             ))
           ) : (

@@ -31,6 +31,18 @@ export const EditProperty = () => {
   
   const [traceAlert, setTraceAlert] = useState({ message: "", severity: "success" });
 
+
+   // función para volver conservando paginación y filtros
+  const goBackToHome = (withRefresh = false) => {
+    const backTo = location.state?.from || "/home";
+    const stateToSend = {
+      pagination: location.state?.pagination,
+      filters: location.state?.filters,
+      ...(withRefresh ? { refresh: true } : {})
+    };
+    navigate(backTo, { state: stateToSend });
+  };
+
   const toBase64 = useCallback(
     (file) =>
       new Promise((resolve, reject) => {
@@ -165,7 +177,7 @@ export const EditProperty = () => {
           title: "Propiedad actualizada",
           confirmButtonText: "Aceptar",
         });
-        navigate('/home', { state: { refresh: true } });
+        goBackToHome(true);
       } else {
         Swal.fire({
           icon: "error",
@@ -305,7 +317,7 @@ export const EditProperty = () => {
         </div>
 
         <Button id="updateButton" type="submit" variant="contained" color={updating ? 'secondary':'primary'} disabled={updating} aria-label="update button">{updating ? 'Actualizando...' : 'Actualizar Propiedad'}</Button>
-        <Button id="cancelButton" variant="outlined" color="secondary" onClick={() => navigate('/home')} aria-label="cancel button">Cancelar</Button>
+        <Button id="cancelButton" variant="outlined" color="secondary" onClick={() => goBackToHome(false)} aria-label="cancel button">Cancelar</Button>
       </form>
     </div>
   );

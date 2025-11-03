@@ -12,17 +12,45 @@ export const Index = () => {
   const location = useLocation();
   const dispatch = useDispatch();
   const { properties = [], loading = false, meta = {} } = useSelector((s) => s.property || {});
-  const [filters, setFilters] = useState({ name: "", address: "" });
-  const [pagination, setPagination] = useState({ page: 1, limit: 6, last_page: 1, total: 0 });
+
+  // Cuando regresa de property restaura la paginación y los filtros con lo que venga del history
+  const [filters, setFilters] = useState(() => location.state?.filters || { name: "", address: "" });
+  const [pagination, setPagination] = useState(() => location.state?.pagination || { page: 1, limit: 6, last_page: 1, total: 0 });
 
   useEffect(() => {
     const needsRefresh = location.state?.refresh === true;
-    dispatch(fetchProperties({ page: pagination.page, limit: pagination.limit, name: filters.name, address: filters.address, minPrice: filters.minPrice, maxPrice: filters.maxPrice, refresh: needsRefresh }));
+    dispatch(
+      fetchProperties({
+        page: pagination.page,
+        limit: pagination.limit,
+        name: filters.name,
+        address: filters.address,
+        minPrice: filters.minPrice,
+        maxPrice: filters.maxPrice,
+        refresh: needsRefresh
+      })
+    );
     if (needsRefresh) navigate(location.pathname, { replace: true, state: {} });
-  }, [location.pathname, location.state, pagination.page, pagination.limit, filters, dispatch, navigate]);
+  }, [
+    location.pathname,
+    location.state?.refresh,
+    pagination.page,
+    pagination.limit,
+    filters,
+    dispatch,
+    navigate
+  ]);
+
+   // Cuando el usuario cambie de página o de filtros se actualiza el history
+  useEffect(() => {
+    const { refresh, ...rest } = location.state || {};
+    navigate(location.pathname, { replace: true, state: { ...rest, pagination, filters } });
+  }, [pagination, filters, navigate, location.pathname]);
 
   const handleSearchChange = (nextFilters) => { setFilters(nextFilters); setPagination((prev) => ({ ...prev, page: 1 })); };
-  const handleOpenProperty = (propertyId) => navigate(`/property/${propertyId}`);
+
+  const handleOpenProperty = (propertyId) => navigate(`/property/${propertyId}`, { state: { from: location.pathname, pagination, filters } });
+
   const handleChangePage = (newPage) => setPagination((prev) => ({ ...prev, page: newPage }));
 
   if (loading) {
@@ -34,7 +62,6 @@ export const Index = () => {
     );
   }
 
-  // fallback
   return (
     <div className="index-container">
       <div className="index-content">

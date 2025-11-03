@@ -1,5 +1,5 @@
-export const blueColor = '#107ACC';
-export const orangeColor = '#ff4800';
+export const primaryColor = '#107ACC';
+export const secondaryColor = '#ff4800';
 
 //Search
 export const MAX_PRICE = 3_000_000_000;

@@ -28,7 +28,7 @@
   transition: all 0.3s ease;
   padding: 2.5rem 2rem;
 
-  @include screen-sm { padding: 1.5rem 0.5rem; }
+  @include screen-sm { padding: 1.5rem 0.5rem !important; }
   
   // Titulo
   h2 {

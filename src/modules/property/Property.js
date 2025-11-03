@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, useLocation } from "react-router-dom";
 import { Title } from "../../components/title/Title.js";
 import { Button } from "../../components/button/Button.js";
 import { useFetch } from "../../services/fetch/useFetch.js";
@@ -9,6 +9,7 @@ const propertyEndpoint = process.env.REACT_APP_ENDPOINT_PROPERTY;
 
 export const Property = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { propertyId } = useParams();
   const { data: property, loading, error } = useFetch(`${propertyEndpoint}/${propertyId}`);
 
@@ -17,7 +18,14 @@ export const Property = () => {
     window.scrollTo(0, 0);
   }, []);
 
-  const goBack = () => navigate(-1);
+  // Toma "from" y el estado de paginación para volver
+  const goBack = () => {
+    if (location.state?.from) {
+      navigate(location.state.from, { state: { pagination: location.state.pagination, filters: location.state.filters } });
+    } else {
+      navigate("/");              // fallback si entró directo
+    }
+  };
 
   // Loader
   if (loading) {
@@ -58,7 +66,7 @@ export const Property = () => {
           <Title title={name} />
           <p className="property-address">📍 {address || "Sin dirección"}</p>
           <div className="property-price">
-            💰 {price ? `$${Number(price).toLocaleString("es-CO")} COP` : "Sin precio"}
+            💰 {price ? `$ ${Number(price).toLocaleString("es-CO")}` : "Sin precio"}
           </div>
 
           <div className="property-details">
@@ -87,8 +95,8 @@ export const Property = () => {
                 <div key={index} className="trace-card">
                   <p><strong>Fecha:</strong> {trace.dateSale || "N/A"}</p>
                   <p><strong>Nombre:</strong> {trace.name || "N/A"}</p>
-                  <p><strong>Valor:</strong> ${Number(trace.value || 0).toLocaleString("es-CO")} COP</p>
-                  <p><strong>Impuesto:</strong> ${Number(trace.tax || 0).toLocaleString("es-CO")} COP</p>
+                  <p><strong>Valor:</strong> $ {Number(trace.value || 0).toLocaleString("es-CO")}</p>
+                  <p><strong>Impuesto:</strong> {Number(trace.tax || 0).toLocaleString("es-CO")} %</p>
                 </div>
               ))
             ) : (

@@ -1,4 +1,5 @@
 ﻿import { useEffect, useState } from "react";
+import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from "react-redux";
 import { api } from "../../../services/api/api";
 import { Title } from "../../../components/title/Title";
@@ -11,8 +12,10 @@ import Swal from "sweetalert2";
 import "./EditUser.scss";
 
 export const EditUser = () => {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const authUser = useSelector((state) => state.auth.user);
+  const [updating, setUpdating] = useState(false);
 
   // Lee token real del navegador
   const token = localStorage.getItem("token") || sessionStorage.getItem("token") || "";
@@ -46,6 +49,7 @@ export const EditUser = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      setUpdating(true);
       const userDto = mapUserToDto(form);
 
       // Solo envia campos modificados
@@ -75,6 +79,7 @@ export const EditUser = () => {
           timer: 1500,
           showConfirmButton: false,
         });
+        navigate(-1)
       } else {
         Swal.fire({
           icon: "error",
@@ -84,25 +89,31 @@ export const EditUser = () => {
     } catch (err) {
       console.error(" Error al actualizar perfil:", err);
       Swal.fire({ icon: "error", text: "No se pudo actualizar el perfil" });
+    } finally {
+      setUpdating(false);
     }
   };
+
+  // fallback
+  if (updating)
+    return (
+      <div className="loader-overlay loader-overlay--home">
+        <div className="loader-spinner"></div>
+          <p className="loader-text">Actualizando usuario...</p>
+      </div>
+    );
 
   return (
     <div className="edituser-container">
       <Paper elevation={3} className="edituser-card">
         <Title title="Editar perfil" />
-        <Box component="form" className="edituser-form" onSubmit={handleSubmit}>
+        <Box component="form" className="edituser-form" onSubmit={handleSubmit} sx={{ '& #saveUser': { gridColumn:'1 / -1', width:'100%' } }}>
           <TextField name="name" label="Nombre" value={form.name} onChange={handleChange} fullWidth required />
           <TextField name="email" label="Correo" type="email" value={form.email} fullWidth disabled />
-          <TextField name="role" label="Rol" value={form.role} select fullWidth disabled >
-            <MenuItem value="admin">Admin</MenuItem>
-            <MenuItem value="editor">Editor</MenuItem>
-            <MenuItem value="user">User</MenuItem>
-          </TextField>
-          <Button id="saveUser" type="submit" variant="contained" color="primary" sx={{ borderRadius: 2, textTransform: 'none', py: 1.2 }} aria-label="save user">
-            Guardar
-          </Button>
+          <TextField name="role" label="Rol" value={form.role} select fullWidth disabled><MenuItem value="admin">Admin</MenuItem><MenuItem value="editor">Editor</MenuItem><MenuItem value="user">User</MenuItem></TextField>
+          <Button id="saveUser" type="submit" variant="contained" color="primary" sx={{ borderRadius:2, textTransform:'none', py:1.2 }} aria-label="save user">Guardar</Button>
         </Box>
+        <Button id="cancelUser" onClick={() => navigate(-1)} variant="outlined" color="secondary" sx={{ borderRadius: 2, textTransform: 'none', py: 1.2 }} aria-label="cancel to save user">Cancelar</Button>
       </Paper>
     </div>
   );

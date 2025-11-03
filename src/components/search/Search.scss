@@ -308,8 +308,8 @@
 
   .searchbar-panel { padding: .5rem .6rem; }
 
-  .searchbar-actions { justify-content: center; }
-
-  .searchbar-apply span,
-  .searchbar-clear span { display: none; }
+  .searchbar-actions { 
+    justify-content: center; 
+    margin-top: 0.5rem; 
+  }
 }

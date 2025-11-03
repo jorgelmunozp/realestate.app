@@ -11,9 +11,9 @@
   .MuiOutlinedInput-root {
     border-radius: 12px;
 
-  fieldset { border-color: #d1d5db; }
+    fieldset { border-color: #d1d5db; }
 
-  &:hover fieldset { border-color: #9ca3af; }
+    &:hover fieldset { border-color: #9ca3af; }
 
     &.Mui-focused fieldset { border-color: $secondary-color; }
 
@@ -35,7 +35,7 @@
       font-family: $primary-font;
       font-size: 0.9rem;
 
-      &.Mui-focused { color: $black-color !important; }
+     &.Mui-focused fieldset { border-color: $secondary-color; }
     }
   }
 
@@ -65,10 +65,14 @@
     border-radius: 12px !important;
   }
 
-  .MuiFormLabel-root { 
+  .MuiFormLabel-root {                // Label año
     &.MuiInputLabel-root{ 
-        &.Mui-focused { color: $black-color !important; }
+      &.Mui-focused { color: $black-color !important; }
     }
+  }
+
+  &.MuiOutlinedInput-input {
+    &.Mui-focused { border-color: $black-color !important; }
   }
 }
 

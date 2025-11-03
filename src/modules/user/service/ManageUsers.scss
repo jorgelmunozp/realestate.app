@@ -85,14 +85,15 @@
   font-style: italic;
 }
 
-.manageusers-replace-btn {
+.manageusers-delete-btn {
   background-color: #fee2e2 !important;
   color: #b91c1c !important;
-  min-width: 46px;
   height: 40px;
   display: flex !important;
   align-items: center;
   justify-content: center;
+  margin-bottom: 0.6rem !important;
+  vertical-align: middle !important;
   border-radius: 12px !important;
   &:hover {
     background-color: #fecaca !important;

@@ -4,7 +4,7 @@ import { api } from '../../../services/api/api';
 import { Title } from '../../../components/title/Title';
 import { Box, Paper, TextField, Button, InputAdornment, Typography } from '@mui/material';
 import { FiAtSign } from 'react-icons/fi';
-import { blueColor, orangeColor } from '../../../global';
+import { primaryColor, secondaryColor } from '../../../global';
 import Swal from 'sweetalert2';
 import './PasswordRecover.scss';
 
@@ -50,7 +50,7 @@ export const PasswordRecover = () => {
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
-                  <FiAtSign color={orangeColor} size={20} />
+                  <FiAtSign color={secondaryColor} size={20} />
                 </InputAdornment>
               ),
             }}
@@ -64,7 +64,7 @@ export const PasswordRecover = () => {
             Cancelar
           </Button>
 
-          <Typography onClick={handleBack} sx={{ color:blueColor, fontFamily:'Montserrat', fontSize:'0.95rem', fontWeight:'600', mt:4, cursor:'pointer', '&:hover': { color:'#000 !important', textDecoration:'none !important' } }}>
+          <Typography onClick={handleBack} sx={{ color:primaryColor, fontFamily:'Montserrat', fontSize:'0.95rem', fontWeight:'600', mt:4, cursor:'pointer', '&:hover': { color:'#000 !important', textDecoration:'none !important' } }}>
             ← Volver al inicio de sesión
           </Typography>
         </Box>

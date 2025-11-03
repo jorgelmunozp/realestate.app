@@ -27,8 +27,8 @@ export const Home = () => {
   const error = propertyState?.error;
   const authUser = useSelector((state) => state.auth.user);
 
-  const [filters, setFilters] = useState({ name: "", address: "" });
-  const [pagination, setPagination] = useState({ last_page: 1, limit: 6, page: 1, total: 0 });
+  // const [filters, setFilters] = useState({ name: "", address: "" });
+  // const [pagination, setPagination] = useState({ last_page: 1, limit: 6, page: 1, total: 0 });
 
   const userId = sessionStorage.getItem("userId");
   const payload = getTokenPayload("token");
@@ -42,6 +42,11 @@ export const Home = () => {
   const firstName = ((authUser?.name || tokenUser?.name || "").split(" ")[0]) || "";
   const displayRole = role ? role.charAt(0).toUpperCase() + role.slice(1) : "";
 
+  // Cuando regresa de property restaura la paginación y los filtros con lo que venga del history
+  const [filters, setFilters] = useState(() => location.state?.filters || { name: "", address: "" });
+  const [pagination, setPagination] = useState(() => location.state?.pagination || { last_page: 1, limit: 6, page: 1, total: 0 });
+
+
   useEffect(() => {
     if (!userId) {
       navigate("/index");
@@ -51,23 +56,20 @@ export const Home = () => {
     const { name, address, minPrice, maxPrice } = filters;
     dispatch(fetchProperties({ page: pagination.page, limit: pagination.limit, name, address, minPrice, maxPrice, refresh: needsRefresh }));
     if (needsRefresh) navigate(location.pathname, { replace: true, state: {} });
-  }, [
-    dispatch,
-    navigate,
-    location.pathname,
-    location.state,
-    pagination.page,
-    pagination.limit,
-    filters.name,
-    filters.address,
-    filters.minPrice,
-    filters.maxPrice,
-    userId,
-  ]);
+  }, [ dispatch, navigate, location.pathname, location.state?.refresh, pagination.page, pagination.limit, filters.name, filters.address, filters.minPrice, filters.maxPrice, userId, ]);
+
+   // Sincroniza history cuando cambien filtros/paginación
+  useEffect(() => {
+    const { refresh, ...rest } = location.state || {}; 
+    navigate(location.pathname, { replace: true, state: { ...rest, pagination, filters } }); 
+  }, [pagination, filters, navigate, location.pathname]); 
 
   const handleFiltersChange = (next) => { setFilters(next); setPagination((prev) => ({ ...prev, page: 1 })); };
-  const handleEditProperty = (propertyId) => navigate(`/edit-property/${propertyId}`);
-  const handleAddProperty = () => navigate("/add-property");
+  
+  const handleEditProperty = (propertyId) => navigate(`/edit-property/${propertyId}`, { state: { from: location.pathname, pagination, filters } });
+
+  // const handleAddProperty = () => navigate("/add-property");
+  const handleAddProperty = () => navigate("/add-property", { state: { from: location.pathname, pagination, filters } });
 
   const handleDeleteProperty = async (propertyId) => {
     const result = await Swal.fire({

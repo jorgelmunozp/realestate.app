@@ -13,7 +13,7 @@
   margin-bottom: 1.5rem;
 }
 
-.pagination__btn {
+.pagination_btn {
   background: $primary-color;
   border: none;
   color: #fff;
@@ -27,39 +27,40 @@
   gap: .35rem;
 }
 
-.pagination__btn:hover:not(:disabled) {
+.pagination_btn:hover:not(:disabled) {
   background: darken($primary-color, 7%);
   transform: translateY(-2px);
 }
 
-.pagination__btn:disabled {
+.pagination_btn:disabled {
   background: #e5e7eb;
   color: #9ca3af;
   cursor: not-allowed;
   transform: none;
 }
 
-.pagination__info {
+.pagination_info {
   font-size: .9rem;
 }
 
-.pagination__last {
+.pagination_last {
   background: transparent;
   border: none;
   color: $primary-color;
+  font-family: $primary-font;
   font-weight: 600;
-  font-size: 0.9rem;
+  font-size: 0.975rem;
   cursor: pointer;
   padding: 0;
 }
 
-.pagination__last:disabled {
+.pagination_last:disabled {
   color: #9ca3af;
   cursor: default;
 }
 
 @include screen-sm {
   .pagination { gap: .6rem; }
-  .pagination__btn span { display: none; }
-  .pagination__info { font-size: .8rem; }
+  .pagination_btn span { display: none; }
+  .pagination_info { font-size: .8rem; }
 }

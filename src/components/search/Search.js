@@ -1,7 +1,7 @@
 import { memo, useEffect, useRef, useState } from "react";
 import { TextField, Button, Box, Paper, MenuItem } from "@mui/material";
 import { FiSearch, FiMapPin, FiDollarSign, FiFilter, FiX, FiRotateCcw } from "react-icons/fi";
-import { MAX_PRICE, orangeColor, STEP } from "../../global";
+import { MAX_PRICE, secondaryColor, STEP } from "../../global";
 import "./Search.scss";
 
 const formatShort = (v) => (v >= 1_000_000 ? `${Math.round(v / 1_000_000)} M` : `$ ${v.toLocaleString()}`);
@@ -83,7 +83,7 @@ export const Search = ({ filters = {}, onChange, className = "" }) => {
           <div className="searchbar-divider" />
           <div className="searchbar-field">
             <FiMapPin className="searchbar-icon" />
-            <TextField id="addressSearch" type="text" value={address} onChange={(e) => setAddress(e.target.value)} label="Dirección / sector" aria-label="address search input"/>
+            <TextField id="addressSearch" type="text" value={address} onChange={(e) => setAddress(e.target.value)} label="Dirección | sector" aria-label="address search input"/>
           </div>
           <div className="searchbar-divider hide-mobile" />
           <div className="searchbar-field searchbar-price">
@@ -102,8 +102,8 @@ export const Search = ({ filters = {}, onChange, className = "" }) => {
         </div>
 
         <div className="searchbar-actions">
-          <button id="clearButton" type="button" className="searchbar-clear" onClick={clear}><FiRotateCcw color={orangeColor} aria-label="clear button"/><span>Limpiar</span></button>
-          <button id="applyButton" type="button" className="searchbar-apply" onClick={apply}><FiFilter color={orangeColor} aria-label="apply button" /><span>Aplicar</span></button>
+          <button id="clearButton" type="button" className="searchbar-clear" onClick={clear}><FiRotateCcw color={secondaryColor} aria-label="clear button"/><span>Limpiar</span></button>
+          <button id="applyButton" type="button" className="searchbar-apply" onClick={apply}><FiFilter color={secondaryColor} aria-label="apply button" /><span>Aplicar</span></button>
         </div>
       </div>
     </div>

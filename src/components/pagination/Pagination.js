@@ -1,8 +1,8 @@
 import React from "react";
-import { blueColor } from "../../global";
+import { primaryColor } from "../../global";
 import "./Pagination.scss";
 
-export const Pagination = ({ page = 1, lastPage = 1, onPageChange, className = "pagination", buttonClassName = "pagination__btn", prevLabel = "Anterior", nextLabel = "Siguiente", disabled = false }) => {
+export const Pagination = ({ page = 1, lastPage = 1, onPageChange, className = "pagination", buttonClassName = "pagination_btn", prevLabel = "Anterior", nextLabel = "Siguiente", disabled = false }) => {
   const prevDisabled = disabled || page <= 1;
   const nextDisabled = disabled || page >= lastPage;
   const lastDisabled = disabled || page >= lastPage;
@@ -14,9 +14,9 @@ export const Pagination = ({ page = 1, lastPage = 1, onPageChange, className = "
   return (
     <div className={className}>
       <button className={buttonClassName} disabled={prevDisabled} onClick={handlePrev} aria-label="Anterior"><span>{prevLabel}</span></button>
-      <span className="pagination__info">
+      <span className="pagination_info">
         Página {page} de{" "}
-        <button type="button" onClick={handleGoLast} disabled={lastDisabled} aria-label="Ir a la última página" className="pagination__last">
+        <button type="button" onClick={handleGoLast} disabled={lastDisabled} aria-label="Ir a la última página" className="pagination_last">
           {lastPage}
         </button>
       </span>

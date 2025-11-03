@@ -4,7 +4,7 @@ import { api } from '../../../services/api/api';
 import { Title } from '../../../components/title/Title';
 import { TextField, Button, InputAdornment, Box, Paper } from '@mui/material';
 import { FiUser, FiAtSign, FiLock } from 'react-icons/fi';
-import { orangeColor } from '../../../global';
+import { secondaryColor } from '../../../global';
 import Swal from 'sweetalert2';
 import './Register.scss';
 
@@ -86,7 +86,7 @@ export const Register = () => {
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
-                  <FiUser color={orangeColor} />
+                  <FiUser color={secondaryColor} />
                 </InputAdornment>
               ),
             }}
@@ -97,7 +97,7 @@ export const Register = () => {
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
-                  <FiAtSign color={orangeColor} />
+                  <FiAtSign color={secondaryColor} />
                 </InputAdornment>
               ),
             }}
@@ -108,7 +108,7 @@ export const Register = () => {
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
-                  <FiLock color={orangeColor} />
+                  <FiLock color={secondaryColor} />
                 </InputAdornment>
               ),
             }}
