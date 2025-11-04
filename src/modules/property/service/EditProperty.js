@@ -20,7 +20,7 @@ export const EditProperty = () => {
   const navigate = useNavigate();
   const { propertyId } = useParams();
   const location = useLocation();
-  const endpoint = process.env.REACT_APP_ENDPOINT_PROPERTY;
+  const endpoint = process.env.REACT_APP_ENDPOINT_PROPERTY.trim();
 
   const [itemProperty, setProperty] = useState(null);
   const [itemOwner, setOwner] = useState({});

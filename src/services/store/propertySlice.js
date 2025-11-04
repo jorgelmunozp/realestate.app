@@ -2,7 +2,7 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { api } from '../../services/api/api';
 import { errorWrapper } from '../../services/api/errorWrapper';
 
-const ENDPOINT = process.env.REACT_APP_ENDPOINT_PROPERTY;
+const ENDPOINT = process.env.REACT_APP_ENDPOINT_PROPERTY.trim();
 
 export const fetchProperties = createAsyncThunk(
   'property/fetchAll',

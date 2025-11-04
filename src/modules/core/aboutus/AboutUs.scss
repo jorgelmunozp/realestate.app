@@ -8,7 +8,9 @@
   min-height: 90vh;
   background: #f6f8fb;
   color: #333;
-  padding: 2rem;
+  padding: 2rem 2rem;
+
+  @include screen-sm { padding: 1rem 0.5rem; }
 }
 
 .aboutUs-form {

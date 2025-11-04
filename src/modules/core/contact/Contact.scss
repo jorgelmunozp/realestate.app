@@ -10,8 +10,8 @@
   align-items: center;
   animation: fadeIn 0.5s ease-in-out;
 
-  @include screen-md { padding: 4rem 1.5em; }
-  @include screen-sm { padding: 4rem 1em; }
+  @include screen-md { padding: 2rem 1.5em; }
+  @include screen-sm { padding: 2rem 1em; }
 
   h2 {
     color: $primary-color;
@@ -72,7 +72,9 @@
   }
 
   .contact-info {
-    padding: 1.8rem;
+    padding: 1.8rem 1.8rem;
+
+    @include screen-sm { padding: 1rem 1.8rem; }
 
     h3 {
       font-size: 1.2rem;

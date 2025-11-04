@@ -7,12 +7,13 @@ import { Box, Paper, TextField, Button, InputAdornment } from '@mui/material';
 import { FiLock } from 'react-icons/fi';
 import './PasswordReset.scss';
 
-const resetEndpoint = process.env.REACT_APP_ENDPOINT_PASSWORD_RESET;
+const resetEndpoint = process.env.REACT_APP_ENDPOINT_PASSWORD_RESET.trim();
 
 export const PasswordReset = () => {
   const navigate = useNavigate();
   const { token } = useParams();
   const [password, setPassword] = useState('');
+  const [sending, setSending] = useState(false);
 
   const handleReset = async () => {
     try {
@@ -53,8 +54,8 @@ export const PasswordReset = () => {
             }}
           />
 
-          <Button id="confirmButton" variant="contained" color="primary" onClick={handleReset} sx={{ borderRadius: 2, textTransform: 'none', py: 1.2 }} aria-label='confirm button'>
-            Confirmar
+          <Button id="confirmButton" variant="contained" color={sending ? 'secondary' : 'primary'} onClick={handleReset} disabled={sending} sx={{ borderRadius: 2, textTransform: 'none', py: 1.2 }} aria-label='confirm button'>
+           {sending ? 'Enviando...':'Confirmar'}
           </Button>
 
           <Button id="cancelButton" variant="outlined" color="secondary" onClick={handleCancel} sx={{ borderRadius: 2, textTransform: 'none', py: 1.2 }} aria-label='cancel button'>

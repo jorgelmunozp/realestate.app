@@ -19,7 +19,7 @@ export const ManageUsers = () => {
   const [errorMsg, setErrorMsg] = useState("");
   const [pagination, setPagination] = useState({ page: 1, limit: PAGE_SIZE, last_page: 1, total: 0 });
 
-  const userEndpoint = process.env.REACT_APP_ENDPOINT_USER;
+  const userEndpoint = process.env.REACT_APP_ENDPOINT_USER.trim();
 
   useEffect(() => {
     const load = async () => {

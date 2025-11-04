@@ -17,6 +17,11 @@ export const Index = () => {
   const [filters, setFilters] = useState(() => location.state?.filters || { name: "", address: "" });
   const [pagination, setPagination] = useState(() => location.state?.pagination || { page: 1, limit: 6, last_page: 1, total: 0 });
 
+  // Scroll al inicio al montar
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   useEffect(() => {
     const needsRefresh = location.state?.refresh === true;
     dispatch(

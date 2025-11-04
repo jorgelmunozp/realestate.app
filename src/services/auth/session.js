@@ -10,7 +10,7 @@ let refreshPromise = null;
 const interceptorMap = new WeakMap();
 
 // obtiene el endpoint de refresh desde las envs
-const getRefreshEndpoint = () => process.env.REACT_APP_ENDPOINT_TOKEN_REFRESH;
+const getRefreshEndpoint = () => process.env.REACT_APP_ENDPOINT_TOKEN_REFRESH.trim();
 
 // limpia sesión y redirige al login
 const redirectToLogin = () => {

@@ -75,7 +75,7 @@ export const Login = () => {
               ),
             }}
           />
-          <Button id="loginButton" variant="contained" color="primary" onClick={handleLogin} disabled={loading} sx={{ borderRadius: 2, textTransform: 'none', py: 1.2 }}>
+          <Button id="loginButton" variant="contained" color={loading ? 'secondary' : 'primary'} onClick={handleLogin} disabled={loading} sx={{ borderRadius: 2, textTransform: 'none', py: 1.2 }}>
             {loading ? 'Ingresando...' : 'Ingresar'}
           </Button>
           <Button id="registerButton" variant="outlined" color="secondary" onClick={() => navigate('/register')} sx={{ borderRadius: 2, textTransform: 'none', py: 1.2 }}>
@@ -83,6 +83,9 @@ export const Login = () => {
           </Button>
           <Button id="forgotPasswordButton" variant="text" onClick={() => navigate('/password-recover')} sx={{ color: primaryColor, textTransform: 'none', fontWeight: 500, fontSize: '0.95rem !important', mt: 1, '&:hover': { color: '#000' } }}>
             ¿Olvidaste tu contraseña?
+          </Button>
+          <Button id="forgotPasswordButton" variant="text" onClick={() => navigate('/index')} sx={{ color: primaryColor, textTransform: 'none', fontWeight: 500, fontSize: '0.95rem !important', '&:hover': { color: '#000' } }}>
+            ← Volver al Inicio
           </Button>
         </Box>
       </Paper>

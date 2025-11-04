@@ -3,15 +3,18 @@ import { useNavigate, useParams, useLocation } from "react-router-dom";
 import { Title } from "../../components/title/Title.js";
 import { Button } from "../../components/button/Button.js";
 import { useFetch } from "../../services/fetch/useFetch.js";
+import dayjs from 'dayjs';
+import 'dayjs/locale/es';
 import "./Property.scss";
 
-const propertyEndpoint = process.env.REACT_APP_ENDPOINT_PROPERTY;
+const propertyEndpoint = process.env.REACT_APP_ENDPOINT_PROPERTY.trim();
 
 export const Property = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { propertyId } = useParams();
   const { data: property, loading, error } = useFetch(`${propertyEndpoint}/${propertyId}`);
+  dayjs.locale('es');
 
   // Scroll al inicio al montar
   useEffect(() => {
@@ -49,6 +52,10 @@ export const Property = () => {
   // Extracción de datos
   const { name, address, price, year, idProperty, codeInternal, image, owner, traces = [] } = property.data;
 
+   const ownerBirthday = owner?.birthday
+    ? dayjs(owner.birthday).format('D [de] MMMM [de] YYYY')
+    : "Sin fecha de nacimiento";
+
   // Render principal
   return (
     <div className="property-container">
@@ -83,7 +90,8 @@ export const Property = () => {
                            : ( <div className="no-image">Sin foto</div> )}
               <p className="owner-name">{owner.name || "Nombre no disponible"}</p>
               <p>{owner.address || "Sin dirección"}</p>
-              <p>🎂 {owner.birthday || "Sin fecha de nacimiento"}</p>
+              {/* <p>🎂 {owner.birthday || "Sin fecha de nacimiento"}</p> */}
+              <p>🎂 {ownerBirthday}</p>
             </div>
           )}
 

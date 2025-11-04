@@ -14,7 +14,7 @@ import { AboutUs } from "../modules/core/aboutus/AboutUs";
 import { Contact } from "../modules/core/contact/Contact";
 import { NotFound } from "../modules/core/notfound/NotFound";
 
-const urlBasepath = process.env.REACT_APP_FRONTEND_BASEPATH;
+const urlBasepath = process.env.REACT_APP_FRONTEND_BASEPATH.trim();
 
 export const AppRouter = () => (
   <BrowserRouter basename={urlBasepath}>

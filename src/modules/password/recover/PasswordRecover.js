@@ -8,7 +8,7 @@ import { primaryColor, secondaryColor } from '../../../global';
 import Swal from 'sweetalert2';
 import './PasswordRecover.scss';
 
-const recoverEndpoint = process.env.REACT_APP_ENDPOINT_PASSWORD_RECOVER;
+const recoverEndpoint = process.env.REACT_APP_ENDPOINT_PASSWORD_RECOVER.trim();
 
 export const PasswordRecover = () => {
   const navigate = useNavigate();
@@ -56,7 +56,7 @@ export const PasswordRecover = () => {
             }}
           />
 
-          <Button id="sendButton" variant="contained" color="primary" onClick={handleRecover} disabled={sending} sx={{ borderRadius: 2, textTransform: 'none', py: 1.2 }} aria-label="send button">
+          <Button id="sendButton" variant="contained" color={sending ? 'secondary' : 'primary'} onClick={handleRecover} disabled={sending} sx={{ borderRadius: 2, textTransform: 'none', py: 1.2 }} aria-label="send button">
              {sending ? 'Enviando...':'Enviar enlace'}
           </Button>
 

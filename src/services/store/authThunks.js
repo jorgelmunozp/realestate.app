@@ -3,7 +3,7 @@ import { errorWrapper } from "../api/errorWrapper";
 import { saveToken } from "../auth/token";
 import { setAuth, logout } from "./authSlice";
 
-const LOGIN_ENDPOINT = process.env.REACT_APP_ENDPOINT_LOGIN || "/auth/login";
+const LOGIN_ENDPOINT = process.env.REACT_APP_ENDPOINT_LOGIN.trim();
 
 export const loginUser = (credentials) => async (dispatch) => {
   const res = await errorWrapper(api.post(LOGIN_ENDPOINT, credentials));

@@ -21,7 +21,7 @@ import "./AddProperty.scss";
 export const AddProperty = () => {
   const navigate = useNavigate();
   const endpoints = {
-    property: process.env.REACT_APP_ENDPOINT_PROPERTY,
+    property: process.env.REACT_APP_ENDPOINT_PROPERTY.trim(),
   };
 
   const [itemProperty, setProperty] = useState(propertyDto);

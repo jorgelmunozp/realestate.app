@@ -68,7 +68,7 @@ export const EditUser = () => {
       }
 
       const res = await errorWrapper(
-        api.patch(`${process.env.REACT_APP_ENDPOINT_USER}/${form.email}`, changedFields)
+        api.patch(`${process.env.REACT_APP_ENDPOINT_USER.trim()}/${form.email}`, changedFields)
       );
 
       if (res.ok) {

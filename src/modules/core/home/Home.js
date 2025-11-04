@@ -14,7 +14,7 @@ import { FaUserSecret, FaUserTie, FaUser } from "react-icons/fa6";
 import { FiPlus, FiEdit2, FiTrash2 } from "react-icons/fi";
 import "./Home.scss";
 
-const propertyEndpoint = process.env.REACT_APP_ENDPOINT_PROPERTY;
+const propertyEndpoint = process.env.REACT_APP_ENDPOINT_PROPERTY.trim();
 
 export const Home = () => {
   const navigate = useNavigate();
@@ -46,7 +46,6 @@ export const Home = () => {
   const [filters, setFilters] = useState(() => location.state?.filters || { name: "", address: "" });
   const [pagination, setPagination] = useState(() => location.state?.pagination || { last_page: 1, limit: 6, page: 1, total: 0 });
 
-
   useEffect(() => {
     if (!userId) {
       navigate("/index");
@@ -58,7 +57,12 @@ export const Home = () => {
     if (needsRefresh) navigate(location.pathname, { replace: true, state: {} });
   }, [ dispatch, navigate, location.pathname, location.state?.refresh, pagination.page, pagination.limit, filters.name, filters.address, filters.minPrice, filters.maxPrice, userId, ]);
 
-   // Sincroniza history cuando cambien filtros/paginación
+  // Scroll al inicio al montar
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
+  // Sincroniza history cuando cambien filtros/paginación
   useEffect(() => {
     const { refresh, ...rest } = location.state || {}; 
     navigate(location.pathname, { replace: true, state: { ...rest, pagination, filters } }); 

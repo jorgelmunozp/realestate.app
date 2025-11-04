@@ -66,7 +66,7 @@ export const AboutUs = () => {
 
         {/* Contenido */}
         <div className="aboutUs-content">
-          <p>Somos una inmobiliaria pensada para ti, ofreciéndote propiedades exclusivas y asesoría personalizada.</p>
+          <p>Somos una inmobiliaria pensada para ti, te ofrecemos propiedades exclusivas y asesoría personalizada.</p>
           <Label text="¡Tu hogar ideal te espera!" />
         </div>
 

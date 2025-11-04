@@ -28,7 +28,7 @@ const FallbackView = memo(() => {
 
 // Al montar la app hace ping a Render para despertar la Api
 (function warmApi(){
-  const API = (process.env.REACT_APP_BACKEND_URL).replace(/\/$/,'');
+  const API = (process.env.REACT_APP_BACKEND_URL.trim()).replace(/\/$/,'');
   if (sessionStorage.getItem("__apiWarmed")) return;
   sessionStorage.setItem("__apiWarmed","1");
   fetch(API + "/", { method:"GET", mode:"no-cors", cache:"no-store", keepalive:true }).catch(()=>{});

@@ -144,3 +144,44 @@
     }
   }
 }
+
+
+
+
+// /* Header.css */
+// .header {
+//   position: fixed;
+//   top: 0;
+//   left: 0;
+//   width: 100%;
+//   height: 80vh; /* Altura grande inicial */
+//   background-color: white;
+//   padding: 15px 30px;
+//   display: flex;
+//   justify-content: space-between;
+//   align-items: center;
+//   transition: height 0.3s ease-in-out, padding 0.3s ease-in-out; /* Transición suave */
+//   z-index: 1000;
+// }
+
+// .scrolled {
+//   height: 60px; /* Altura de barra de menú */
+//   padding: 10px 20px;
+//   box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* Sombra opcional para la barra */
+// }
+
+// .logo {
+//   font-size: 24px;
+//   font-weight: bold;
+//   color: #333;
+// }
+
+// .scrolled .logo {
+//   font-size: 20px;
+// }
+
+// nav a {
+//   margin-left: 20px;
+//   text-decoration: none;
+//   color: #333;
+// }
