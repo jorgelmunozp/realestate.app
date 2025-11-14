@@ -14,7 +14,7 @@ export const Login = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [form, setForm] = useState({ email: '', password: '' });
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -29,7 +29,6 @@ export const Login = () => {
     }
 
     try {
-      setLoading(true);
       const result = await dispatch(loginUser({ email, password }));
       if (!result.ok) {
         Swal.fire({

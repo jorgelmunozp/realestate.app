@@ -14,7 +14,7 @@ const PAGE_SIZE = 6;
 
 export const ManageUsers = () => {
   const [users, setUsers] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [query, setQuery] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
   const [pagination, setPagination] = useState({ page: 1, limit: PAGE_SIZE, last_page: 1, total: 0 });
@@ -23,7 +23,6 @@ export const ManageUsers = () => {
 
   useEffect(() => {
     const load = async () => {
-      setLoading(true);
       setErrorMsg("");
       try {
         const res = await errorWrapper(api.get(userEndpoint));

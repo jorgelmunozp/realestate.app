@@ -13,7 +13,7 @@ const registerEndpoint = process.env.REACT_APP_ENDPOINT_REGISTER.trim();
 export const Register = () => {
   const navigate = useNavigate();
   const [form, setForm] = useState({ name: '', email: '', password: '' });
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -29,7 +29,6 @@ export const Register = () => {
     }
 
     try {
-      setLoading(true);
       const response = await api.post(registerEndpoint, { name, email, password });
 
       if (response.status >= 200 && response.status < 300) {
